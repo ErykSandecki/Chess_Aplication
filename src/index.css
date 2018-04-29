@@ -5,6 +5,8 @@ body {
 
 .App {
   transition: 1s;
+  position: absolute;
+  width: 100%;
 }
 
 .menu-drop-left{

@@ -3,7 +3,7 @@ import './App.css';
 import Intro from './Components/Intro/index.js';
 import Navigation from './Components/Navigation/index.js';
 import MenuLeftDrop from './Components/Menu-Left_Drop/index.js'
-
+import Footer from './Components/Footer/index.js'
 class App extends Component {
   constructor(props){
     super(props);
@@ -41,7 +41,8 @@ class App extends Component {
           hideBody={this.hideBody}
           showBody={this.showBody}
         />
-        <Intro />
+        <Intro/>
+        <Footer/>
       </div>
     );
   }

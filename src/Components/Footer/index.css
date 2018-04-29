@@ -1,0 +1,28 @@
+footer {
+    background-color: #2d3436;
+    height: 250px;
+    width: 100%;
+}
+
+footer:hover {
+    cursor:url(../../Images/cursor-move-white.png), auto;
+}
+
+.footer-menu-text {
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    font-family: "Gotham Medium", Arial, sans-serif;
+    margin-top: 10px;
+}
+
+p:hover {
+    opacity: 0.5;
+}
+
+@media only screen and (min-width: 768px) {
+    .footer-menu-text {
+        margin-top: 50px;
+    }
+}
