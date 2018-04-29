@@ -1,3 +1,24 @@
+
+body {
+  cursor:url(Images/cursor-move.png), auto;
+}
+
+.App {
+  transition: 1s;
+}
+
+.menu-drop-left{
+  width: 0%;
+  background-color: white;
+  position: fixed;
+  height: 100vh;
+  z-index: 2;
+  left: 0px;
+  transition: 1s;
+  opacity: 0;
+  display: none;
+}
+
 .hide-body {
   display: block;
   position: fixed;

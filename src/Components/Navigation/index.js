@@ -1,58 +1,70 @@
 import React, { Component } from 'react';
 import './index.css';
-import chessLogo from '../../Images/chess-logo.jpg'
-import emptyUserLogo from '../../Images/empty-logo-user.png'
+import emptyLogoUser from '../../Images/empty-logo-user.png';
 
 class Navigation extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            navButtonClass: false
-        }
         this.showMoreOptionsNav = this.showMoreOptionsNav.bind(this);
     }
 
+    componentDidMount() {
+        window.addEventListener("resize" , () => {
+            this.props.hideBody();
+            document.getElementsByClassName("App")[0].style.marginLeft="unset";
+        })
+    }
+
     componentWillReceiveProps() {
-        if(!this.props.stateBody && this.state.navButtonClass) {
-            this.setState({
-                navButtonClass: false
-            })
+        if(this.props.hiddenBody) {
+            document.getElementsByClassName("App")[0].style.marginLeft="unset";
+            document.getElementsByClassName("menu-drop-left")[0].style.opacity = 0;
+            document.getElementsByClassName("menu-drop-left")[0].style.width = "0%";
+            document.getElementsByClassName("menu-drop-left")[0].style.display = "none";
         }
     }
 
     showMoreOptionsNav() {
-        this.setState({
-            navButtonClass : !this.state.navButtonClass
-        })
-        this.props.showBody();
-        if(this.state.navButtonClass){
-            this.props.hideBody();
-        }
+        document.getElementsByClassName("menu-drop-left")[0].style.display = "block";
+        setTimeout(()=>{
+            if(window.innerWidth < 768) {
+                document.getElementsByClassName("App")[0].style.marginLeft="50%";
+                document.getElementsByClassName("menu-drop-left")[0].style.width = "50%";
+            }
+    
+            else if(window.innerWidth < 1024) {
+                document.getElementsByClassName("App")[0].style.marginLeft="40%";
+                document.getElementsByClassName("menu-drop-left")[0].style.width = "40%";
+            }
+    
+            else{
+                document.getElementsByClassName("App")[0].style.marginLeft="30%";
+                document.getElementsByClassName("menu-drop-left")[0].style.width = "30%";
+            }
+            this.props.showBody();
+        },100);
+
+        setTimeout(()=>{
+            document.getElementsByClassName("menu-drop-left")[0].style.opacity = 1;
+        },1000);
     }
     
     render() {
         return (
             <div className="nav">
-                <img className="nav-picture-logo" src={chessLogo}/>
-                <div className={this.state.navButtonClass ? 
-                                  "nav-button change"
-                                :  "nav-button"
-                               } 
-                     onClick={this.showMoreOptionsNav}
-                >
-                    <div className="bar1"></div>
-                    <div className="bar2"></div>
-                    <div className="bar3"></div>
+                <div className="drop-menu" onClick={this.showMoreOptionsNav}>
+                <div className="nav-button">
+                    <div><div className="nav-button-width"/></div>
+                    <div><div className="nav-button-width"/></div>
+                    <div><div className="nav-button-width"/></div>
                 </div>
-                <div className={this.state.navButtonClass ? 
-                                  "nav-user"
-                                : "nav-user-hide"
-                                }
-                    >
-                    <img className="img-circle" src={emptyUserLogo}/>
-                    <p>Zaloguj</p>
-                    <p>Zarejestruj</p>
+                <p>MENU</p>
                 </div>
+                <div className="nav-option">
+                    <img className="img-circle" src={emptyLogoUser}/>
+                    <p>ZAREJESTRUJ/ ZALOGUJ</p>
+                    <p>JESTEŚ JUŻ CZŁONKIEM?</p>
+                </div> 
             </div>
         )
     }

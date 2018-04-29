@@ -2,101 +2,101 @@
 .nav  {
     background-color: white;
     width: 100%;
-    border-bottom: 1px solid black;     
-}
-
-.nav-picture-logo {
-    margin-left: 1%;
-    height: 70px;
+    border-bottom: 1px solid #e6e6e6;     
 }
 
 .nav-button {
-    cursor: pointer;
     position: relative;
-    float: right;
+    float: left;
     padding: 17px;
   }
-  
-  .change {
-    z-index: 2;
-    background-color: white;
-  }
-  
-  .bar1, .bar2, .bar3 {
-    width: 35px;
-    height: 5px;
-    background-color: black;
-    margin: 6px 0;
-    transition: 0.4s;
-  }
-  
-  .change .bar1 {
-    -webkit-transform: rotate(-45deg) translate(-9px, 6px);
-    transform: rotate(-45deg) translate(-9px, 6px);
-    background-color:black;
-  }
-  
-  .change .bar2 {
-    opacity: 0;
-  }
-  
-  .change .bar3 {
-    -webkit-transform: rotate(45deg) translate(-8px, -8px);
-    transform: rotate(45deg) translate(-8px, -8px);
-    background-color: black;
+
+  .nav-button div:nth-child(1), .nav-button div:nth-child(3) {
+    width: 15px;
+    background-color:gray;
+    margin: 3px 0;
   }
 
-  /* Section user action */
-  .nav-user {
-      position: absolute;
-      top: 72px;
-      width: 100%;
-      z-index: 2;
-      text-align: center;
-      -webkit-box-shadow: 0px 8px 5px -5px rgba(0,0,0,0.75);
-      -moz-box-shadow: 0px 8px 5px -5px rgba(0,0,0,0.75);
-      box-shadow: 0px 8px 5px -5px rgba(0,0,0,0.75);
-      background-color: white;
+  .nav-button div:nth-child(2) {
+    width: 25px;
+    background-color: gray;
+    margin: 3px 0;
+  }
+
+  .nav-button-width {
+      background-color: black !important;
+      width: 100% !important;
+      height: 3px;
+      transition: 0.5s;
+  }
+
+  .nav p {
+      float: left;
+      line-height: 56px;
+      margin: 0px;
+      border-right: 1px solid #e6e6e6;
+      width: 70px;
+      color: black;
+      transition: 0.5s;
       opacity: 1;
-      transition: 1s;
   }
 
-  .nav-user-hide {
-    opacity: 0;
-    position: absolute;
+  .drop-menu:hover .nav-button-width  {
+    width: 0% !important;
+    transition: 0.5s;
   }
 
-  .nav-user p {
+    .drop-menu:hover  p {
+        opacity: 0.3;
+    }
 
-  }
+    .nav-option {
+        float: right;
+        width: 420px;
+        display: none;
+    }
+
+    .nav-option img {
+        float: right;
+        margin-top: 3.5px;
+        margin-left: 10px;
+    }
+
+    .nav-option p:nth-child(2) {
+        border: unset;
+        float: right;
+        width: 180px;
+        font-size: 15px;
+        transition: unset;
+        font-weight: bold;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .nav-option p:nth-child(2):hover {
+        opacity: 0.3;
+    }
+
+    .nav-option p:nth-child(3) {
+        border: unset;
+        text-align: center;
+        float: right;
+        width: 180px;
+        font-size: 15px;
+        transition: unset;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        border-left: 1px solid #e6e6e6;
+    }
+
+  
+  /* Section user action */
+
 
 /* Tablet */
 
 @media only screen and (min-width: 768px) { 
-    .nav-picture-logo {
-        margin-left: 3%;
-        height: 120px;
+    .nav-option {
+        display: block;
     }
-
-    .nav-button {
-        padding: 38px;
-      }
-
-    .bar1, .bar2, .bar3 {
-        width: 50px;
-        height: 8px;
-    }  
-}
-
-/* Deskopt */
-
-@media only screen and (min-width: 1024px) { 
-    .nav-picture-logo {
-        margin-left: 5%;
-        height: unset;
-    }
-
-    .nav-button {
-        display: none;
-      }
+   
 }

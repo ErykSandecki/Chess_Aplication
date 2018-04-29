@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
-import Navigation from './Components/Navigation/index.js'
+import Intro from './Components/Intro/index.js';
+import Navigation from './Components/Navigation/index.js';
+import MenuLeftDrop from './Components/Menu-Left_Drop/index.js'
 
 class App extends Component {
-  
   constructor(props){
     super(props);
     this.state = {
-      hiddenBody: false
+      hiddenBody: false,
     }
     this.showBody = this.showBody.bind(this);
     this.hideBody = this.hideBody.bind(this);
@@ -28,19 +29,23 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <MenuLeftDrop hideBody={this.hideBody}/>
+        <div className="cursorAnimateClick"/>
         <div className={this.state.hiddenBody ?
-                           "hide-body"
-                         : ""
-                       }
-        onClick={this.hideBody}
-        />
+          "hide-body"
+          :""}
+        onClick={this.hideBody}>
+        </div>
         <Navigation
+          hiddenBody={this.state.hiddenBody} 
+          hideBody={this.hideBody}
           showBody={this.showBody}
-          hideBody={this.hideBody} 
         />
+        <Intro />
       </div>
     );
   }
 }
+
 
 export default App;
