@@ -6,14 +6,14 @@ export default class MenuLeftDrop extends Component {
         return(
             <div className="menu-drop-left">
                 <div className="language-exit">
-                    <p>POLSKI</p>
-                    <div onClick={this.props.hideBody}>
+                    <p className="language">POLSKI</p>
+                    <div className="drop-login-register" onClick={this.props.hideBody}>
                         <span className="glyphicon glyphicon-remove"></span>
-                        <p>WYJŚCIE</p>
+                        <p className="exit-drop-menu">WYJŚCIE</p>
                     </div>
                 </div>
-                <div className="login-register">
-                    <p>ZAREJESTRUJ/ZALOGUJ</p>
+                <div className="login-register-drop">
+                    <p className="login-register-drop-text">ZAREJESTRUJ/ZALOGUJ</p>
                 </div>
             </div>
         )

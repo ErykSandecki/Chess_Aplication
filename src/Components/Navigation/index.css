@@ -3,7 +3,9 @@
     background-color: white;
     width: 100%;
     height: 75px;
-    border-bottom: 1px solid #e6e6e6;     
+    border-bottom: 1px solid #e6e6e6;
+    position: fixed;
+    z-index: 2;     
 }
 
 .nav-button {
@@ -12,14 +14,20 @@
     padding: 26px;
   }
 
-  .nav-button div:nth-child(1), .nav-button div:nth-child(3) {
+  .nav-button-contain-1 {
     width: 15px;
     background-color:gray;
     margin: 3px 0;
   }
 
-  .nav-button div:nth-child(2) {
+  .nav-button-contain-2 {
     width: 25px;
+    background-color: gray;
+    margin: 3px 0;
+  }
+
+  .nav-button-contain-3 {
+    width: 20px;
     background-color: gray;
     margin: 3px 0;
   }
@@ -31,7 +39,7 @@
       transition: 0.5s;
   }
 
-  .nav p {
+  .nav-text-button {
       float: left;
       line-height: 75px;
       margin: 0px;
@@ -42,12 +50,19 @@
       opacity: 1;
   }
 
+  .intro-text {
+      width: 200px;
+      margin-top: 25px;
+      float: left;
+      margin-left: 10%;
+  }
+
   .drop-menu:hover .nav-button-width  {
     width: 0% !important;
     transition: 0.5s;
   }
 
-  .drop-menu:hover  p {
+  .drop-menu:hover .nav-text-button {
         opacity: 0.3;
     }
 
@@ -56,15 +71,16 @@
         display: none;
     }
 
-    .nav-option img {
+    .users {
         float: right;
         margin-top: 12.5px;
         margin-left: 10px;
         margin-right: 10px;
     }
 
-    .nav-option p:nth-child(2) {
+    .nav-register-login {
         border: unset;
+        line-height: 75px;
         float: right;
         transition: unset;
         font-weight: bold;
@@ -72,12 +88,13 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
 
-    .nav-option p:nth-child(2):hover {
+    .nav-register-login:hover {
         opacity: 0.3;
     }
 
-    .nav-option p:nth-child(3) {
+    .nav-member {
         border: unset;
+        line-height: 75px;
         text-align: center;
         float: right;
         transition: unset;
@@ -97,14 +114,15 @@
         width: 360px;
     }
 
-    .nav-option p:nth-child(2) {
+    .nav-register-login, .nav-member  {
         width: 140px;
         font-size: 12px;
     }
 
-    .nav-option p:nth-child(3) {
-        width: 140px;
-        font-size: 12px;
+    .intro-text {
+        margin-top: 30px;
+        width: 200px;
+        margin-left: 2%;
     }
    
 }
@@ -115,13 +133,14 @@
         width: 460px;
     }
 
-    .nav-option p:nth-child(2) {
+    .nav-register-login, .nav-member  {
         width: 190px;
         font-size: 15px;    
     }
 
-    .nav-option p:nth-child(3) {
-        width: 190px;
-        font-size: 15px;
+    .intro-text {
+        width: 400px;
+        margin-top: 17.5px;
+        margin-left: 1.5%;
     }
 }

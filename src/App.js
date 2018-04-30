@@ -4,6 +4,8 @@ import Intro from './Components/Intro/index.js';
 import Navigation from './Components/Navigation/index.js';
 import MenuLeftDrop from './Components/Menu-Left_Drop/index.js'
 import Footer from './Components/Footer/index.js'
+import Article from './Components/Article/index.js'
+
 class App extends Component {
   constructor(props){
     super(props);
@@ -42,6 +44,7 @@ class App extends Component {
           showBody={this.showBody}
         />
         <Intro/>
+        <Article/>
         <Footer/>
       </div>
     );

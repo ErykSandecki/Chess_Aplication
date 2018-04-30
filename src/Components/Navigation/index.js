@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './index.css';
 import emptyLogoUser from '../../Images/empty-logo-user.png';
+import introText from '../../Images/intro-text.png';
 
 class Navigation extends Component {
     constructor(props){
@@ -17,10 +18,15 @@ class Navigation extends Component {
 
     componentWillReceiveProps() {
         if(this.props.hiddenBody) {
-            document.getElementsByClassName("App")[0].style.marginLeft="unset";
             document.getElementsByClassName("menu-drop-left")[0].style.opacity = 0;
-            document.getElementsByClassName("menu-drop-left")[0].style.width = "0%";
-            document.getElementsByClassName("menu-drop-left")[0].style.display = "none";
+            setTimeout(function() {
+                document.getElementsByClassName("App")[0].style.marginLeft="unset";
+                document.getElementsByClassName("menu-drop-left")[0].style.width = "0%";
+            },300);
+          
+            setTimeout(function() {
+                document.getElementsByClassName("menu-drop-left")[0].style.display = "none";
+            },1000);
         }
     }
 
@@ -54,16 +60,17 @@ class Navigation extends Component {
             <div className="nav">
                 <div className="drop-menu" onClick={this.showMoreOptionsNav}>
                 <div className="nav-button">
-                    <div><div className="nav-button-width"/></div>
-                    <div><div className="nav-button-width"/></div>
-                    <div><div className="nav-button-width"/></div>
+                    <div className="nav-button-contain-1"><div className="nav-button-width"/></div>
+                    <div className="nav-button-contain-2"><div className="nav-button-width"/></div>
+                    <div className="nav-button-contain-3"><div className="nav-button-width"/></div>
                 </div>
-                <p>MENU</p>
+                <p className="nav-text-button">MENU</p>
+                <img className="intro-text img-responsive" src={introText}/>
                 </div>
                 <div className="nav-option">
-                    <img className="img-circle" src={emptyLogoUser}/>
-                    <p>ZAREJESTRUJ/ ZALOGUJ</p>
-                    <p>JESTEŚ JUŻ CZŁONKIEM?</p>
+                    <img className="users img-circle" src={emptyLogoUser}/>
+                    <p className="nav-register-login">ZAREJESTRUJ/ ZALOGUJ</p>
+                    <p className="nav-member">JESTEŚ JUŻ CZŁONKIEM?</p>
                 </div> 
             </div>
         )

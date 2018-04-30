@@ -1,0 +1,41 @@
+.article {
+    min-height: 700px;
+    text-align: center;
+    background-color: white;
+    float: left;
+    width: 100%;
+}
+
+.article-main-text {
+    font-family: 'Oswald', sans-serif;
+    font-size: 34px;
+    margin-top: 50px;
+}
+
+.article-option {
+    margin-top: 150px;
+}
+
+.article-text-title-option {
+    font-family: 'Oswald', sans-serif;
+    font-size: 30px;
+    margin-top: 10px;
+}
+
+.article-text-option {
+    font-size: 20px;
+    text-align: left;
+}
+
+.article-check-options {
+    text-align: left;
+    color: steelblue;
+    font-size: 15px;
+    margin-bottom: 10px;
+    transition: 0.5;
+    width: 45%;
+}
+
+.article-check-options:hover {
+    filter: brightness(150%);
+}

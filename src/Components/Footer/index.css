@@ -1,7 +1,9 @@
+/* First Mobile */
 footer {
     background-color: #2d3436;
-    height: 250px;
+    height: 550px;
     width: 100%;
+    float: left;
 }
 
 footer:hover {
@@ -17,12 +19,43 @@ footer:hover {
     margin-top: 10px;
 }
 
-p:hover {
+.footer-menu-text:hover {
     opacity: 0.5;
 }
 
+.icon {
+    text-align: center;
+}
+
+.fa-facebook , .fa-twitter, .fa-linkedin {
+    color: #2d3436;
+    background-color: gray;
+    padding: 5px;
+    font-size: 40px;
+    margin-top: 25px;
+    width: 50px;
+    transition: 0.5s;
+}
+
+.fa:hover {
+    text-decoration: unset;
+    transition: 0.5s;
+}
+
+.footer-down-text {
+    color: white;
+    margin-top: 20px;
+    text-align: center;
+}
+
 @media only screen and (min-width: 768px) {
+    footer {
+        height: 250px;
+    }
     .footer-menu-text {
         margin-top: 50px;
+    }
+    .fa{
+        font-size: 30px;
     }
 }

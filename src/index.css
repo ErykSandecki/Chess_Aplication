@@ -1,6 +1,7 @@
 
 body {
   cursor:url(Images/cursor-move.png), auto;
+  height: 1500px;
 }
 
 .App {
@@ -16,7 +17,7 @@ body {
   height: 100vh;
   z-index: 2;
   left: 0px;
-  transition: 1s;
+  transition: 0.5s;
   opacity: 0;
   display: none;
 }
