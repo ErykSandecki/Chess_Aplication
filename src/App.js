@@ -45,6 +45,9 @@ class App extends Component {
         />
         <Intro/>
         <Article/>
+        <div className="picture-1">
+          <div className="parallax-1"></div>
+        </div>
         <Footer/>
       </div>
     );

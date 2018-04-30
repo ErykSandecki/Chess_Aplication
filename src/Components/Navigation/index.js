@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './index.css';
 import emptyLogoUser from '../../Images/empty-logo-user.png';
-import introText from '../../Images/intro-text.png';
 
 class Navigation extends Component {
     constructor(props){
@@ -65,8 +64,10 @@ class Navigation extends Component {
                     <div className="nav-button-contain-3"><div className="nav-button-width"/></div>
                 </div>
                 <p className="nav-text-button">MENU</p>
-                <img className="intro-text img-responsive" src={introText}/>
                 </div>
+                <a className="icon-nav fa fa-linkedin"></a>
+                <a className="icon-nav fa fa-twitter"></a>
+                <a className="icon-nav fa fa-facebook"></a>
                 <div className="nav-option">
                     <img className="users img-circle" src={emptyLogoUser}/>
                     <p className="nav-register-login">ZAREJESTRUJ/ ZALOGUJ</p>

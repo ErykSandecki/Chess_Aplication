@@ -50,20 +50,26 @@
       opacity: 1;
   }
 
-  .intro-text {
-      width: 200px;
-      margin-top: 25px;
-      float: left;
-      margin-left: 10%;
-  }
-
-  .drop-menu:hover .nav-button-width  {
+  .drop-menu:hover .nav-button-width {
     width: 0% !important;
     transition: 0.5s;
   }
+  .drop-menu:hover .nav-text-button{
+      opacity: 0.3 !important;
+  }
+  
+    .icon-nav {
+        float: left;
+        background-color: white !important;
+        opacity: 0.5;
+        margin-top: 22.5px !important;
+        margin-left: 3%;
+        margin-right: 3%;
+    }
 
-  .drop-menu:hover .nav-text-button {
-        opacity: 0.3;
+    .icon-nav:hover {
+        color: black !important;
+        opacity: 1;
     }
 
     .nav-option {
@@ -119,10 +125,9 @@
         font-size: 12px;
     }
 
-    .intro-text {
-        margin-top: 30px;
-        width: 200px;
+    .icon-nav {
         margin-left: 2%;
+        margin-right: 2%;
     }
    
 }
@@ -138,9 +143,8 @@
         font-size: 15px;    
     }
 
-    .intro-text {
-        width: 400px;
-        margin-top: 17.5px;
-        margin-left: 1.5%;
+    .icon-nav {
+        margin-left: 4%;
+        margin-right: 4%;
     }
 }
