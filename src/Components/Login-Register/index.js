@@ -2,6 +2,8 @@ import './index.css';
 import React, { Component } from 'react';
 import logoUser from '../../Images/users-login.png';
 import completeLogo from '../../Images/register-accepted.png';
+import {addUser,downloadBase} from '../../Firebase/index.js';
+
 export default class LoginRegister extends Component {   
     constructor(props) {
         super(props);
@@ -14,6 +16,7 @@ export default class LoginRegister extends Component {
 
     componentDidMount() {
         document.getElementsByClassName("form-register-pointer")[0].style.backgroundColor = "rgb(92,184,92)";
+        downloadBase();
     }
 
     componentWillReceiveProps() {
@@ -47,16 +50,34 @@ export default class LoginRegister extends Component {
     }
 
     nextStepRegistration() {
+        for(let i = 0; i<4;i++){
+            if(i === 3 && this.state.textRegister === 0) {
+                continue;
+            }
+            dateRegister.push(document.getElementsByClassName("form-register-step-1-input")[i].value);
+        }
+
         if(this.state.textRegister === 3) {
             this.viewCompleteRegistration();
+            addUser(dateRegister);
+            for(let i = 0; i<4; i++) {
+                document.getElementsByClassName("form-register-step-1-input")[i].value ="";
+            }    
             return;
         }
+        
+        for(let i = 0; i<4; i++) {
+            document.getElementsByClassName("form-register-step-1-input")[i].value ="";
+        }
+
         this.setState({
             textRegister : this.state.textRegister + 1
         })
         setTimeout(()=>{
             document.getElementsByClassName("form-register-pointer")[this.state.textRegister].style.backgroundColor = "rgb(92,184,92)";
         },100);
+        document.getElementsByClassName("form-register-step-1-input")[2].type="text";
+        document.getElementsByClassName("form-register-step-1-input")[3].type="text";
     }
 
     viewCompleteRegistration() {
@@ -71,7 +92,7 @@ export default class LoginRegister extends Component {
         setTimeout(()=>{
             document.getElementsByClassName("register-complete")[0].style.display= "none";
             this.hideRegisterLogin();
-        },3000);      
+        },3000);     
     }
 
     render() {
@@ -79,7 +100,7 @@ export default class LoginRegister extends Component {
             ['Tworzenie Konta','Nazwa Użytkownika', 'E-mail', 'Hasło', 'Powtórz Hasło'],
             ['Linki do twojej osoby','Facebook','Twitter', 'Linked In','Instagram'],
             ['Dane Personalne', 'Imie', 'Nazwisko', 'Kraj','Data Urodzenia'],
-            ['Dane Opcjonalne', 'Miasto', 'Ulica', 'Telefon', 'Osoba Polecająca']
+            ['Dane Opcjonalne', 'Miasto', 'Region', 'Telefon', 'Osoba Polecająca']
         ];
 
         return(
@@ -120,3 +141,5 @@ export default class LoginRegister extends Component {
         )
     }
 }
+
+var dateRegister = [];

@@ -35,6 +35,11 @@ class App extends Component {
       visibleForm: !this.state.visibleForm,
       hiddenBody: false
     })
+    for(let i = 0; i<4;i++){
+      document.getElementsByClassName("form-register-step-1-input")[i].value="";
+    }
+    document.getElementsByClassName("form-register-step-1-input")[2].type="password";
+    document.getElementsByClassName("form-register-step-1-input")[3].type="password";
   }
   render() {
     return (

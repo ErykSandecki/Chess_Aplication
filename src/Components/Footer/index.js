@@ -27,7 +27,6 @@ export default class Footer extends Component {
                     <p className=" footer-down-text">Copyright 2018. ChessWebsite</p>
                     <p className="footer-down-text">Webiste by Eryk Sandecki</p>
                 </div>
-               
             </footer>
         )
     }
