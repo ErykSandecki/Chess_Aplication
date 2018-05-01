@@ -1,0 +1,213 @@
+
+.login-register {
+    display: none;
+}
+
+.register-login {
+    position: fixed;
+    z-index: 3;
+    height: 100vh;
+    width: 100%;
+    background-color: black;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.register-login-table{
+    position: fixed;
+    height: 90vh;
+    width: 90%;
+    left: 5%;
+    top: 5%;
+    background-color: white;
+    z-index: 3;
+    opacity: 0;
+    border-radius: 20px;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.register-login-image {
+    margin-top: 20px;
+}
+
+.exit-validation-register-login{ 
+    position: absolute;
+    right: 2%;
+    top: 4%;
+    opacity: 0.5;
+}
+.exit-validation-register-login:hover {
+    opacity: 1;
+}
+
+
+.register-login-text-1 {
+    font-size: 20px;
+    font-family: 'Lato', sans-serif;
+    margin-top: 15px;
+}
+
+.form-register-step-1{ 
+    width: 60%;
+    margin-top: 50px;
+    height: 250px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.form-register-step-1-input {
+    width: 60%;
+    border: unset;
+    font-size: 20px;
+}
+
+.form-register-step-1-input:focus {
+    outline: unset;
+}
+
+.form-register-step-1-underline{
+    width: 60%;
+    height: 1px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: black;
+    margin-bottom: 30px;
+}
+
+.button-register-login-next-step {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    width: 40%;
+    height: 80px;
+    border-radius: 40px;
+}
+
+.button-register-login-next-step:hover {
+    cursor: unset;
+}
+
+.button-register-login-next-step:focus {
+    outline: unset;
+}
+
+.form-register-pointers {
+    width: 200px;
+    height: 40px;
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-register-pointer{
+    background-color: gray;
+    border-radius: 5px;
+    width: 10px;
+    height: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    float: left;
+}
+
+.form-register-already-account{ 
+    margin-top: 10%;
+    font-family: 'Lato', sans-serif;
+    opacity: 0.5;
+}
+
+.form-register-already-account:hover {
+    opacity: 1;
+}
+
+.register-complete {
+    z-index: 4;
+    opacity: 1;
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    display: none;
+}
+
+.register-complete-block {
+    position: absolute;
+    width: 60%;
+    height: 100px;
+    left: 20%;
+    top: 40%;
+    background-color: white;
+    opacity: 0;
+    transition: 1s;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.register-complete-text {
+    color: black;
+    font-size: 20px;
+    line-height: 100px;
+}
+
+.register-complete-img {
+    height: 20px;
+    width: 20px;
+}
+
+@media only screen and (min-width: 768px) { 
+    .register-login-table{
+        width: 80%;
+        left: 10%;
+    }
+
+    .form-register-pointers {
+        width: 400px;
+    }
+
+    .form-register-pointer {
+        width: 20px;
+        height: 20px;
+        margin-left: 40px;
+        margin-right: 40px;
+        border-radius: 20px;
+    }
+
+    .register-complete-block {
+        width: 80%;
+        left: 10%;
+        height: 100px;
+        border-radius: 10px;
+    }
+
+    .register-complete-text {
+        font-size: 20px;
+        line-height: 100px;
+    }
+
+    .register-complete-img {
+        height: 35px;
+        width: 35px;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .register-login-table{
+        width: 50%;
+        left: 25%;
+    }
+
+    .register-complete-block {
+        width: 80%;
+        left: 10%;
+        height: 200px;
+        border-radius: 20px;
+    }
+
+    .register-complete-text {
+        font-size: 50px;
+        line-height: 200px;
+    }
+
+    .register-complete-img {
+        width: unset;
+        height: unset;
+    }
+}

@@ -70,7 +70,7 @@ class Navigation extends Component {
                 <a className="icon-nav fa fa-facebook"></a>
                 <div className="nav-option">
                     <img className="users img-circle" src={emptyLogoUser}/>
-                    <p className="nav-register-login">ZAREJESTRUJ/ ZALOGUJ</p>
+                    <p onClick={this.props.setVisibleForm} className="nav-register-login">ZAREJESTRUJ/ ZALOGUJ</p>
                     <p className="nav-member">JESTEŚ JUŻ CZŁONKIEM?</p>
                 </div> 
             </div>

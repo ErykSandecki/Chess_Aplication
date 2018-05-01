@@ -4,6 +4,10 @@ body {
   height: 1500px;
 }
 
+input:hover {
+  cursor:url(Images/cursor-move.png), auto;
+}
+
 .App {
   transition: 1s;
   position: absolute;
@@ -32,6 +36,12 @@ body {
   opacity: 0.1;
 }
 
+.picture-1 {
+  float: left;
+  height: 700px;
+  width: 100%;
+}
+
 .parallax-1 {
   border-top: 2px solid #e6e6e6;
   background-image: url("./Images/picture-1.png");
@@ -42,8 +52,18 @@ body {
   background-size: cover;
 }
 
-.picture-1 {
+.picture-2 {
   float: left;
   height: 700px;
   width: 100%;
+}
+
+.parallax-2 {
+  border-top: 2px solid #e6e6e6;
+  background-image: url("./Images/picture-2.jpg");
+  min-height: 700px; 
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }

@@ -5,15 +5,17 @@ import Navigation from './Components/Navigation/index.js';
 import MenuLeftDrop from './Components/Menu-Left_Drop/index.js'
 import Footer from './Components/Footer/index.js'
 import Article from './Components/Article/index.js'
-
+import LoginRegister from './Components/Login-Register/index.js';
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
       hiddenBody: false,
+      visibleForm: false
     }
     this.showBody = this.showBody.bind(this);
     this.hideBody = this.hideBody.bind(this);
+    this.setVisibleForm = this.setVisibleForm.bind(this);
   }
 
   showBody() {
@@ -28,10 +30,21 @@ class App extends Component {
     })
   }
 
+  setVisibleForm() {
+    this.setState({
+      visibleForm: !this.state.visibleForm,
+      hiddenBody: false
+    })
+  }
   render() {
     return (
       <div className="App">
-        <MenuLeftDrop hideBody={this.hideBody}/>
+        <LoginRegister 
+          visibleForm={this.state.visibleForm}
+          setVisibleForm={this.setVisibleForm}/>
+        <MenuLeftDrop 
+          hideBody={this.hideBody}
+          setVisibleForm={this.setVisibleForm}/>
         <div className="cursorAnimateClick"/>
         <div className={this.state.hiddenBody ?
           "hide-body"
@@ -42,11 +55,15 @@ class App extends Component {
           hiddenBody={this.state.hiddenBody} 
           hideBody={this.hideBody}
           showBody={this.showBody}
+          setVisibleForm={this.setVisibleForm}
         />
         <Intro/>
-        <Article/>
         <div className="picture-1">
           <div className="parallax-1"></div>
+        </div>
+        <Article/>
+        <div className="picture-2">
+          <div className="parallax-2"></div>
         </div>
         <Footer/>
       </div>
@@ -54,5 +71,6 @@ class App extends Component {
   }
 }
 
-
 export default App;
+
+

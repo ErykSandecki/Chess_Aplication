@@ -13,7 +13,7 @@ export default class MenuLeftDrop extends Component {
                     </div>
                 </div>
                 <div className="login-register-drop">
-                    <p className="login-register-drop-text">ZAREJESTRUJ/ZALOGUJ</p>
+                    <p className="login-register-drop-text" onClick={this.props.setVisibleForm}>ZAREJESTRUJ/ZALOGUJ</p>
                 </div>
             </div>
         )
