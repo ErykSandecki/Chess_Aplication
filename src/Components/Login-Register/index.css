@@ -57,13 +57,22 @@
     margin-bottom: 20px;
 }
 
-.form-register-step-1-input {
+.form-login {
+    width: 60%;
+    margin-top: 50px;
+    height: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.form-register-step-1-input, .form-login-input {
     width: 60%;
     border: unset;
     font-size: 20px;
 }
 
-.form-register-step-1-input:focus {
+.form-register-step-1-input:focus, .form-login-input:focus {
     outline: unset;
 }
 
@@ -77,6 +86,13 @@
 }
 
 .button-register-login-next-step {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    width: 40%;
+    height: 80px;
+    border-radius: 40px;
+}
+
+.button-login {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     width: 40%;
     height: 80px;
@@ -152,6 +168,41 @@
     width: 20px;
 }
 
+.progress-bar-register-upload-picture {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.register-upload-input {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 15px;
+    margin-bottom: 280px;
+    width: 0px;
+}
+
+.choose-file {
+    cursor: unset;
+}
+
+.login-users-table{
+    position: fixed;
+    height: 90vh;
+    width: 90%;
+    left: 5%;
+    top: 5%;
+    background-color: white;
+    z-index: 3;
+    opacity: 0;
+    border-radius: 20px;
+    text-align: center;
+    transition: 0.5s;
+    display: none;
+}
+
 @media only screen and (min-width: 768px) { 
     .register-login-table{
         width: 80%;
@@ -186,6 +237,11 @@
         height: 35px;
         width: 35px;
     }
+
+    .login-users-table{
+        width: 80%;
+        left: 10%;
+    }
 }
 
 @media only screen and (min-width: 1024px) {
@@ -209,5 +265,10 @@
     .register-complete-img {
         width: unset;
         height: unset;
+    }
+
+    .login-users-table{
+        width: 50%;
+        left: 25%;
     }
 }

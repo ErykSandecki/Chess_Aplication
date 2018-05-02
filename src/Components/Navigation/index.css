@@ -65,6 +65,7 @@
         margin-top: 22.5px !important;
         margin-left: 3%;
         margin-right: 3%;
+        display: none;
     }
 
     .icon-nav:hover {
@@ -74,7 +75,6 @@
 
     .nav-option {
         float: right;
-        display: none;
     }
 
     .users {
@@ -82,6 +82,8 @@
         margin-top: 12.5px;
         margin-left: 10px;
         margin-right: 10px;
+        width: 50px;
+        height: 50px;
     }
 
     .nav-register-login {
@@ -91,6 +93,7 @@
         transition: unset;
         font-weight: bold;
         text-align: center;
+        font-size: 8px;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
 
@@ -106,21 +109,37 @@
         transition: unset;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         border-left: 1px solid #e6e6e6;
+        font-size: 8px;
     }
 
-  
-  /* Section user action */
+    .nav-register-logout{
+        width: 80px;
+        font-size: 12px;
+        line-height: 75px;
+        float: right;
+        font-weight: bold;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        opacity: 0.5;
+    }
 
+    .nav-register-text {
+        width: 80px;
+        font-size: 12px;
+        line-height: 75px;
+        float: right;
+        font-weight: bold;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .nav-register-logout:hover {
+        opacity: 1;
+    }
 
 /* Tablet */
 
 @media only screen and (min-width: 768px) { 
-    .nav-option {
-        display: block;
-        width: 360px;
-    }
 
-    .nav-register-login, .nav-member  {
+    .nav-register-login, .nav-member, .nav-register-text, .nav-register-logout  {
         width: 140px;
         font-size: 12px;
     }
@@ -128,19 +147,36 @@
     .icon-nav {
         margin-left: 2%;
         margin-right: 2%;
+        display: block;
+    }
+
+    .nav-register-logout {
+        width: 100px;
+        font-size: 12px;
+    }
+
+    .nav-register-text{
+        width: 60px;
+        font-size: 12px;
     }
    
 }
 
 /* Deskopt */
 @media only screen and (min-width: 1024px) {
-    .nav-option {
-        width: 460px;
-    }
-
     .nav-register-login, .nav-member  {
         width: 190px;
         font-size: 15px;    
+    }
+
+    .nav-register-logout {
+        width: 100px;
+        font-size: 15px;
+    }
+
+    .nav-register-text{
+        width: 60px;
+        font-size: 15px;
     }
 
     .icon-nav {

@@ -6,16 +6,20 @@ import MenuLeftDrop from './Components/Menu-Left_Drop/index.js'
 import Footer from './Components/Footer/index.js'
 import Article from './Components/Article/index.js'
 import LoginRegister from './Components/Login-Register/index.js';
+import {getImage} from './Firebase/index.js';
+
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
       hiddenBody: false,
-      visibleForm: false
+      visibleForm: false,
+      statusLogin: false
     }
     this.showBody = this.showBody.bind(this);
     this.hideBody = this.hideBody.bind(this);
     this.setVisibleForm = this.setVisibleForm.bind(this);
+    this.setStatusUsers = this.setStatusUsers.bind(this);
   }
 
   showBody() {
@@ -35,21 +39,38 @@ class App extends Component {
       visibleForm: !this.state.visibleForm,
       hiddenBody: false
     })
-    for(let i = 0; i<4;i++){
-      document.getElementsByClassName("form-register-step-1-input")[i].value="";
-    }
-    document.getElementsByClassName("form-register-step-1-input")[2].type="password";
-    document.getElementsByClassName("form-register-step-1-input")[3].type="password";
+    setTimeout(()=>{
+        for(let i = 0; i<4; i++) {
+            document.getElementsByClassName("form-register-step-1-input")[i].value ="";
+        }
+    },100);
   }
+
+  setStatusUsers() {
+   this.setState({
+     statusLogin: !this.state.statusLogin
+   })
+   
+   if(this.state.statusLogin) {
+      getImage();
+     }  
+  }
+
   render() {
     return (
       <div className="App">
         <LoginRegister 
           visibleForm={this.state.visibleForm}
-          setVisibleForm={this.setVisibleForm}/>
+          setVisibleForm={this.setVisibleForm}
+          statusLogin={this.state.statusLogin}
+          setStatusUsers={this.setStatusUsers}
+          />
         <MenuLeftDrop 
           hideBody={this.hideBody}
-          setVisibleForm={this.setVisibleForm}/>
+          setVisibleForm={this.setVisibleForm}
+          statusLogin={this.state.statusLogin}
+          setStatusUsers={this.setStatusUsers}
+          hideBody={this.hideBody}/>
         <div className="cursorAnimateClick"/>
         <div className={this.state.hiddenBody ?
           "hide-body"
@@ -61,6 +82,8 @@ class App extends Component {
           hideBody={this.hideBody}
           showBody={this.showBody}
           setVisibleForm={this.setVisibleForm}
+          statusLogin={this.state.statusLogin}
+          setStatusUsers={this.setStatusUsers}
         />
         <Intro/>
         <div className="picture-1">

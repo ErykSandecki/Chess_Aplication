@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './index.css';
 import emptyLogoUser from '../../Images/empty-logo-user.png';
+import {urlImage, data} from '../../Firebase/index.js';
 
 class Navigation extends Component {
     constructor(props){
@@ -69,9 +70,18 @@ class Navigation extends Component {
                 <a className="icon-nav fa fa-twitter"></a>
                 <a className="icon-nav fa fa-facebook"></a>
                 <div className="nav-option">
-                    <img className="users img-circle" src={emptyLogoUser}/>
-                    <p onClick={this.props.setVisibleForm} className="nav-register-login">ZAREJESTRUJ/ ZALOGUJ</p>
-                    <p className="nav-member">JESTEŚ JUŻ CZŁONKIEM?</p>
+                    {this.props.statusLogin ? 
+                        <React.Fragment>
+                            <img className="users img-circle" src={urlImage}/>
+                            <p className="nav-register-text">{data.name}</p>
+                            <p className="nav-register-logout" onClick={this.props.setStatusUsers}>Wyloguj</p>
+                        </React.Fragment>
+                        :<React.Fragment>
+                            <img className="users img-circle" src={emptyLogoUser}/>
+                            <p onClick={this.props.setVisibleForm} className="nav-register-login">ZAREJESTRUJ/ ZALOGUJ</p>
+                            <p className="nav-member">JESTEŚ JUŻ CZŁONKIEM?</p>
+                        </React.Fragment>        
+                    }   
                 </div> 
             </div>
         )
