@@ -15,13 +15,20 @@ export default class MenuLeftDrop extends Component {
                 <div className="login-register-drop">
                     <p className="login-register-drop-text" 
                         onClick={this.props.statusLogin ?
-                            ()=>{this.props.hideBody();
-                                this.props.setStatusUsers();}
-                            :this.props.showVisibleForm}>
+                                ()=>{this.props.hideBody();
+                                     this.props.setStatusUsers();}
+                                :this.props.showVisibleForm}>
                         {this.props.statusLogin ?
                          "WYLOGUJ"   
                         :"ZAREJESTRUJ/ZALOGUJ"}
                     </p>
+                </div>
+                <div className="friends-drop" 
+                    onClick={this.props.statusLogin ?
+                                () =>{this.props.showFriendsSection();
+                                      this.props.hideBody();}
+                                :this.props.showVisibleForm}>
+                    <p className="friends-drop-text" >ZNAJOMI</p>
                 </div>
             </div>
         )

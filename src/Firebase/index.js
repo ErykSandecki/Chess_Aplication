@@ -30,6 +30,30 @@ function updateData() {
     data = allScore[referenceUser];
 }
 
+// Donwload base all users //
+
+export function downloadBase() {
+    ref.on("value", gotData, errData);
+}
+
+function gotData(data){
+    let scores = data.val();
+    let keys = Object.keys(scores);
+    allScore = [];
+    for(let i = 0; i < keys.length; i++) {
+        allScore.push(scores[keys[i]]);
+    }
+    
+    if(setLogin) {
+        whenDownloadBase();
+        setLogin = false;
+    }
+}
+
+function errData(err) {
+    console.log(err);
+}
+
 // Download reference to image src and import image //
 
 export function sendReferencePicture(file){
@@ -131,6 +155,7 @@ var passwrd;
 var hideTableLoginReference;
 var setStatusUserReference;
 var setLogin = false;
+
 export function tryLoginUser(userName, password, hideTableLogin, setStatusUsers) {
     hideTableLoginReference = hideTableLogin;
     setStatusUserReference = setStatusUsers;
@@ -139,31 +164,6 @@ export function tryLoginUser(userName, password, hideTableLogin, setStatusUsers)
     setLogin = true;
     downloadBase();
 }
-
-// Donwload base all users //
-
-export function downloadBase() {
-    ref.on("value", gotData, errData);
-}
-
-function gotData(data){
-    let scores = data.val();
-    let keys = Object.keys(scores);
-    allScore = [];
-    for(let i = 0; i < keys.length; i++) {
-        allScore.push(scores[keys[i]]);
-    }
-    if(setLogin) {
-        whenDownloadBase();
-        setLogin = false;
-    }
-}
-
-function errData(err) {
-    console.log("Error!")
-    console.log(err);
-}
-
 
 function whenDownloadBase() {
     for(let i = 0; i <allScore.length; i++){

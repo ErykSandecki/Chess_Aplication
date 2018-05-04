@@ -50,15 +50,15 @@
       opacity: 1;
   }
 
-  .drop-menu:hover .nav-button-width {
+  .nav-drop-menu:hover .nav-button-width {
     width: 0% !important;
     transition: 0.5s;
   }
-  .drop-menu:hover .nav-text-button{
+  .nav-drop-menu:hover .nav-text-button{
       opacity: 0.3 !important;
   }
   
-    .icon-nav {
+    .nav-icon {
         float: left;
         background-color: white !important;
         opacity: 0.5;
@@ -68,7 +68,7 @@
         display: none;
     }
 
-    .icon-nav:hover {
+    .nav-icon:hover {
         color: black !important;
         opacity: 1;
     }
@@ -77,7 +77,7 @@
         float: right;
     }
 
-    .users {
+    .nav-users {
         float: right;
         margin-top: 12.5px;
         margin-left: 10px;
@@ -144,7 +144,7 @@
         font-size: 12px;
     }
 
-    .icon-nav {
+    .nav-icon {
         margin-left: 2%;
         margin-right: 2%;
         display: block;
@@ -179,7 +179,7 @@
         font-size: 15px;
     }
 
-    .icon-nav {
+    .nav-icon {
         margin-left: 4%;
         margin-right: 4%;
     }

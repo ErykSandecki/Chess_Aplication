@@ -8,6 +8,7 @@
 .language {
     float: left;
     line-height: 75px;
+    margin: 0px;
     margin-left: 15px; 
     text-decoration: underline;
 }
@@ -18,6 +19,7 @@
 
 .exit-drop-menu{
     float: right;
+    margin: 0px;
     line-height: 75px;
     margin-right: 5px;
 }
@@ -28,11 +30,13 @@
     margin-right: 15px;
 }
 
-.login-register-drop {
+.login-register-drop, 
+.friends-drop {
     border-bottom: 1px solid #e6e6e6;
 }
 
-.login-register-drop-text {
+.login-register-drop-text, 
+.friends-drop-text {
     text-align: center;
     margin:0px;
     font-size: 15px;
@@ -41,7 +45,7 @@
     opacity: 1;
 }
 
-.login-register-drop-text:hover{
+.login-register-drop-text:hover,
+.friends-drop-text:hover{
     opacity: 0.3;
 }
-

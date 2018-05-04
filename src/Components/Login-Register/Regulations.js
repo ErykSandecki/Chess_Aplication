@@ -12,6 +12,7 @@ export default class Regulations extends Component {
                 selector[i].style.marginLeft = "5px";
                 selector[i].style.marginTop = "10px";
             }
+            // eslint-disable-next-line
             else if(parseInt(selector[i].innerHTML.charAt(0)) > 0) {
                 selector[i].style.marginLeft = "15px";
             }

@@ -27,15 +27,22 @@ export default class LoginRegister extends Component {
     }
 
     componentWillReceiveProps() {
-        setTimeout(()=>{
+        let time;
+        if(this.props.hiddenBody) {
+            time = 1000;
+        }
+        else {
+            time = 0;
+        }
+        setTimeout(()=> {
             if(this.props.visibleForm) {
                 document.getElementsByClassName("login-register")[0].style.display= "block";
-                setTimeout(function(){
+                setTimeout(() => {
                     document.getElementsByClassName("register-login")[0].style.opacity = 0.9;
-                },10)
-                setTimeout(function(){
-                    document.getElementsByClassName("register-login-table")[0].style.opacity = 1;
-                },500)
+                    setTimeout(() =>{
+                        document.getElementsByClassName("register-login-table")[0].style.opacity = 1;
+                    },500)
+                },time)
             }
         },100)
     }
@@ -87,6 +94,8 @@ export default class LoginRegister extends Component {
     }
 
     showTableLogin(){
+        document.getElementsByClassName("arrow-up-wrong")[0].style.opacity = 0;
+        document.getElementsByClassName("table-wrong-password-login")[0].style.opacity = 0;
         document.getElementsByClassName("register-login-table")[0].style.opacity = 0;
         document.getElementsByClassName("login-users-table")[0].style.display = "block";
         setTimeout(function() {
@@ -123,35 +132,37 @@ export default class LoginRegister extends Component {
     render() {
         return(
             <div className="login-register">
-                <div className="register-login" onClick={this.hideRegisterLogin}/>
-                <div className="register-login-table">
-                    <img className="register-login-image" src={logoUser} alt="logo-user"/>
-                    <div className="exit-validation-register-login" onClick={this.hideRegisterLogin}>
-                        <span className="glyphicon glyphicon-remove"></span>
-                        <p className="exit-drop-menu">WYJŚCIE</p>
-                    </div> 
-                    <React.Fragment>
-                       {this.state.stepRegister === 0 ? 
-                       <Step1/>
-                       :this.state.stepRegister === 1 ?
-                            <Step2/>
-                            :this.state.stepRegister === 2 ?
+                <div className="register-login" onClick={()=>{
+                        this.hideTableLogin();
+                        this.hideRegisterLogin();}}/>
+                    <div className="register-login-table">
+                        <img className="register-login-image" src={logoUser} alt="logo-user"/>
+                        <div className="exit-validation-register-login" onClick={this.hideRegisterLogin}>
+                            <span className="glyphicon glyphicon-remove"/>
+                            <p className="exit-drop-menu">WYJŚCIE</p>
+                        </div> 
+                        <React.Fragment>
+                            {this.state.stepRegister === 0 ? 
+                            <Step1/>
+                            :this.state.stepRegister === 1 ?
+                                <Step2/>
+                                :this.state.stepRegister === 2 ?
                                     <Step3/>
                                     :this.state.stepRegister === 3 ?
                                         <Step4
-                                            uploadFile={this.uploadFile}
-                                            uploadPicture={this.uploadPicture}/>
+                                        uploadFile={this.uploadFile}
+                                        uploadPicture={this.uploadPicture}/>
                                         :null}
-                    </React.Fragment>
-                    <button className="button-register-login-next-step btn btn-success" onClick={this.nextStepRegistration}>Następny Krok</button>
-                    <div className="form-register-pointers">
-                        <div className="form-register-pointer"></div>
-                        <div className="form-register-pointer"></div>
-                        <div className="form-register-pointer"></div>
-                        <div className="form-register-pointer"></div>
+                        </React.Fragment>
+                        <button className="button-register-login-next-step btn btn-success" onClick={this.nextStepRegistration}>Następny Krok</button>
+                        <div className="form-register-pointers">
+                            <div className="form-register-pointer"></div>
+                            <div className="form-register-pointer"></div>
+                            <div className="form-register-pointer"></div>
+                            <div className="form-register-pointer"></div>
+                        </div>
+                        <p className="form-register-already-account" onClick={this.showTableLogin}>Masz już konto? Zaloguj się.</p>
                     </div>
-                    <p className="form-register-already-account" onClick={this.showTableLogin}>Masz już konto? Zaloguj się.</p>
-                </div>
                 <div className="register-complete">
                     <div className="register-complete-block">
                         <p className="register-complete-text">Rejestacja Przebiegła Pomyślnie!<img className="register-complete-img" src={completeLogo} alt="complete-logo"/></p>

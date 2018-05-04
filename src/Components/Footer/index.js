@@ -14,7 +14,7 @@ export default class Footer extends Component {
                 </div>
                 <div className="social-icon col-xs-12">
                     <div className="icon col-sm-2 col-sm-offset-3">
-                        <a  className="fa fa-facebook"></a>
+                        <a className="fa fa-facebook"></a>
                     </div>
                     <div className="icon col-sm-2">
                         <a className="fa fa-twitter"></a>

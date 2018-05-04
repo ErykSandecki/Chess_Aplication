@@ -6,7 +6,8 @@ import MenuLeftDrop from './Components/Menu-Left_Drop/index.js'
 import Footer from './Components/Footer/index.js'
 import Article from './Components/Article/index.js'
 import LoginRegister from './Components/Login-Register/index.js';
-import {getImage} from './Firebase/index.js';
+import Friends from './Components/Friends/index.js';
+
 
 class App extends Component {
   constructor(props){
@@ -14,13 +15,16 @@ class App extends Component {
     this.state = {
       hiddenBody: false,
       visibleForm: false,
-      statusLogin: false
+      statusLogin: false,
+      vissibleFriends: false
     }
     this.showBody = this.showBody.bind(this);
     this.hideBody = this.hideBody.bind(this);
     this.showVisibleForm = this.showVisibleForm.bind(this);
     this.hideVisibleForm = this.hideVisibleForm.bind(this);
     this.setStatusUsers = this.setStatusUsers.bind(this);
+    this.showFriendsSection = this. showFriendsSection.bind(this);
+    this.hideFriendsSection = this.hideFriendsSection.bind(this);
   }
 
   showBody() {
@@ -58,6 +62,18 @@ class App extends Component {
    })
   }
 
+  showFriendsSection() {
+    this.setState({
+      vissibleFriends: true
+    })
+  }
+
+  hideFriendsSection() {
+    this.setState({
+      vissibleFriends: false
+    })
+  }
+
   render() {
     return (
       <div className="App">
@@ -66,12 +82,17 @@ class App extends Component {
           showVisibleForm={this.showVisibleForm}
           statusLogin={this.state.statusLogin}
           setStatusUsers={this.setStatusUsers}
-          hideVisibleForm={this.hideVisibleForm}/>
+          hideVisibleForm={this.hideVisibleForm}
+          hiddenBody={this.state.hiddenBody}/>
+        <Friends 
+          vissibleFriends={this.state.vissibleFriends}
+          hideFriendsSection={this.hideFriendsSection}/>  
         <MenuLeftDrop 
           hideBody={this.hideBody}
           showVisibleForm={this. showVisibleForm}
           statusLogin={this.state.statusLogin}
-          setStatusUsers={this.setStatusUsers}/>
+          setStatusUsers={this.setStatusUsers}
+          showFriendsSection={this.showFriendsSection}/>
         <div className="cursorAnimateClick"/>
         <div className={this.state.hiddenBody ?
           "hide-body"

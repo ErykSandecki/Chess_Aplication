@@ -31,6 +31,8 @@
 
 .register-login-image {
     margin-top: 20px;
+    height: 150px;
+    width: 150px;
 }
 
 .exit-validation-register-login{ 

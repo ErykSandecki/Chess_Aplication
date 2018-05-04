@@ -1,0 +1,252 @@
+/* First mobile*/
+.friends {
+    display: none;
+    position: fixed;
+    z-index: 3;
+}
+
+.friends-background {
+    position: fixed;
+    z-index: 3;
+    height: 100vh;
+    width: 100%;
+    background-color: black;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.friends-table {
+    position: fixed;
+    height: 90vh;
+    width: 90%;
+    left: 5%;
+    top: 5%;
+    opacity: 0;
+    background-color: white;
+    z-index: 3;
+    border-radius: 20px;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.friends-users-profile-table {
+    position: relative;
+    width: 90%;
+    height: 20%;
+    display: block;
+    margin-top: 3.5%;
+    margin-left: 5%;
+    border-radius: 20px;
+    border: 1px solid #e6e6e6;
+}
+
+.friends-number {
+    background-color: blue;
+}
+
+.friends-ranking {
+    background-color: blueviolet;
+}
+
+.friends-image-users-section {
+    width: 100%;
+    height: 50px;
+}
+
+.friends-image-users {
+    width: 50px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+}
+
+.friends-name-users, 
+.friends-list-users,
+.friends-ranking-users {
+    margin-top: 2.5px;
+    border: 1px solid #e6e6e6;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 30px;
+    border-radius: 15px;
+}
+
+.friends-name-users-text, 
+.friends-list-users-text,
+.friends-ranking-users-text {
+    font-size: 15px;
+    font-weight: 900;
+    font-family: 'Lato', sans-serif;
+    line-height: 30px;
+}
+
+.friends-users {
+    position: relative;
+    width: 90%;
+    height: 30%;
+    display: block;
+    margin-top: 7.5%;
+    margin-left: 5%;
+    border-radius: 20px;
+    border: 1px solid #e6e6e6;
+}
+
+.friends-search-users {
+    position: relative;
+    width: 90%;
+    height: 30%;
+    display: block;
+    margin-top: 7.5%;
+    margin-left: 5%;
+    border: 1px solid #e6e6e6;
+    border-radius: 20px;
+}
+
+.friends-exit-section {
+    opacity: 0.5;
+}
+
+.friends-exit-section:hover {
+    opacity: 1;
+}
+
+.friends-exit-icon {
+    float: unset;
+    line-height: 30px;
+}
+
+.friends-exit {
+    margin-right: 5px;
+}
+
+@media only screen and (min-width: 768px) {
+.friends-users-profile-table {
+    height: 170px;
+    margin-top: 25px;
+}
+
+.friends-image-users-section {
+    float: left;
+    width: unset;
+    height: unset;
+}
+
+.friends-image-users {
+    width: 100px;
+    height: 100px;
+    margin-top: 35px;
+    margin-left: 50px;
+}
+
+.friends-name-users {
+    float: right;
+    width: 62%;
+    margin-right: 15px;
+    height: 50px;
+    margin-top: 25px;
+}
+
+.friends-name-users-text {
+    font-size: 20px;
+    line-height: 50px;
+}
+
+.friends-list-users,
+.friends-ranking-users{
+    float: right;
+    width: 30%;
+    margin-right: 15px;
+    height: 50px;
+    margin-top: 25px;
+}
+
+.friends-list-users-text,
+.friends-ranking-users-text {
+    font-size: 20px;
+    line-height: 50px;
+}
+
+.friends-users {
+    height: 250px;
+    margin-top: 20px;
+}
+
+.friends-search-users {
+    height: 250px;
+    margin-top: 20px;
+}
+}
+
+@media only screen and (min-width: 1024px) {
+    .friends-users-profile-table {
+        height: 30%;
+        float: left;
+        width: 25%;
+    }
+
+    .friends-image-users-section {
+        float: unset;
+        width: 100%;
+        height: 50px;
+    }
+    
+    .friends-image-users {
+        width: 50px;
+        height: 50px;
+        margin-top: 35px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .friends-name-users {
+        float: unset;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        height: 30px;
+    }
+    
+    .friends-name-users-text {
+        font-size: 15px;
+        line-height: 30px;
+    }
+
+    .friends-list-users,
+    .friends-ranking-users{
+        float: unset;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        height: 30px;
+        margin-top: 10px;
+    }
+
+    .friends-list-users-text,
+    .friends-ranking-users-text {
+        font-size: 15px;
+        line-height: 30px;
+    }
+    
+    .friends-users {
+        height: 30%;
+        float: left;
+        width: 50%;
+        margin-top: 25px;
+    }
+    
+    .friends-search-users {
+        height: 50%;
+        float: left;
+        width: 80%;
+        margin-top: 25px;
+    }
+
+    .friends-exit-section {
+        width: 100%;
+        float: left;
+        margin-top: 50px;
+    }
+}
+
