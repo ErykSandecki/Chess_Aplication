@@ -18,7 +18,8 @@ class App extends Component {
     }
     this.showBody = this.showBody.bind(this);
     this.hideBody = this.hideBody.bind(this);
-    this.setVisibleForm = this.setVisibleForm.bind(this);
+    this.showVisibleForm = this.showVisibleForm.bind(this);
+    this.hideVisibleForm = this.hideVisibleForm.bind(this);
     this.setStatusUsers = this.setStatusUsers.bind(this);
   }
 
@@ -34,26 +35,27 @@ class App extends Component {
     })
   }
 
-  setVisibleForm() {
+  showVisibleForm() {
     this.setState({
-      visibleForm: !this.state.visibleForm,
+      visibleForm: true,
       hiddenBody: false
     })
-    setTimeout(()=>{
-        for(let i = 0; i<4; i++) {
-            document.getElementsByClassName("form-register-step-1-input")[i].value ="";
-        }
-    },100);
+    for(let i = 0; i<4; i++) {
+      document.getElementsByClassName("form-register-input")[i].value ="";
+    }
+  }
+
+  hideVisibleForm() {
+    this.setState({
+      visibleForm: false,
+    })
   }
 
   setStatusUsers() {
    this.setState({
-     statusLogin: !this.state.statusLogin
+     statusLogin: !this.state.statusLogin,
+     visibleForm: false
    })
-   
-   if(this.state.statusLogin) {
-      getImage();
-     }  
   }
 
   render() {
@@ -61,16 +63,15 @@ class App extends Component {
       <div className="App">
         <LoginRegister 
           visibleForm={this.state.visibleForm}
-          setVisibleForm={this.setVisibleForm}
+          showVisibleForm={this.showVisibleForm}
           statusLogin={this.state.statusLogin}
           setStatusUsers={this.setStatusUsers}
-          />
+          hideVisibleForm={this.hideVisibleForm}/>
         <MenuLeftDrop 
           hideBody={this.hideBody}
-          setVisibleForm={this.setVisibleForm}
+          showVisibleForm={this. showVisibleForm}
           statusLogin={this.state.statusLogin}
-          setStatusUsers={this.setStatusUsers}
-          hideBody={this.hideBody}/>
+          setStatusUsers={this.setStatusUsers}/>
         <div className="cursorAnimateClick"/>
         <div className={this.state.hiddenBody ?
           "hide-body"
@@ -81,7 +82,7 @@ class App extends Component {
           hiddenBody={this.state.hiddenBody} 
           hideBody={this.hideBody}
           showBody={this.showBody}
-          setVisibleForm={this.setVisibleForm}
+          showVisibleForm={this.showVisibleForm}
           statusLogin={this.state.statusLogin}
           setStatusUsers={this.setStatusUsers}
         />

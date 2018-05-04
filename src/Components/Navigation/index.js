@@ -78,7 +78,7 @@ class Navigation extends Component {
                         </React.Fragment>
                         :<React.Fragment>
                             <img className="users img-circle" src={emptyLogoUser}/>
-                            <p onClick={this.props.setVisibleForm} className="nav-register-login">ZAREJESTRUJ/ ZALOGUJ</p>
+                            <p onClick={this.props.showVisibleForm} className="nav-register-login">ZAREJESTRUJ/ ZALOGUJ</p>
                             <p className="nav-member">JESTEŚ JUŻ CZŁONKIEM?</p>
                         </React.Fragment>        
                     }   

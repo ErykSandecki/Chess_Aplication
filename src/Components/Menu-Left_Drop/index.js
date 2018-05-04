@@ -17,7 +17,7 @@ export default class MenuLeftDrop extends Component {
                         onClick={this.props.statusLogin ?
                             ()=>{this.props.hideBody();
                                 this.props.setStatusUsers();}
-                            :this.props.setVisibleForm}>
+                            :this.props.showVisibleForm}>
                         {this.props.statusLogin ?
                          "WYLOGUJ"   
                         :"ZAREJESTRUJ/ZALOGUJ"}

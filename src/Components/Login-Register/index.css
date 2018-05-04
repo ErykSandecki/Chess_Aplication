@@ -1,6 +1,8 @@
 
 .login-register {
     display: none;
+    position: fixed;
+    z-index: 3;
 }
 
 .register-login {
@@ -48,7 +50,7 @@
     margin-top: 15px;
 }
 
-.form-register-step-1{ 
+.form-register{ 
     width: 60%;
     margin-top: 50px;
     height: 250px;
@@ -63,26 +65,26 @@
     height: 150px;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 20px;
 }
 
-.form-register-step-1-input, .form-login-input {
+.form-register-input, .form-login-input {
     width: 60%;
     border: unset;
     font-size: 20px;
 }
 
-.form-register-step-1-input:focus, .form-login-input:focus {
+.form-register-input:focus, .form-login-input:focus {
     outline: unset;
 }
 
-.form-register-step-1-underline{
+.form-register-underline{
     width: 60%;
     height: 1px;
     margin-left: auto;
     margin-right: auto;
     background-color: black;
     margin-bottom: 30px;
+    position: relative;
 }
 
 .button-register-login-next-step {
@@ -97,6 +99,15 @@
     width: 40%;
     height: 80px;
     border-radius: 40px;
+    position: relative;
+}
+
+.button-login:hover {
+    cursor: unset;
+}
+
+.button-login:focus {
+    outline: unset;
 }
 
 .button-register-login-next-step:hover {
@@ -126,7 +137,7 @@
 }
 
 .form-register-already-account{ 
-    margin-top: 10%;
+    margin-top: 5%;
     font-family: 'Lato', sans-serif;
     opacity: 0.5;
 }
@@ -173,14 +184,14 @@
     margin-left: auto;
     margin-right: auto;
     margin-top: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 }
 
 .register-upload-input {
     margin-left: auto;
     margin-right: auto;
     font-size: 15px;
-    margin-bottom: 280px;
+    margin-bottom: 10px;
     width: 0px;
 }
 
@@ -199,8 +210,71 @@
     opacity: 0;
     border-radius: 20px;
     text-align: center;
-    transition: 0.5s;
+    transition: 0.3s;
     display: none;
+}
+
+.text-register-add-picture {
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.register-regular {
+    border: 1px solid black;
+    width: 80%;
+    height: 200px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    overflow: auto;
+    margin-bottom: 20px;
+}
+
+.save-password {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.remember-password {
+    margin-top: 25px;
+    margin-bottom: 200px;
+    text-align: center;
+    opacity: 0.5;
+}
+
+.form-login-already-account {
+    opacity: 0.5;
+}
+
+.form-login-already-account:hover, .remember-password:hover {
+    opacity: 1;
+}
+
+.table-wrong-password-login {
+    background-color: rgb(217, 83, 79) ;
+    position: absolute;
+    color: white;
+    font-family: 'Lato', sans-serif;
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+    font-size: 11px;
+    top: 15px;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    z-index: 1;
+    opacity: 0;
+    transition: 0.5s;
+}
+.arrow-up-wrong{
+    position: absolute;
+    z-index: 0;
+    z-index: 2;
+    top: 2px;
+    left: 10px;
+    transition: 0.5s;
+    opacity: 0;
 }
 
 @media only screen and (min-width: 768px) { 
@@ -241,6 +315,7 @@
     .login-users-table{
         width: 80%;
         left: 10%;
+        transition: 0.5s;
     }
 }
 
