@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './index.css';
 import emptyLogoUser from '../../Images/empty-logo-user.png';
-import {urlImage, data} from '../../Firebase/index.js';
+import {data} from '../../Firebase/index.js';
 import MenuLeftDrop from '../Menu-Left_Drop';
 
 class Navigation extends Component {
@@ -75,7 +75,7 @@ class Navigation extends Component {
                 <div className="nav-option">
                     {this.props.statusLogin ? 
                         <React.Fragment>
-                            <img className="nav-users img-circle" src={urlImage}/>
+                            <img className="nav-users img-circle" src={data.pictureUrl}/>
                             <p className="nav-register-text">{data.name}</p>
                             <p className="nav-register-logout" onClick={this.props.setStatusUsers}>Wyloguj</p>
                         </React.Fragment>

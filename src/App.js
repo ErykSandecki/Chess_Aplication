@@ -7,7 +7,7 @@ import Footer from './Components/Footer/index.js'
 import Article from './Components/Article/index.js'
 import LoginRegister from './Components/Login-Register/index.js';
 import Friends from './Components/Friends/index.js';
-
+import {updateAndDownloadBase} from './Firebase/index.js';
 
 class App extends Component {
   constructor(props){
@@ -16,7 +16,11 @@ class App extends Component {
       hiddenBody: false,
       visibleForm: false,
       statusLogin: false,
-      vissibleFriends: false
+      vissibleFriends: false,
+      marginLeftApp: 'unset',
+      opacityMenuDropLeft: 0,
+      displayMenuDropLeft: 'none',
+      widthMenuDropLeft: 'unset',
     }
     this.showBody = this.showBody.bind(this);
     this.hideBody = this.hideBody.bind(this);
@@ -27,16 +31,16 @@ class App extends Component {
     this.hideFriendsSection = this.hideFriendsSection.bind(this);
   }
 
+  componentDidMount() {
+    updateAndDownloadBase();
+  }
+
   showBody() {
-    this.setState({
-      hiddenBody: true
-    })
+    this.setState({hiddenBody: true})
   }
 
   hideBody() {
-    this.setState({
-      hiddenBody: false
-    })
+    this.setState({hiddenBody: false})
   }
 
   showVisibleForm() {
@@ -44,15 +48,10 @@ class App extends Component {
       visibleForm: true,
       hiddenBody: false
     })
-    for(let i = 0; i<4; i++) {
-      document.getElementsByClassName("form-register-input")[i].value ="";
-    }
   }
 
   hideVisibleForm() {
-    this.setState({
-      visibleForm: false,
-    })
+    this.setState({visibleForm: false})
   }
 
   setStatusUsers() {
@@ -63,20 +62,17 @@ class App extends Component {
   }
 
   showFriendsSection() {
-    this.setState({
-      vissibleFriends: true
-    })
+    this.setState({vissibleFriends: true})
   }
 
   hideFriendsSection() {
-    this.setState({
-      vissibleFriends: false
-    })
+    this.setState({vissibleFriends: false})
   }
 
   render() {
+    const styleApp = {marginLeft: this.state.marginLeftApp}
     return (
-      <div className="App">
+      <div className="App" style={styleApp}>
         <LoginRegister 
           visibleForm={this.state.visibleForm}
           showVisibleForm={this.showVisibleForm}
@@ -92,13 +88,13 @@ class App extends Component {
           showVisibleForm={this. showVisibleForm}
           statusLogin={this.state.statusLogin}
           setStatusUsers={this.setStatusUsers}
-          showFriendsSection={this.showFriendsSection}/>
+          showFriendsSection={this.showFriendsSection}
+          />
         <div className="cursorAnimateClick"/>
         <div className={this.state.hiddenBody ?
           "hide-body"
           :""}
-        onClick={this.hideBody}>
-        </div>
+          onClick={this.hideBody}/>
         <Navigation
           hiddenBody={this.state.hiddenBody} 
           hideBody={this.hideBody}
@@ -106,7 +102,8 @@ class App extends Component {
           showVisibleForm={this.showVisibleForm}
           statusLogin={this.state.statusLogin}
           setStatusUsers={this.setStatusUsers}
-        />
+          setStyleMarginLeftApp={this.setStyleMarginLeftApp}
+          setStyleMenuDropLeft={this.setStyleMenuDropLeft}/>
         <Intro/>
         <div className="picture-1">
           <div className="parallax-1"></div>

@@ -20,10 +20,10 @@ export default class Footer extends Component {
                         <a className="fa fa-twitter"></a>
                     </div>
                     <div className="icon col-sm-2">
-                        <a className=" fa fa-linkedin"></a>
+                        <a className="fa fa-linkedin"></a>
                     </div>
                 </div>
-                <div className=" col-xs-12 footer-down">
+                <div className="col-xs-12 footer-down">
                     <p className="footer-down-text">Copyright 2018. ChessWebsite</p>
                     <p className="footer-down-text">Webiste by Eryk Sandecki</p>
                 </div>

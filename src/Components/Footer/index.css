@@ -7,7 +7,7 @@ footer {
 }
 
 footer:hover {
-    cursor:url(../../Images/cursor-move-white.png), auto;
+    cursor: url(../../Images/cursor-move-white.png), auto;
 }
 
 .footer-menu-text {
@@ -27,7 +27,7 @@ footer:hover {
     text-align: center;
 }
 
-.fa-facebook , .fa-twitter, .fa-linkedin {
+.fa-facebook, .fa-twitter, .fa-linkedin {
     color: #2d3436;
     background-color: gray;
     padding: 5px;
@@ -53,10 +53,12 @@ footer:hover {
     footer {
         height: 250px;
     }
+
     .footer-menu-text {
         margin-top: 50px;
     }
-    .fa{
+
+    .fa {
         font-size: 30px;
     }
 }

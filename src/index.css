@@ -1,11 +1,10 @@
-
 body {
-  cursor:url(Images/cursor-move.png), auto;
+  cursor: url(Images/cursor-move.png), auto;
   height: 1500px;
 }
 
 input:hover {
-  cursor:url(Images/cursor-move.png), auto;
+  cursor: url(Images/cursor-move.png), auto;
 }
 
 .App {
@@ -14,8 +13,7 @@ input:hover {
   width: 100%;
 }
 
-.menu-drop-left{
-  width: 0%;
+.menu-drop-left {
   background-color: white;
   position: fixed;
   height: 100vh;
@@ -23,7 +21,6 @@ input:hover {
   left: 0px;
   transition: 0.5s;
   opacity: 0;
-  display: none;
 }
 
 .hide-body {
@@ -45,7 +42,7 @@ input:hover {
 .parallax-1 {
   border-top: 2px solid #e6e6e6;
   background-image: url("./Images/picture-1.png");
-  min-height: 700px; 
+  min-height: 700px;
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
@@ -61,7 +58,7 @@ input:hover {
 .parallax-2 {
   border-top: 2px solid #e6e6e6;
   background-image: url("./Images/picture-2.jpg");
-  min-height: 700px; 
+  min-height: 700px;
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;

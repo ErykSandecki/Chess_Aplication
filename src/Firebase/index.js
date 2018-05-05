@@ -3,10 +3,13 @@ import firebase from 'firebase';
 
 var newId = 0;
 var allScore = [];
+export var allUsers;
 export var data;
+export var urlImage;
+export var allUrl;
 var fileName;
 var storageRef;
-export var urlImage;
+
 var config = {
     apiKey: "AIzaSyDSK_jiqW71rTExUfsHBHFMHP9-eIlJkoM",
     authDomain: "chess-base-aa6a9.firebaseapp.com",
@@ -28,9 +31,25 @@ var referenceUser;
 
 function updateData() {
     data = allScore[referenceUser];
+    allUsers = allScore;
 }
 
-// Donwload base all users //
+export function updateAndDownloadBase () {
+    ref.on("value", donwloadData, errData);
+}
+
+function donwloadData(data) {
+    let scores = data.val();
+    let keys = Object.keys(scores);
+    allScore = [];
+    for(let i = 0; i < keys.length; i++) {
+        allScore.push(scores[keys[i]]);
+    }
+    allUsers = allScore;
+    console.log(allScore);
+}
+
+// Donwload base all users when use Login or Register //
 
 export function downloadBase() {
     ref.on("value", gotData, errData);
@@ -42,11 +61,6 @@ function gotData(data){
     allScore = [];
     for(let i = 0; i < keys.length; i++) {
         allScore.push(scores[keys[i]]);
-    }
-    
-    if(setLogin) {
-        whenDownloadBase();
-        setLogin = false;
     }
 }
 
@@ -64,10 +78,8 @@ function getImage(status){
     var starsRef = pathReference.child(data.nameUser);
     starsRef.getDownloadURL().then(function(url) {
     urlImage = url;
-    if(status === "login") {
-        hideTableLoginReference();
-        setStatusUserReference();
-    }
+    data.pictureUrl = url;
+    ref.push(data);
     }).catch(function(error) {
     switch (error.code) {
         case 'storage/object_not_found':
@@ -108,9 +120,10 @@ export function addUser(value, hideRegisterLogin, setStatusUser) {
         city: value[7],
         region: value[8],
         phone: value[9],
-        friends: [newId]
+        friends: [newId],
+        ranking: 0,
+        pictureUrl: '',
     }
-    ref.push(data);
     if(fileName) {
         storageRef = firebase.storage().ref(data.nameUser);
         var task = storageRef.put(fileName);
@@ -136,50 +149,39 @@ export function addUser(value, hideRegisterLogin, setStatusUser) {
 
 function viewCompleteRegistration(hideRegisterLogin) {
     document.getElementsByClassName("register-login-table")[0].style.opacity = 0;
-    document.getElementsByClassName("register-complete")[0].style.display= "block";
+    document.getElementsByClassName("register-login-register-complete")[0].style.display= "block";
     setTimeout(function(){
-        document.getElementsByClassName("register-complete-block")[0].style.opacity = 1;
+        document.getElementsByClassName("register-login-register-complete-block")[0].style.opacity = 1;
     },500);
     setTimeout(function(){
-        document.getElementsByClassName("register-complete-block")[0].style.opacity = 0;
+        document.getElementsByClassName("register-login-register-complete-block")[0].style.opacity = 0;
     },2500);
     setTimeout(()=>{
-        document.getElementsByClassName("register-complete")[0].style.display= "none";
+        document.getElementsByClassName("register-login-register-complete")[0].style.display= "none";
         hideRegisterLogin();
     },3000);     
 }
 
 //Section Login user //
-var user;
-var passwrd;
-var hideTableLoginReference;
-var setStatusUserReference;
-var setLogin = false;
 
-export function tryLoginUser(userName, password, hideTableLogin, setStatusUsers) {
-    hideTableLoginReference = hideTableLogin;
-    setStatusUserReference = setStatusUsers;
-    user = userName;
-    passwrd = password;
-    setLogin = true;
-    downloadBase();
-}
-
-function whenDownloadBase() {
+export function tryLoginUser(userName, password, hideTableLogin, setStatusUsers) {   
     for(let i = 0; i <allScore.length; i++){
-        if(user === allScore[i].nameUser && passwrd === allScore[i].password) {
-            document.getElementsByClassName("arrow-up-wrong")[0].style.opacity = 0;
-            document.getElementsByClassName("table-wrong-password-login")[0].style.opacity = 0;
-            document.getElementsByClassName("form-login-input")[0].value = "";
-            document.getElementsByClassName("form-login-input")[1].value = "";
+        if(userName === allScore[i].nameUser && password === allScore[i].password) {
+            document.getElementsByClassName("register-login-arrow-up-wrong")[0].style.opacity = 0;
+            document.getElementsByClassName("register-login-table-wrong-password-login")[0].style.opacity = 0;
             referenceUser = i;
             updateData();
-            getImage('login');
+            hideTableLogin();
+            setTimeout(()=>{
+                setStatusUsers();
+                document.getElementsByClassName("register-login-form-login-input")[0].value = "";
+                document.getElementsByClassName("register-login-form-login-input")[1].value = "";
+            },500);
             return;
         }
         else {
-            document.getElementsByClassName("arrow-up-wrong")[0].style.opacity = 1;
-            document.getElementsByClassName("table-wrong-password-login")[0].style.opacity = 1;
+            document.getElementsByClassName("register-login-arrow-up-wrong")[0].style.opacity = 1;
+            document.getElementsByClassName("register-login-table-wrong-password-login")[0].style.opacity = 1;
         }
     }
 }
