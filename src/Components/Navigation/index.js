@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './index.css';
 import emptyLogoUser from '../../Images/empty-logo-user.png';
 import {data} from '../../Firebase/index.js';
-import MenuLeftDrop from '../Menu-Left_Drop';
 
 class Navigation extends Component {
     constructor(props){

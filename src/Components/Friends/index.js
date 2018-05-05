@@ -1,7 +1,7 @@
 import './index.css';
 import React, { Component } from 'react';
 import users from '../../Images/users-login.png';
-import {urlImage, data, allUsers, allUrl} from '../../Firebase/index.js';
+import {data, allUsers} from '../../Firebase/index.js';
 import emptylogouser from '../../Images/empty-logo-user.png';
 export default class Friends extends Component {
     constructor(props) {
@@ -13,6 +13,8 @@ export default class Friends extends Component {
             styleYourFriends: [],
             styleSearchFriends: [],
             friendsSearch: false,
+            filterSearch: 10,
+            nextTop: 400,
         }
         this.hideFriendsSection = this.hideFriendsSection.bind(this);
         this.showFriendsSection = this.showFriendsSection.bind(this);
@@ -21,13 +23,36 @@ export default class Friends extends Component {
     }
 
     componentDidMount() {
-        this.showYourFriends();
+        this.showYourFriends(); 
+        var div = document.getElementsByClassName('friends-window-users')[0];
+        div.addEventListener('scroll', () =>{ 
+            if(div.scrollTop > this.state.nextTop) {
+                for(let i = 0; i < this.state.filterSearch;i++) {
+                    document.getElementsByClassName("friends-users-list")[i].style.filter = "blur(1px)";
+                }
+                document.getElementsByClassName("friends-loader")[0].style.display = "block";
+                setTimeout(()=>{
+                    for(let i = 0; i < this.state.filterSearch;i++) {
+                        document.getElementsByClassName("friends-users-list")[i].style.filter = "blur(0px)";
+                    }
+                    this.setState({
+                        filterSearch: this.filterSearch + 10,
+                        nextTop: this.state.nextTop + 400,
+                    });
+                    document.getElementsByClassName("friends-loader")[0].style.display = "none";
+                },1000);
+            }
+        })
     }
 
     componentWillReceiveProps() {
         setTimeout(()=> {
             if(this.props.vissibleFriends) {
                 this.showFriendsSection();
+                this.setState({
+                    filterSearch: 10,
+                    nextTop: 400,
+                })
             }
         },1);
     }
@@ -157,9 +182,13 @@ export default class Friends extends Component {
                             <input placeholder="Imię" className="friends-search-username"/>
                             <button className="friends-search-advanced">Wyszukiwanie zaawansowane</button>
                             <div className="friends-window-users">
+                                <div className="friends-loader"></div>
                                 {this.state.friendsSearch ? 
                                     this.props.vissibleFriends ? 
                                         allUsers.map((user, index) => {
+                                            if(index >= this.state.filterSearch){
+                                                return;
+                                            }
                                             return user.nameUser !== data.nameUser ? 
                                                 <div key={index} className="friends-users-list">
                                                     <img className="friends-users-list-image img-circle" src={user.pictureUrl}/>

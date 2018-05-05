@@ -1,12 +1,9 @@
-import React from 'react';
 import firebase from 'firebase';
 
 var newId = 0;
 var allScore = [];
 export var allUsers;
 export var data;
-export var urlImage;
-export var allUrl;
 var fileName;
 var storageRef;
 
@@ -31,7 +28,13 @@ var referenceUser;
 
 function updateData() {
     data = allScore[referenceUser];
-    allUsers = allScore;
+    allUsers = [];
+    for(let i = 0; i < allScore.length;i++) {
+        if(data.nameUser !== allScore[i].nameUser){
+            allUsers.push(allScore[i])
+        }
+    }
+    allUsers.push(data);
 }
 
 export function updateAndDownloadBase () {
@@ -49,21 +52,6 @@ function donwloadData(data) {
     console.log(allScore);
 }
 
-// Donwload base all users when use Login or Register //
-
-export function downloadBase() {
-    ref.on("value", gotData, errData);
-}
-
-function gotData(data){
-    let scores = data.val();
-    let keys = Object.keys(scores);
-    allScore = [];
-    for(let i = 0; i < keys.length; i++) {
-        allScore.push(scores[keys[i]]);
-    }
-}
-
 function errData(err) {
     console.log(err);
 }
@@ -74,12 +62,38 @@ export function sendReferencePicture(file){
     fileName = file;
 }
 
-function getImage(status){
+// Donwload reference users //
+
+function donwloadIdANewUser(){
+    ref.on("value", downloadId, errData);
+}
+
+function downloadId(score) {
+    let scores = score.val();
+    let keys = Object.keys(scores);
+    for(let i = 0; i < keys.length; i++) {
+        if(data.nameUser === scores[keys[i]].nameUser){
+           data.id = keys[i];
+        }
+    }
+    database.ref('users').child(data.id).set(data);
+}
+
+function sortUsers() {
+    for(let i = 0; i < allScore.length;i++) {
+        
+    }
+    console.log(allScore);
+}
+
+// Upload picture and download url //
+
+function uploadImage(status){
     var starsRef = pathReference.child(data.nameUser);
     starsRef.getDownloadURL().then(function(url) {
-    urlImage = url;
     data.pictureUrl = url;
     ref.push(data);
+    donwloadIdANewUser();
     }).catch(function(error) {
     switch (error.code) {
         case 'storage/object_not_found':
@@ -99,17 +113,9 @@ function getImage(status){
 
 // Section Register new user //
 
-
-function donwloadNewId(data){
-    let scores = data.val();
-    let keys = Object.keys(scores);
-    newId = keys.length - 1;
-}
-
 export function addUser(value, hideRegisterLogin, setStatusUser) {
-    ref.on("value", donwloadNewId, errData);
     data = {
-        id: newId + 1,
+        id: '',
         nameUser: value[0],
         email: value[1],
         password: value[2],
@@ -133,7 +139,7 @@ export function addUser(value, hideRegisterLogin, setStatusUser) {
            if(percentage === 100) {
                setTimeout(function(){
                 viewCompleteRegistration(hideRegisterLogin);
-                getImage();
+                uploadImage();
                 setStatusUser();
                },1000);
            }
@@ -185,3 +191,5 @@ export function tryLoginUser(userName, password, hideTableLogin, setStatusUsers)
         }
     }
 }
+
+
