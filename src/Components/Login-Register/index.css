@@ -37,26 +37,30 @@
 
 .login-register-glyphicon-remove {
     float: right;
-    line-height: 75px;
+    line-height: 50px;
     margin-right: 15px;
 }
 
 .login-register-exit-menu {
     float: right;
     margin: 0px;
-    line-height: 75px;
+    line-height: 50px;
     margin-right: 5px;
 }
 
 .register-login-exit-validation {
     position: absolute;
     right: 2%;
-    top: 4%;
-    opacity: 0.5;
+    top: 2%;
+    border: 1px solid orange;
+    border-radius: 10px;
+    width: 120px;
+    background-color: orange;
+    height: 50px;
 }
 
 .register-login-exit-validation:hover {
-    opacity: 1;
+    filter: drop-shadow(8px 8px 10px gray);
 }
 
 .register-login-text {
@@ -108,6 +112,14 @@
     border-radius: 40px;
 }
 
+.register-login-button-register-login-last-step {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width: 40%;
+    height: 80px;
+    border-radius: 40px;
+    margin-top: 75px;
+}
+
 .register-login-button-login {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     width: 40%;
@@ -116,19 +128,16 @@
     position: relative;
 }
 
-.register-login-button-login:hover {
+.register-login-button-login:hover,
+.register-login-button-register-login-next-step:hover,
+.register-login-button-register-login-last-step:hover {
     cursor: unset;
 }
 
-.register-login-button-login:focus {
-    outline: unset;
-}
-
-.register-login-button-register-login-next-step:hover {
-    cursor: unset;
-}
-
-.register-login-button-register-login-next-step:focus {
+.register-login-button-login:focus,
+.register-login-button-register-login-next-step:focus,
+.register-login-button-register-login-last-step:focus
+ {
     outline: unset;
 }
 
@@ -153,11 +162,10 @@
 .register-login-form-register-already-account {
     margin-top: 5%;
     font-family: 'Lato', sans-serif;
-    opacity: 0.5;
 }
 
 .register-login-form-register-already-account:hover {
-    opacity: 1;
+    text-decoration: underline;
 }
 
 .register-login-register-complete {
@@ -194,7 +202,7 @@
 }
 
 .register-login-progress-bar-register-upload-picture {
-    width: 80%;
+    width: 50%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
@@ -204,30 +212,22 @@
 .register-login-register-upload-input {
     margin-left: auto;
     margin-right: auto;
-    font-size: 15px;
+    font-size: 0px;
     margin-bottom: 10px;
     width: 0px;
 }
 
 .register-login-choose-file {
     cursor: unset;
+    height: 50px;
+    width: 250px;
 }
 
 .register-login-text-register-add-picture {
     margin-bottom: 20px;
     font-weight: bold;
-}
-
-.register-login-register-regular {
-    border: 1px solid black;
-    width: 80%;
-    height: 200px;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: left;
-    overflow: auto;
-    margin-bottom: 20px;
+    margin-top: 50px;
+    font-size: 20px;
 }
 
 .register-login-login-users-table {
@@ -246,19 +246,27 @@
 }
 
 .register-login-save-password {
-    text-align: left;
-    margin-left: 32%;
+    text-align: center;
+    font-size: 15px;
 }
 
 .register-login-remember-password {
     margin-top: 15px;
-    margin-bottom: 150px;
-    text-align: left;
-    margin-left: 32%;
+    margin-bottom: 90px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.register-login-remember-password:hover {
+    text-decoration: underline;
 }
 
 .register-login-form-login-already-account {
-    margin-top: 50px;
+    margin-top: 120px;
+}
+
+.register-login-form-login-already-account:hover {
+    text-decoration: underline;
 }
 
 .register-login-table-wrong-password-login {
@@ -276,6 +284,7 @@
     z-index: 1;
     opacity: 0;
     transition: 0.5s;
+    display: none;
 }
 
 .register-login-arrow-up-wrong {
@@ -286,6 +295,19 @@
     left: 10px;
     transition: 0.5s;
     opacity: 0;
+}
+
+.register-login-check-save-password {
+    height: 12px;
+    width: 12px;
+}
+
+.register-login-regular {
+    color: #0081AF;
+}
+
+.register-login-regular:hover {
+    text-decoration: underline;
 }
 
 @media only screen and (min-width: 768px) {

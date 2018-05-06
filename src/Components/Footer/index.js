@@ -8,19 +8,21 @@ export default class Footer extends Component {
                 <div className="col-xs-10 col-xs-offset-1">
                     <p className="footer-menu-text col-xs-12 col-sm-offset-1 col-sm-2">Kontakt</p>
                     <p className="footer-menu-text col-xs-12 col-sm-2">FAQs</p>
-                    <p className="footer-menu-text col-xs-12 col-sm-2">Regulamin</p>
+                    <p className="footer-menu-text col-xs-12 col-sm-2"
+                       onClick={this.props.showRegularSection}
+                       >Regulamin</p>
                     <p className="footer-menu-text col-xs-12 col-sm-2">Polityka</p>
                     <p className="footer-menu-text col-xs-12 col-sm-2">Członkowie</p>
                 </div>
                 <div className="social-icon col-xs-12">
                     <div className="icon col-sm-2 col-sm-offset-3">
-                        <a className="fa fa-facebook"></a>
+                        <span className="fa fa-facebook"></span>
                     </div>
                     <div className="icon col-sm-2">
-                        <a className="fa fa-twitter"></a>
+                        <span className="fa fa-twitter"></span>
                     </div>
                     <div className="icon col-sm-2">
-                        <a className="fa fa-linkedin"></a>
+                        <span className="fa fa-linkedin"></span>
                     </div>
                 </div>
                 <div className="col-xs-12 footer-down">

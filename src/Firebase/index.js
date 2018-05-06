@@ -78,14 +78,6 @@ function downloadId(score) {
     }
     database.ref('users').child(data.id).set(data);
 }
-
-function sortUsers() {
-    for(let i = 0; i < allScore.length;i++) {
-        
-    }
-    console.log(allScore);
-}
-
 // Upload picture and download url //
 
 function uploadImage(status){
@@ -107,6 +99,8 @@ function uploadImage(status){
 
         case 'storage/unknown':
             break;
+        default :
+            break;    
     }
     });
 }
@@ -145,8 +139,6 @@ export function addUser(value, hideRegisterLogin, setStatusUser) {
            }
         }, function error(err) {
         })
-        function complete() {
-        }
     }
     else {
         viewCompleteRegistration(hideRegisterLogin);
@@ -186,8 +178,20 @@ export function tryLoginUser(userName, password, hideTableLogin, setStatusUsers)
             return;
         }
         else {
-            document.getElementsByClassName("register-login-arrow-up-wrong")[0].style.opacity = 1;
-            document.getElementsByClassName("register-login-table-wrong-password-login")[0].style.opacity = 1;
+            document.getElementsByClassName("register-login-arrow-up-wrong")[0].style.display = "block";
+            document.getElementsByClassName("register-login-table-wrong-password-login")[0].style.display = "block";
+            setTimeout(()=>{
+                document.getElementsByClassName("register-login-arrow-up-wrong")[0].style.opacity = 1;
+                document.getElementsByClassName("register-login-table-wrong-password-login")[0].style.opacity = 1;
+                setTimeout(() => {
+                    document.getElementsByClassName("register-login-arrow-up-wrong")[0].style.opacity = 0;
+                    document.getElementsByClassName("register-login-table-wrong-password-login")[0].style.opacity = 0;
+                    setTimeout(() => {
+                        document.getElementsByClassName("register-login-arrow-up-wrong")[0].style.display = "none";
+                        document.getElementsByClassName("register-login-table-wrong-password-login")[0].style.display = "none";
+                    },500);
+                },2000);
+            },100)
         }
     }
 }

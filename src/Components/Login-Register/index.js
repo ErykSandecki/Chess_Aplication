@@ -51,12 +51,14 @@ export default class LoginRegister extends Component {
     }
     
     hideRegisterLogin() {
-         this.setState({
-            stepRegister : 0,
-        })
         this.props.hideVisibleForm();
         this.hideBlockRegisterLogin();
         dateRegister = [];
+        setTimeout(()=>{
+            this.setState({
+                stepRegister : 0,
+            })
+        },500);
     }
 
     hideBlockRegisterLogin() {
@@ -103,6 +105,8 @@ export default class LoginRegister extends Component {
     showTableLogin(){
         document.getElementsByClassName("register-login-arrow-up-wrong")[0].style.opacity = 0;
         document.getElementsByClassName("register-login-table-wrong-password-login")[0].style.opacity = 0;
+        document.getElementsByClassName("register-login-arrow-up-wrong")[0].style.display = "none";
+        document.getElementsByClassName("register-login-table-wrong-password-login")[0].style.display = "none";
         document.getElementsByClassName("register-login-table")[0].style.opacity = 0;
         document.getElementsByClassName("register-login-login-users-table")[0].style.display = "block";
         setTimeout(function() {
@@ -158,10 +162,13 @@ export default class LoginRegister extends Component {
                                     :this.state.stepRegister === 3 ?
                                         <Step4
                                         uploadFile={this.uploadFile}
-                                        uploadPicture={this.uploadPicture}/>
+                                        uploadPicture={this.uploadPicture}
+                                        showRegularSection={this.props.showRegularSection}/>
                                         :null}
                         </React.Fragment>
-                        <button className="register-login-button-register-login-next-step btn btn-success" onClick={this.nextStepRegistration}>Następny Krok</button>
+                        {this.state.stepRegister !== 3 ?
+                             <button className={"register-login-button-register-login-next-step btn btn-success"} onClick={this.nextStepRegistration}>Następny Krok</button>
+                            :<button className={"register-login-button-register-login-last-step btn btn-success"} onClick={this.nextStepRegistration}>Zarejestruj</button>}
                         <div className="register-login-form-register-pointers">
                             <div className="register-login-form-register-pointer"></div>
                             <div className="register-login-form-register-pointer"></div>
@@ -194,10 +201,10 @@ export default class LoginRegister extends Component {
                         </div>
                     </div>
                     <div className="register-login-save-password">
-                        <input type="checkbox"/>
+                        <input className="register-login-check-save-password" type="checkbox"/>
                         <span > Zapamiętaj moje hasło.</span>
                     </div>
-                    <p className="register-login-remember-password">Przypomnij mi hasło.</p>
+                    <p className="register-login-remember-password">* Przypomnij mi hasło.</p>
                     <button className="register-login-button-login btn btn-primary" onClick={this.loginUsers}>Zaloguj</button>
                     <p onClick={this.goCreateAccountfromLoginTable} className="register-login-form-login-already-account">Nie masz jeszcze konta? Zarejestruj się.</p>
                 </div>

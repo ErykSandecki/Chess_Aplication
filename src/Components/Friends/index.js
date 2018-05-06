@@ -1,8 +1,6 @@
 import './index.css';
 import React, { Component } from 'react';
-import users from '../../Images/users-login.png';
 import {data, allUsers} from '../../Firebase/index.js';
-import emptylogouser from '../../Images/empty-logo-user.png';
 export default class Friends extends Component {
     constructor(props) {
         super(props);
@@ -10,39 +8,23 @@ export default class Friends extends Component {
             displayFriends: 'none',
             opacityFriendsBackground: 0,
             opacityFriendsTable: 0,
-            styleYourFriends: [],
-            styleSearchFriends: [],
+            styleYourFriends: {},
+            styleSearchFriends: {},
             friendsSearch: false,
             filterSearch: 10,
             nextTop: 400,
+            styleFriendsUsersListFilter: 'blur(0px)',
+            styleFriendsLoaderDisplay: 'none',
         }
         this.hideFriendsSection = this.hideFriendsSection.bind(this);
         this.showFriendsSection = this.showFriendsSection.bind(this);
         this.showYourFriends = this.showYourFriends.bind(this);
         this.showSearchFriends = this.showSearchFriends.bind(this);
+        this.showMoreUsers = this.showMoreUsers.bind(this);
     }
 
     componentDidMount() {
-        this.showYourFriends(); 
-        var div = document.getElementsByClassName('friends-window-users')[0];
-        div.addEventListener('scroll', () =>{ 
-            if(div.scrollTop > this.state.nextTop) {
-                for(let i = 0; i < this.state.filterSearch;i++) {
-                    document.getElementsByClassName("friends-users-list")[i].style.filter = "blur(1px)";
-                }
-                document.getElementsByClassName("friends-loader")[0].style.display = "block";
-                setTimeout(()=>{
-                    for(let i = 0; i < this.state.filterSearch;i++) {
-                        document.getElementsByClassName("friends-users-list")[i].style.filter = "blur(0px)";
-                    }
-                    this.setState({
-                        filterSearch: this.filterSearch + 10,
-                        nextTop: this.state.nextTop + 400,
-                    });
-                    document.getElementsByClassName("friends-loader")[0].style.display = "none";
-                },1000);
-            }
-        })
+        this.showYourFriends();     
     }
 
     componentWillReceiveProps() {
@@ -57,6 +39,23 @@ export default class Friends extends Component {
         },1);
     }
 
+    showMoreUsers(e) {
+        if(e.target.scrollTop > this.state.nextTop) {
+            this.setState({
+                styleFriendsUsersListFilter: 'blur(1px)',
+                styleFriendsLoaderDisplay: 'block',
+            })
+            setTimeout(()=>{
+                this.setState({styleFriendsUsersListFilter: 'blur(0px)'})
+                this.setState({
+                    filterSearch: this.filterSearch + 10,
+                    nextTop: this.state.nextTop + 400,
+                });
+                this.setState({styleFriendsLoaderDisplay: 'none'});
+            },1000)
+        }
+    }
+    
     showFriendsSection() {
         this.setState({displayFriends: 'block'})
         setTimeout(()=> {
@@ -127,9 +126,11 @@ export default class Friends extends Component {
     }
 
     render() {
-        const styleFriends = {display: this.state.displayFriends}
-        const styleFriendsBackground = {opacity: this.state.opacityFriendsBackground}
-        const styleFriendsTable = {opacity: this.state.opacityFriendsTable}
+        const styleFriends = {display: this.state.displayFriends};
+        const styleFriendsBackground = {opacity: this.state.opacityFriendsBackground};
+        const styleFriendsTable = {opacity: this.state.opacityFriendsTable};
+        const styleFriendsUsersList = {filter: this.state.styleFriendsUsersListFilter};
+        const styleFriendsLoader = {display: this.state.styleFriendsLoaderDisplay};
         return(
             <div className="friends" style={styleFriends}>
                <div className="friends-background" style={styleFriendsBackground} onClick={this.hideFriendsSection}></div>
@@ -181,17 +182,17 @@ export default class Friends extends Component {
                           <div className="friends-users-table">
                             <input placeholder="Imię" className="friends-search-username"/>
                             <button className="friends-search-advanced">Wyszukiwanie zaawansowane</button>
-                            <div className="friends-window-users">
-                                <div className="friends-loader"></div>
+                            <div className="friends-window-users" onScroll={this.showMoreUsers}>
+                                <div className="friends-loader" style={styleFriendsLoader}></div>
                                 {this.state.friendsSearch ? 
                                     this.props.vissibleFriends ? 
                                         allUsers.map((user, index) => {
-                                            if(index >= this.state.filterSearch){
-                                                return;
+                                            if(index >= this.state.filterSearch) {
+                                                return null;
                                             }
                                             return user.nameUser !== data.nameUser ? 
-                                                <div key={index} className="friends-users-list">
-                                                    <img className="friends-users-list-image img-circle" src={user.pictureUrl}/>
+                                                <div key={index} className="friends-users-list" style={styleFriendsUsersList}>
+                                                    <img className="friends-users-list-image img-circle" src={user.pictureUrl} alt={"image-users-" + index}/>
                                                     <div className="friends-users-list-informations">
                                                         <p className="friends-users-list-information">{user.nameUser}</p>
                                                         <p className="friends-users-list-information">Ranking: {user.ranking}</p>

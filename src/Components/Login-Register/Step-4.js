@@ -1,6 +1,5 @@
 import './index.css';
 import React, { Component } from 'react';
-import Regulations from './Regulations.js';
 
 export default class Step4 extends Component {
     render() {
@@ -14,9 +13,11 @@ export default class Step4 extends Component {
                         <span className="sr-only"></span>
                     </div>
                 </div>
-                <div className="register-login-register-regular"><Regulations/></div>
                 <input type="checkbox"/>
-                <span> * Zapoznałem się i akceptuję powyższy regulamin.</span>
+                <span> * Zapoznałem się i akceptuję powyższy 
+                    <span className="register-login-regular"
+                          onClick={this.props.showRegularSection}>regulamin.</span>
+                </span>
                 <input type="file" className="register-login-register-upload-input" onChange={this.props.uploadPicture}/>
             </React.Fragment>
         )

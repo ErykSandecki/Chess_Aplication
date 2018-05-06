@@ -10,7 +10,7 @@ class Navigation extends Component {
     }
 
     componentDidMount() {
-        window.addEventListener("resize" , () => {
+        window.addEventListener("resize",() => {
             this.props.hideBody();
             document.getElementsByClassName("App")[0].style.marginLeft="unset";
         })
@@ -32,8 +32,7 @@ class Navigation extends Component {
         }
     }
 
-    showMoreOptionsNav() {
-        
+    showMoreOptionsNav() {       
         menuDropLeft.style.display = "block";
         setTimeout(()=>{
             if(window.innerWidth < 768) {
@@ -68,18 +67,18 @@ class Navigation extends Component {
                 </div>
                 <p className="nav-text-button">MENU</p>
                 </div>
-                <a className="nav-icon fa fa-linkedin"></a>
-                <a className="nav-icon fa fa-twitter"></a>
-                <a className="nav-icon fa fa-facebook"></a>
+                <span className="nav-icon fa fa-linkedin"></span>
+                <span className="nav-icon fa fa-twitter"></span>
+                <span className="nav-icon fa fa-facebook"></span>
                 <div className="nav-option">
                     {this.props.statusLogin ? 
                         <React.Fragment>
-                            <img className="nav-users img-circle" src={data.pictureUrl}/>
+                            <img className="nav-users img-circle" src={data.pictureUrl} alt="nav-img"/>
                             <p className="nav-register-text">{data.name}</p>
                             <p className="nav-register-logout" onClick={this.props.setStatusUsers}>Wyloguj</p>
                         </React.Fragment>
                         :<React.Fragment>
-                            <img className="nav-users img-circle" src={emptyLogoUser}/>
+                            <img className="nav-users img-circle" src={emptyLogoUser} alt="nav-empty-img"/>
                             <p onClick={this.props.showVisibleForm} className="nav-register-login">ZAREJESTRUJ/ ZALOGUJ</p>
                             <p className="nav-member">JESTEŚ JUŻ CZŁONKIEM?</p>
                         </React.Fragment>        
