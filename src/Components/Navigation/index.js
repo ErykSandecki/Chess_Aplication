@@ -3,63 +3,11 @@ import './index.css';
 import emptyLogoUser from '../../Images/empty-logo-user.png';
 import {data} from '../../Firebase/index.js';
 
-class Navigation extends Component {
-    constructor(props){
-        super(props);
-        this.showMoreOptionsNav = this.showMoreOptionsNav.bind(this);
-    }
-
-    componentDidMount() {
-        window.addEventListener("resize",() => {
-            this.props.hideBody();
-            document.getElementsByClassName("App")[0].style.marginLeft="unset";
-        })
-        App = document.getElementsByClassName("App")[0];
-        menuDropLeft =  document.getElementsByClassName("menu-drop-left")[0];
-    }
-
-    componentWillReceiveProps() {
-        if(this.props.hiddenBody) {
-           menuDropLeft.style.opacity = 0;
-            setTimeout(function() {
-                App.style.marginLeft="unset";
-                menuDropLeft.style.width = "0%";
-            },300);
-          
-            setTimeout(function() {
-                menuDropLeft.style.display = "none";
-            },1000);
-        }
-    }
-
-    showMoreOptionsNav() {       
-        menuDropLeft.style.display = "block";
-        setTimeout(()=>{
-            if(window.innerWidth < 768) {
-                App.style.marginLeft="50%";
-                menuDropLeft.style.width = "50%";
-            }
-            else if(window.innerWidth < 1024) {
-                App.style.marginLeft="40%";
-                menuDropLeft.style.width = "40%";
-            }
-            else {
-                App.style.marginLeft="30%";
-                menuDropLeft.style.width = "30%";
-            }
-            
-            this.props.showBody();
-            
-            setTimeout(()=>{
-                menuDropLeft.style.opacity = 1;
-            },900);
-        },100);
-    }
-    
+export default class Navigation extends Component {
     render() {
         return (
             <div className="nav">
-                <div className="nav-drop-menu" onClick={this.showMoreOptionsNav}>
+                <div className="nav-drop-menu" onClick={this.props.showMenuDropLeft}>
                 <div className="nav-button">
                     <div className="nav-button-contain-1"><div className="nav-button-width"/></div>
                     <div className="nav-button-contain-2"><div className="nav-button-width"/></div>
@@ -88,8 +36,3 @@ class Navigation extends Component {
         )
     }
 }
-
-export default Navigation;
-
-var App;
-var menuDropLeft;  

@@ -1,6 +1,5 @@
 import firebase from 'firebase';
-
-var newId = 0;
+import {uploadStatus} from '../Components/Friends/index.js';
 var allScore = [];
 export var allUsers;
 export var data;
@@ -27,14 +26,16 @@ var referenceUser;
 // Update data information user actually login//
 
 function updateData() {
-    data = allScore[referenceUser];
-    allUsers = [];
-    for(let i = 0; i < allScore.length;i++) {
-        if(data.nameUser !== allScore[i].nameUser){
-            allUsers.push(allScore[i])
+    if(referenceUser >= 0){
+        data = allScore[referenceUser];
+        allUsers = [];
+        for(let i = 0; i < allScore.length;i++) {
+            if(data.nameUser !== allScore[i].nameUser){
+                allUsers.push(allScore[i])
+            }
         }
+        allUsers.push(data);
     }
-    allUsers.push(data);
 }
 
 export function updateAndDownloadBase () {
@@ -49,11 +50,48 @@ function donwloadData(data) {
         allScore.push(scores[keys[i]]);
     }
     allUsers = allScore;
+    updateData();
+    uploadStatus();
     console.log(allScore);
 }
 
 function errData(err) {
     console.log(err);
+}
+
+// Add send to friends users//
+
+export function addInviteFriends(id) {
+    if(!data.invitesFriends){
+        data.invitesFriends= [];
+    }
+
+    if(!data.friends){
+        data.friends = [];
+    }
+    let newData = {
+        id: data.id,
+        nameUser: data.nameUser,
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        surname: data.surname,
+        country: data.country,
+        dateSince: data.dateSince,
+        city: data.city,
+        region: data.region,
+        phone: data.phone,
+        ranking: data.ranking,
+        pictureUrl: data.pictureUrl,
+        invitesFriends: data.invitesFriends,
+        friends: data.friends,
+    }
+    if(!data.invitesFriends){
+        newData.invitesFriends = [];
+    } 
+    newData.invitesFriends.push(id);
+    let refAddInvite = database.ref('users').child(data.id);
+    refAddInvite.set(data);
 }
 
 // Download reference to image src and import image //
@@ -120,7 +158,6 @@ export function addUser(value, hideRegisterLogin, setStatusUser) {
         city: value[7],
         region: value[8],
         phone: value[9],
-        friends: [newId],
         ranking: 0,
         pictureUrl: '',
     }

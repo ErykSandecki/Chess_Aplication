@@ -39,7 +39,7 @@ export default class Regulations extends Component {
             setTimeout(() => {
                 this.setState({styleRegular: "none"});
             },500);
-            this.props.hideRegulatSection();    
+            this.props.hideRegularSection();    
         },500);
     }
     

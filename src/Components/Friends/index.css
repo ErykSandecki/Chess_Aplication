@@ -214,7 +214,19 @@
     margin-top: 25px;
 }
 
-.friends-users-list-information {
+.friends-users-list-information-1 {
+    float: left;
+    width: 25%;
+    margin: 5px;
+    margin-left: 10%;
+    margin-top: 15px;
+    border: 1px solid #e6e6e6;
+    border-radius: 11px;
+    background-color: #222130;
+    color: white;
+}
+
+.friends-users-list-information-2 {
     float: left;
     width: 25%;
     margin: 5px;

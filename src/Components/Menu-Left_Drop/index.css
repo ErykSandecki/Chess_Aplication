@@ -1,3 +1,12 @@
+
+.menu-drop-left {
+    background-color: white;
+    position: fixed;
+    height: 100vh;
+    z-index: 2;
+    left: 0px;
+    transition: 0.5s;
+}  
 .menu-drop-left-language-exit, .menu-drop-left-login-register {
     width: 100%;
     border-bottom: 1px solid #e6e6e6;

@@ -1,6 +1,6 @@
 import './index.css';
 import React, { Component } from 'react';
-import {data, allUsers} from '../../Firebase/index.js';
+import {data, allUsers, addInviteFriends} from '../../Firebase/index.js';
 export default class Friends extends Component {
     constructor(props) {
         super(props);
@@ -75,6 +75,7 @@ export default class Friends extends Component {
                 this.setState({displayFriends: 'none'})
             },500);
         },500);
+        checkStatusSearchFriends = false;
     }
 
     showYourFriends() {
@@ -100,6 +101,7 @@ export default class Friends extends Component {
                 borderRight: 'unset',
             }
         })
+        checkStatusSearchFriends = false;
     }
     showSearchFriends() {
         this.setState({
@@ -123,6 +125,7 @@ export default class Friends extends Component {
                 borderRight: '2px solid #e6e6e6',
             }
         })
+        checkStatusSearchFriends = true;
     }
 
     render() {
@@ -154,7 +157,7 @@ export default class Friends extends Component {
                         <div className="friends-list-users">
                             <p className="friends-list-users-text">Znajomi: 
                                 <span className="badge friends-number">
-                                {data ? 
+                                {data && data.friends ? 
                                     data.friends.length - 1 
                                     : null}
                                 </span>
@@ -187,16 +190,19 @@ export default class Friends extends Component {
                                 {this.state.friendsSearch ? 
                                     this.props.vissibleFriends ? 
                                         allUsers.map((user, index) => {
+                                            let textButton;
                                             if(index >= this.state.filterSearch) {
                                                 return null;
                                             }
+                                            textButton = checkFriends(user);
                                             return user.nameUser !== data.nameUser ? 
                                                 <div key={index} className="friends-users-list" style={styleFriendsUsersList}>
                                                     <img className="friends-users-list-image img-circle" src={user.pictureUrl} alt={"image-users-" + index}/>
                                                     <div className="friends-users-list-informations">
-                                                        <p className="friends-users-list-information">{user.nameUser}</p>
-                                                        <p className="friends-users-list-information">Ranking: {user.ranking}</p>
-                                                        <button className="friends-button-add-friends btn btn-default">Dodaj do znajomych</button>
+                                                        <p className="friends-users-list-information-1">{user.name + ' ' + user.surname}</p>
+                                                        <p className="friends-users-list-information-2">Ranking: {user.ranking}</p>
+                                                        <button onClick={()=>{sendInviteToFriends(index)}} className="friends-button-add-friends btn btn-default">
+                                                           {textButton}</button>
                                                     </div>
                                                 </div>
                                             : null}) 
@@ -215,3 +221,92 @@ export default class Friends extends Component {
     }
 }
 
+function checkFriends(user) {
+    if(data.friends){
+        for(let i =0;i<data.friends.length;i++) {
+            if(user.id === data.friends[i]){
+                return 'Usuń ze znajomych';
+            }
+        }
+    }
+    if(data.invitesFriends){
+        for(let i =0;i<data.invitesFriends.length;i++) {
+            if(user.id === data.invitesFriends[i]){
+                return 'Usuń zaproszenie';
+            }
+        }
+    }
+    return 'Wyślij zaproszenie';
+}
+
+var checkStatusSearchFriends = false;
+
+export function uploadStatus() {
+    if(checkStatusSearchFriends) {
+        let selectorName= document.getElementsByClassName('friends-users-list-information-1');
+        let selectorRanking= document.getElementsByClassName('friends-users-list-information-2');
+        let selectorStatusFriends= document.getElementsByClassName('friends-button-add-friends');
+        for(let i = 0;i < allUsers.length;i++) {
+            if(i === allUsers.length - 1) {
+                break;
+            }
+            checkYourFriends(selectorStatusFriends, i);
+            checkNameAndSurname(selectorName, i);
+            checkRanking(selectorRanking,i);
+        }
+    }
+}
+
+function checkYourFriends(selector, i) {
+    let change = true;
+    if(data.friends) {
+        for(let j = 0; j < data.friends.length;j++){
+            if(data.friends[j] === allUsers[i].id){
+                if(selector[i].innerText !== 'Usuń ze znajomych') {
+                    selector[i].innerText = 'Usuń ze znajomych';
+                    return;
+                }
+                change = false;
+            }
+        }
+    }
+    if(data.invitesFriends) {
+        for(let j = 0; j < data.invitesFriends.length;j++){
+            if(data.invitesFriends[j] === allUsers[i].id){
+                if(selector[i].innerText !== 'Usuń zaproszenie') {
+                    selector[i].innerText = 'Usuń zaproszenie';
+                    return;
+                }
+                change = false;
+            }
+        }
+    }
+    if(change){
+        if(selector[i].innerText !== 'Wyślij zaproszenie') {
+            selector[i].innerText = 'Wyślij zaproszenie';
+        } 
+    } 
+}
+
+function checkNameAndSurname(selectorName, i) {
+    if(selectorName[i].innerText !== (allUsers[i].name + ' ' + allUsers[i].surname)) {
+        selectorName[i].innerText = allUsers[i].name + ' ' + allUsers[i].surname;
+    }
+}
+
+function checkRanking(selectorRanking, i){
+    if(selectorRanking[i].innerText !== ('Ranking: ' + allUsers[i].ranking)){
+        selectorRanking[i].innerText = 'Ranking: ' + allUsers[i].ranking
+    }
+}
+
+function sendInviteToFriends(index) {
+    if(data.invitesFriends){
+       for(let i = 0; i < data.invitesFriends.length; i++) {
+           if(data.invitesFriends[i] === allUsers[index].id){
+               return;
+           }
+       } 
+    }
+    addInviteFriends(allUsers[index].id);
+}

@@ -14,12 +14,15 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      marginLeftApp: '0%',
       hiddenBody: false,
       visibleForm: false,
       statusLogin: false,
       vissibleFriends: false,
       vissibleRegular: false,
+      vissibleMenuDropLeft: false,
     }
+    this.setStyleMarginAppLeft = this.setStyleMarginAppLeft.bind(this);
     this.showBody = this.showBody.bind(this);
     this.hideBody = this.hideBody.bind(this);
     this.showVisibleForm = this.showVisibleForm.bind(this);
@@ -28,11 +31,17 @@ class App extends Component {
     this.showFriendsSection = this.showFriendsSection.bind(this);
     this.hideFriendsSection = this.hideFriendsSection.bind(this);
     this.showRegularSection = this.showRegularSection.bind(this);
-    this.hideRegulatSection = this.hideRegulatSection.bind(this);
+    this.hideRegularSection = this.hideRegularSection.bind(this);
+    this.showMenuDropLeft = this.showMenuDropLeft.bind(this);
+    this.hideMenuDropLeft = this.hideMenuDropLeft.bind(this);
   }
 
   componentDidMount() {
     updateAndDownloadBase();
+  }
+
+  setStyleMarginAppLeft(marginLeftApp){
+    this.setState({marginLeftApp})
   }
 
   showBody() {
@@ -41,6 +50,7 @@ class App extends Component {
 
   hideBody() {
     this.setState({hiddenBody: false});
+    this.hideMenuDropLeft();
   }
 
   showVisibleForm() {
@@ -73,8 +83,16 @@ class App extends Component {
     this.setState({vissibleRegular: true});
   }
 
-  hideRegulatSection() {
+  hideRegularSection() {
     this.setState({vissibleRegular: false});
+  }
+
+  showMenuDropLeft() {
+    this.setState({vissibleMenuDropLeft: true});
+  }
+
+  hideMenuDropLeft() {
+    this.setState({vissibleMenuDropLeft: false});
   }
 
   render() {
@@ -93,27 +111,27 @@ class App extends Component {
           vissibleFriends={this.state.vissibleFriends}
           hideFriendsSection={this.hideFriendsSection}/>  
         <MenuLeftDrop 
+          vissibleMenuDropLeft={this.state.vissibleMenuDropLeft}
+          setStyleMarginAppLeft={this.setStyleMarginAppLeft}
           hideBody={this.hideBody}
+          hiddenBody={this.state.hiddenBody} 
+          showBody={this.showBody}
           showVisibleForm={this.showVisibleForm}
           statusLogin={this.state.statusLogin}
           setStatusUsers={this.setStatusUsers}
           showFriendsSection={this.showFriendsSection}/>
         <Regulations
           vissibleRegular={this.state.vissibleRegular}
-          hideRegulatSection={this.hideRegulatSection}/>  
+          hideRegularSection={this.hideRegularSection}/>  
           <div className={this.state.hiddenBody ?
             "hide-body"
             :""}
             onClick={this.hideBody}/>
         <Navigation
-          hiddenBody={this.state.hiddenBody} 
-          hideBody={this.hideBody}
-          showBody={this.showBody}
+          showMenuDropLeft={this.showMenuDropLeft}
           showVisibleForm={this.showVisibleForm}
           statusLogin={this.state.statusLogin}
-          setStatusUsers={this.setStatusUsers}
-          setStyleMarginLeftApp={this.setStyleMarginLeftApp}
-          setStyleMenuDropLeft={this.setStyleMenuDropLeft}/>
+          setStatusUsers={this.setStatusUsers}/>
         <Intro/>
         <div className="picture-1">
           <div className="parallax-1"></div>

@@ -13,16 +13,6 @@ input:hover {
   width: 100%;
 }
 
-.menu-drop-left {
-  background-color: white;
-  position: fixed;
-  height: 100vh;
-  z-index: 2;
-  left: 0px;
-  transition: 0.5s;
-  opacity: 0;
-}
-
 .hide-body {
   display: block;
   position: fixed;
