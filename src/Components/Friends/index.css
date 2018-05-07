@@ -214,19 +214,8 @@
     margin-top: 25px;
 }
 
-.friends-users-list-information-1 {
-    float: left;
-    width: 25%;
-    margin: 5px;
-    margin-left: 10%;
-    margin-top: 15px;
-    border: 1px solid #e6e6e6;
-    border-radius: 11px;
-    background-color: #222130;
-    color: white;
-}
-
-.friends-users-list-information-2 {
+.friends-users-list-information-1,
+.friends-users-list-information-2  {
     float: left;
     width: 25%;
     margin: 5px;
@@ -242,7 +231,27 @@
     margin-top: 10px;
     float: left;
     margin-left: 10%;
-    width: 60%;
+    width: 25%;
+    background-color: #3498db;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    font-size: 15px;
+    height: 25px;
+}
+
+.friends-button-delete-invite {
+    margin-top: 10px;
+    float: left;
+    margin-left: 10%;
+    width: 30%;
+    background-color: #3498db;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    display: none;
+    font-size: 15px;
+    height: 25px;
 }
 
 .friends-loader {

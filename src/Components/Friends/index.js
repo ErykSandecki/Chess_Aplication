@@ -1,6 +1,6 @@
 import './index.css';
 import React, { Component } from 'react';
-import {data, allUsers, addInviteFriends} from '../../Firebase/index.js';
+import {data, allUsers, addInviteFriends, deleteInviteFriends} from '../../Firebase/index.js';
 export default class Friends extends Component {
     constructor(props) {
         super(props);
@@ -15,12 +15,15 @@ export default class Friends extends Component {
             nextTop: 400,
             styleFriendsUsersListFilter: 'blur(0px)',
             styleFriendsLoaderDisplay: 'none',
+            actuallyStateWindow: 'yourFriend',
+            nameSearch: false,            
         }
         this.hideFriendsSection = this.hideFriendsSection.bind(this);
         this.showFriendsSection = this.showFriendsSection.bind(this);
         this.showYourFriends = this.showYourFriends.bind(this);
         this.showSearchFriends = this.showSearchFriends.bind(this);
         this.showMoreUsers = this.showMoreUsers.bind(this);
+        this.showSuggestionSearch = this.showSuggestionSearch.bind(this);
     }
 
     componentDidMount() {
@@ -40,20 +43,22 @@ export default class Friends extends Component {
     }
 
     showMoreUsers(e) {
+       
         if(e.target.scrollTop > this.state.nextTop) {
-            this.setState({
-                styleFriendsUsersListFilter: 'blur(1px)',
-                styleFriendsLoaderDisplay: 'block',
-            })
-            setTimeout(()=>{
-                this.setState({styleFriendsUsersListFilter: 'blur(0px)'})
                 this.setState({
-                    filterSearch: this.filterSearch + 10,
-                    nextTop: this.state.nextTop + 400,
-                });
-                this.setState({styleFriendsLoaderDisplay: 'none'});
-            },1000)
-        }
+                    styleFriendsUsersListFilter: 'blur(1px)',
+                    styleFriendsLoaderDisplay: 'block',
+                })
+                setTimeout(()=>{
+                    this.setState({styleFriendsUsersListFilter: 'blur(0px)'})
+                    this.setState({
+                        filterSearch: this.filterSearch + 10,
+                        nextTop: this.state.nextTop + 400,
+                    });
+                    this.setState({styleFriendsLoaderDisplay: 'none'});
+                },1000)
+            }
+        
     }
     
     showFriendsSection() {
@@ -64,6 +69,9 @@ export default class Friends extends Component {
                 this.setState({opacityFriendsTable: 1 })
             },500)
         },1000);
+        if(this.state.actuallyStateWindow === "allUsers"){
+            checkStatusSearchFriends = true;
+        }
     }
 
     hideFriendsSection() {
@@ -99,7 +107,8 @@ export default class Friends extends Component {
                 borderTopLeftRadius: 'unset',
                 borderBottomRightRadius: 'unset',
                 borderRight: 'unset',
-            }
+            },
+            actuallyStateWindow: 'yourFriend',
         })
         checkStatusSearchFriends = false;
     }
@@ -123,10 +132,40 @@ export default class Friends extends Component {
                 borderTopLeftRadius: '15px',
                 borderTopRightRadius: '15px',
                 borderRight: '2px solid #e6e6e6',
-            }
+            },
+            actuallyStateWindow: 'allUsers',
         })
         checkStatusSearchFriends = true;
     }
+
+    showSuggestionSearch(e){
+        const text = e.currentTarget.value;
+        if(text !== ''){
+            this.setState({
+                nameSearch: true, 
+                filterSearch: 10,
+                nextTop: 400,                       
+            })
+        }
+        else {
+            this.setState({
+                nameSearch: false,
+                filterSearch: 10,
+                nextTop: 400,
+            });
+            usersFilter = -1;
+            uploadStatus();
+            return;
+        }
+        
+        usersFilter = this.getFilteredSuggestions(text)
+    }
+
+    getFilteredSuggestions(text) {
+        return allUsers.filter(suggestion => 
+            suggestion.name.toLowerCase().includes(text.toLowerCase()))
+      }
+      
 
     render() {
         const styleFriends = {display: this.state.displayFriends};
@@ -183,30 +222,51 @@ export default class Friends extends Component {
                                onClick={this.showSearchFriends}>
                                Szukaj znajomych</div>
                           <div className="friends-users-table">
-                            <input placeholder="Imię" className="friends-search-username"/>
+                            <input placeholder="Imię" className="friends-search-username" onInput={this.showSuggestionSearch}/>
                             <button className="friends-search-advanced">Wyszukiwanie zaawansowane</button>
                             <div className="friends-window-users" onScroll={this.showMoreUsers}>
                                 <div className="friends-loader" style={styleFriendsLoader}></div>
                                 {this.state.friendsSearch ? 
-                                    this.props.vissibleFriends ? 
-                                        allUsers.map((user, index) => {
-                                            let textButton;
+                                    this.props.vissibleFriends ?
+                                        this.state.nameSearch ?
+                                        usersFilter.map((user, index)=>{
                                             if(index >= this.state.filterSearch) {
                                                 return null;
                                             }
-                                            textButton = checkFriends(user);
+                                            let textButton = checkFriends(user);
+                                            let style ={backgroundColor:setColor(user)};
                                             return user.nameUser !== data.nameUser ? 
                                                 <div key={index} className="friends-users-list" style={styleFriendsUsersList}>
                                                     <img className="friends-users-list-image img-circle" src={user.pictureUrl} alt={"image-users-" + index}/>
                                                     <div className="friends-users-list-informations">
                                                         <p className="friends-users-list-information-1">{user.name + ' ' + user.surname}</p>
                                                         <p className="friends-users-list-information-2">Ranking: {user.ranking}</p>
-                                                        <button onClick={()=>{sendInviteToFriends(index)}} className="friends-button-add-friends btn btn-default">
+                                                        <button style={style} onClick={()=>{sendInviteToFriends(user)}} className="friends-button-add-friends">
                                                            {textButton}</button>
+                                                        <button className="friends-button-delete-invite">Odrzuć Zaproszenie</button>
                                                     </div>
                                                 </div>
-                                            : null}) 
-                                        :null
+                                        : null
+                                        })
+                                        :allUsers.map((user, index) => {
+                                            if(index >= this.state.filterSearch) {
+                                                return null;
+                                            }  
+                                            let textButton = checkFriends(user);
+                                            let style ={backgroundColor:setColor(user)}; 
+                                            return user.nameUser !== data.nameUser ? 
+                                                <div key={index} className="friends-users-list" style={styleFriendsUsersList}>
+                                                    <img className="friends-users-list-image img-circle" src={user.pictureUrl} alt={"image-users-" + index}/>
+                                                    <div className="friends-users-list-informations">
+                                                        <p className="friends-users-list-information-1">{user.name + ' ' + user.surname}</p>
+                                                        <p className="friends-users-list-information-2">Ranking: {user.ranking}</p>
+                                                        <button style={style} onClick={()=>{sendInviteToFriends(user)}} className="friends-button-add-friends">
+                                                           {textButton}</button>
+                                                        <button className="friends-button-delete-invite">Odrzuć Zaproszenie</button>
+                                                    </div>
+                                                </div>
+                                        : null}) 
+                                    :null
                                 :null}
                             </div>
                           </div>          
@@ -219,6 +279,26 @@ export default class Friends extends Component {
             </div>
         )
     }
+}
+
+var usersFilter = -1;
+
+function setColor(user){
+    if(data.friends){
+        for(let i =0;i<data.friends.length;i++) {
+            if(user.id === data.friends[i]){
+                return "yellow";
+            }
+        }
+    }
+    if(data.invitesFriends){
+        for(let i =0;i<data.invitesFriends.length;i++) {
+            if(user.id === data.invitesFriends[i]){
+                return 'red';
+            }
+        }
+    }
+    return '#3498db';
 }
 
 function checkFriends(user) {
@@ -240,57 +320,74 @@ function checkFriends(user) {
 }
 
 var checkStatusSearchFriends = false;
-
+var lengthUsers;
 export function uploadStatus() {
     if(checkStatusSearchFriends) {
         let selectorName= document.getElementsByClassName('friends-users-list-information-1');
+        lengthUsers = selectorName.length;
         let selectorRanking= document.getElementsByClassName('friends-users-list-information-2');
         let selectorStatusFriends= document.getElementsByClassName('friends-button-add-friends');
-        for(let i = 0;i < allUsers.length;i++) {
-            if(i === allUsers.length - 1) {
-                break;
+        for(let i = 0;i < lengthUsers;i++) {
+            
+            if(usersFilter !== -1) {
+                for(let i = 0; i<usersFilter.length;i++) {
+                    for(let j = 0; j<allUsers.length;j++) {
+                        if(usersFilter[i].id === allUsers[j].id){
+                            usersFilter[i] = allUsers[j];
+                        }
+                    }
+                }
+                checkYourFriends(selectorStatusFriends, i, usersFilter[i]);
+                checkNameAndSurname(selectorName, i, usersFilter[i])
             }
-            checkYourFriends(selectorStatusFriends, i);
-            checkNameAndSurname(selectorName, i);
-            checkRanking(selectorRanking,i);
+            else if(allUsers[i] && allUsers[i].id !== data.id){
+                checkYourFriends(selectorStatusFriends, i, allUsers[i]);
+                checkNameAndSurname(selectorName, i, allUsers[i]);
+                checkRanking(selectorRanking,i);
+            }
         }
     }
 }
 
-function checkYourFriends(selector, i) {
+function checkYourFriends(selector, i , user) {
     let change = true;
     if(data.friends) {
         for(let j = 0; j < data.friends.length;j++){
-            if(data.friends[j] === allUsers[i].id){
-                if(selector[i].innerText !== 'Usuń ze znajomych') {
-                    selector[i].innerText = 'Usuń ze znajomych';
-                    return;
+            if(user){
+                if(data.friends[j] === user.id){
+                    if(selector[i].innerText !== 'Usuń ze znajomych') {
+                        selector[i].innerText = 'Usuń ze znajomych';
+                    }
+                    selector[i].style.backgroundColor = "red";
+                    change = false;
                 }
-                change = false;
             }
         }
     }
     if(data.invitesFriends) {
         for(let j = 0; j < data.invitesFriends.length;j++){
-            if(data.invitesFriends[j] === allUsers[i].id){
-                if(selector[i].innerText !== 'Usuń zaproszenie') {
-                    selector[i].innerText = 'Usuń zaproszenie';
-                    return;
+            if(user){
+                if(data.invitesFriends[j] === user.id){
+                    if(selector[i].innerText !== 'Usuń zaproszenie') {
+                        selector[i].innerText = 'Usuń zaproszenie';
+                    }
+                    selector[i].style.backgroundColor = "red";
+                    change = false;
                 }
-                change = false;
             }
         }
     }
     if(change){
         if(selector[i].innerText !== 'Wyślij zaproszenie') {
             selector[i].innerText = 'Wyślij zaproszenie';
+            selector[i].style.backgroundColor="#3498db";
         } 
     } 
 }
 
-function checkNameAndSurname(selectorName, i) {
-    if(selectorName[i].innerText !== (allUsers[i].name + ' ' + allUsers[i].surname)) {
-        selectorName[i].innerText = allUsers[i].name + ' ' + allUsers[i].surname;
+function checkNameAndSurname(selectorName, i, user) {
+    if(selectorName[i].innerText !== (user.name + ' ' + user.surname)) {
+        selectorName[i].innerText = user.name + ' ' + user.surname;
     }
 }
 
@@ -300,13 +397,19 @@ function checkRanking(selectorRanking, i){
     }
 }
 
-function sendInviteToFriends(index) {
-    if(data.invitesFriends){
-       for(let i = 0; i < data.invitesFriends.length; i++) {
-           if(data.invitesFriends[i] === allUsers[index].id){
-               return;
-           }
-       } 
+function sendInviteToFriends(user) {
+    if(user && user.id !== data.id){
+        if(data.invitesFriends){
+            for(let i = 0; i < data.invitesFriends.length; i++) {
+                if(data.invitesFriends[i] === user.id){
+                 deleteInviteFriends(user.id);
+                 return;
+                }
+            } 
+         }
+        
+         addInviteFriends(user.id);
     }
-    addInviteFriends(allUsers[index].id);
+    
+
 }

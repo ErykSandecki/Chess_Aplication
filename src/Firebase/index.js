@@ -1,10 +1,9 @@
 import firebase from 'firebase';
 import {uploadStatus} from '../Components/Friends/index.js';
-var allScore = [];
+
 export var allUsers;
 export var data;
-var fileName;
-var storageRef;
+
 
 var config = {
     apiKey: "AIzaSyDSK_jiqW71rTExUfsHBHFMHP9-eIlJkoM",
@@ -16,26 +15,39 @@ var config = {
 };
 
 firebase.initializeApp(config);
-
+var register;
 var database = firebase.database();
 var ref = database.ref('users');
 var storage = firebase.storage();
 var pathReference = storage.ref();
 var referenceUser;
+var scores;
+var keys;
+var allScore = [];
+var fileName;
+var storageRef;
 
 // Update data information user actually login//
 
 function updateData() {
     if(referenceUser >= 0){
         data = allScore[referenceUser];
+        if(!data){
+            referenceUser -= 1;
+            data = allScore[referenceUser];
+        }
         allUsers = [];
         for(let i = 0; i < allScore.length;i++) {
-            if(data.nameUser !== allScore[i].nameUser){
-                allUsers.push(allScore[i])
-            }
+            if(allScore[i]){
+                if(data.nameUser !== allScore[i].nameUser){
+                    allUsers.push(allScore[i])
+                }
+            }  
         }
         allUsers.push(data);
     }
+    
+    
 }
 
 export function updateAndDownloadBase () {
@@ -43,16 +55,25 @@ export function updateAndDownloadBase () {
 }
 
 function donwloadData(data) {
-    let scores = data.val();
-    let keys = Object.keys(scores);
+    scores = data.val();
+    keys = Object.keys(scores);
     allScore = [];
     for(let i = 0; i < keys.length; i++) {
         allScore.push(scores[keys[i]]);
     }
     allUsers = allScore;
-    updateData();
-    uploadStatus();
+     
+    if(!register) {
+        updateData();
+        uploadStatus();
+     }   
+    
+     if(register){
+        downloadId();
+        register = false;
+    }
     console.log(allScore);
+    
 }
 
 function errData(err) {
@@ -62,36 +83,28 @@ function errData(err) {
 // Add send to friends users//
 
 export function addInviteFriends(id) {
-    if(!data.invitesFriends){
-        data.invitesFriends= [];
+    let newData;
+    if(data.invitesFriends){
+        data.invitesFriends.push(id);
+        newData = data.invitesFriends;
     }
+    else {
+        newData = [id];
+    }
+    let refAddInvite = database.ref('users').child(data.id).child('invitesFriends');
+    refAddInvite.set(newData);
+}
 
-    if(!data.friends){
-        data.friends = [];
+// Delete Invite friends //
+export function deleteInviteFriends(id) {
+    let invitesFriends = [];
+    for(let i = 0; i<data.invitesFriends.length; i++) {
+        if(data.invitesFriends[i] !== id) {
+            invitesFriends.push(data.invitesFriends[i])
+        }
     }
-    let newData = {
-        id: data.id,
-        nameUser: data.nameUser,
-        email: data.email,
-        password: data.password,
-        name: data.name,
-        surname: data.surname,
-        country: data.country,
-        dateSince: data.dateSince,
-        city: data.city,
-        region: data.region,
-        phone: data.phone,
-        ranking: data.ranking,
-        pictureUrl: data.pictureUrl,
-        invitesFriends: data.invitesFriends,
-        friends: data.friends,
-    }
-    if(!data.invitesFriends){
-        newData.invitesFriends = [];
-    } 
-    newData.invitesFriends.push(id);
-    let refAddInvite = database.ref('users').child(data.id);
-    refAddInvite.set(data);
+    let refDeleteInvite = database.ref('users').child(data.id).child('invitesFriends');
+    refDeleteInvite.set(invitesFriends);
 }
 
 // Download reference to image src and import image //
@@ -100,67 +113,24 @@ export function sendReferencePicture(file){
     fileName = file;
 }
 
-// Donwload reference users //
+// Donwload reference and id users //
 
-function donwloadIdANewUser(){
-    ref.on("value", downloadId, errData);
-}
 
-function downloadId(score) {
-    let scores = score.val();
-    let keys = Object.keys(scores);
-    for(let i = 0; i < keys.length; i++) {
+function downloadId() {
+   for(let i = 0; i < keys.length; i++) {
         if(data.nameUser === scores[keys[i]].nameUser){
            data.id = keys[i];
+           referenceUser = i;
         }
     }
     database.ref('users').child(data.id).set(data);
 }
-// Upload picture and download url //
 
-function uploadImage(status){
-    var starsRef = pathReference.child(data.nameUser);
-    starsRef.getDownloadURL().then(function(url) {
-    data.pictureUrl = url;
-    ref.push(data);
-    donwloadIdANewUser();
-    }).catch(function(error) {
-    switch (error.code) {
-        case 'storage/object_not_found':
-            break;
-
-        case 'storage/unauthorized':
-            break;
-
-        case 'storage/canceled':
-            break;
-
-        case 'storage/unknown':
-            break;
-        default :
-            break;    
-    }
-    });
-}
 
 // Section Register new user //
-
 export function addUser(value, hideRegisterLogin, setStatusUser) {
-    data = {
-        id: '',
-        nameUser: value[0],
-        email: value[1],
-        password: value[2],
-        name: value[3],
-        surname: value[4],
-        country: value[5],
-        dateSince: value[6],
-        city: value[7],
-        region: value[8],
-        phone: value[9],
-        ranking: 0,
-        pictureUrl: '',
-    }
+    referenceUser = -1;
+    setData(value);
     if(fileName) {
         storageRef = firebase.storage().ref(data.nameUser);
         var task = storageRef.put(fileName);
@@ -179,6 +149,28 @@ export function addUser(value, hideRegisterLogin, setStatusUser) {
     }
     else {
         viewCompleteRegistration(hideRegisterLogin);
+        register = true;
+        data.pictureUrl="https://firebasestorage.googleapis.com/v0/b/chess-base-aa6a9.appspot.com/o/empty-logo-user.png?alt=media&token=d1e9b113-271f-4ec1-a2eb-8cd7a0f8bae9";
+        ref.push(data);
+        setStatusUser(); 
+    }
+}
+
+function setData(value){
+    data = {
+        id: '',
+        nameUser: value[0],
+        email: value[1],
+        password: value[2],
+        name: value[3],
+        surname: value[4],
+        country: value[5],
+        dateSince: value[6],
+        city: value[7],
+        region: value[8],
+        phone: value[9],
+        ranking: 0,
+        pictureUrl: '',
     }
 }
 
@@ -195,6 +187,33 @@ function viewCompleteRegistration(hideRegisterLogin) {
         document.getElementsByClassName("register-login-register-complete")[0].style.display= "none";
         hideRegisterLogin();
     },3000);     
+}
+
+function uploadImage(status){
+    var starsRef = pathReference.child(data.nameUser);
+    
+    starsRef.getDownloadURL().then(function(url) {
+        data.pictureUrl = url;
+        register = true;
+        ref.push(data); 
+        fileName = null;
+    }).catch(function(error) {
+        switch (error.code) {
+            case 'storage/object_not_found':
+                break;
+
+            case 'storage/unauthorized':
+                break;
+
+            case 'storage/canceled':
+                break;
+
+            case 'storage/unknown':
+                break;
+            default :
+                break;    
+    }
+    });
 }
 
 //Section Login user //
