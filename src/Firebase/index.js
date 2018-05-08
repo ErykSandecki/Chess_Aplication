@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import {uploadStatus} from '../Components/Friends/index.js';
+import {uploadStatus, classFriends} from '../Components/Friends/index.js';
 
 export var allUsers;
 export var data;
@@ -47,7 +47,10 @@ function updateData() {
         allUsers.push(data);
     }
     
-    
+    classFriends.setState({
+        filterSearch: 10,
+        nextTop: 400,
+    })
 }
 
 export function updateAndDownloadBase () {
@@ -72,6 +75,7 @@ function donwloadData(data) {
         downloadId();
         register = false;
     }
+
     console.log(allScore);
     
 }
@@ -82,29 +86,97 @@ function errData(err) {
 
 // Add send to friends users//
 
-export function addInviteFriends(id) {
+export function addInviteFriends(user) {
     let newData;
-    if(data.invitesFriends){
-        data.invitesFriends.push(id);
-        newData = data.invitesFriends;
+    let newDataForFriends;
+    // Check that user have friends table//
+    if(data.friends){
+        newData = {
+            id: user.id,
+            read:false,
+            isFriends:false,
+            direction:'send',
+        }
+        data.friends.push(newData);
+        newData = data.friends;
     }
+    
+    else{
+        newData = [{
+            id: user.id,
+            read:false,
+            isFriends:false,
+            direction:'send',
+        }];
+    }
+    // Check that new friends have friends table//
+    if(user.friends){
+        newDataForFriends = {
+            id:  data.id,
+            read: false,
+            isFriends: false,
+            direction: 'get',
+        }
+        user.friends.push(newDataForFriends);
+        newDataForFriends = user.friends;
+    }
+
     else {
-        newData = [id];
+        newDataForFriends = [{
+            id: data.id,
+            read: false,
+            isFriends: false,
+            direction: 'get',
+        }]
     }
-    let refAddInvite = database.ref('users').child(data.id).child('invitesFriends');
-    refAddInvite.set(newData);
+    let refAddSendFriend = database.ref('users').child(data.id).child('friends');
+    let refAddGetFriend = database.ref('users').child(user.id).child('friends');
+    refAddSendFriend.set(newData);
+    refAddGetFriend.set(newDataForFriends);
 }
 
 // Delete Invite friends //
-export function deleteInviteFriends(id) {
-    let invitesFriends = [];
-    for(let i = 0; i<data.invitesFriends.length; i++) {
-        if(data.invitesFriends[i] !== id) {
-            invitesFriends.push(data.invitesFriends[i])
+export function deleteInviteFriends(user) {
+    let newData = [];
+    let newDataForFriends = [];
+    for(let i = 0; i<data.friends.length; i++) {
+        if(data.friends[i].id !== user.id) {
+            newData.push(data.friends[i])
         }
     }
-    let refDeleteInvite = database.ref('users').child(data.id).child('invitesFriends');
-    refDeleteInvite.set(invitesFriends);
+    for (let i = 0; i< user.friends.length; i++) {
+        if(user.friends[i].id !== data.id) {
+            newDataForFriends.push(user.friends[i])
+        }
+    }
+    let refDeleteSendFriend = database.ref('users').child(data.id).child('friends');
+    let refDeleteGetFriend = database.ref('users').child(user.id).child('friends');
+    refDeleteSendFriend.set(newData);
+    refDeleteGetFriend.set(newDataForFriends);
+}
+
+// Accepted invite to friends //
+
+export function acceptedInviteFriends(user){
+    let indexUser;
+    let indexFriend;
+    for (let i = 0; i< data.friends.length;i++){
+        if(data.friends[i].id === user.id){
+            indexUser = i;
+            break;
+        }
+    }
+    for(let i = 0; i< user.friends.length; i++){
+        if(user.friends[i].id === data.id){
+            indexFriend = i;
+            break;
+        }
+    }
+    let refAcceptedUserInvite = database.ref('users').child(data.id).child('friends').child(indexUser).child('isFriends');
+    let refAcceptedFriendInvite = database.ref('users').child(user.id).child('friends').child(indexFriend).child('isFriends');
+    refAcceptedUserInvite.set(true);
+    refAcceptedFriendInvite.set(true);
+
 }
 
 // Download reference to image src and import image //

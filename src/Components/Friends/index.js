@@ -1,6 +1,6 @@
 import './index.css';
 import React, { Component } from 'react';
-import {data, allUsers, addInviteFriends, deleteInviteFriends} from '../../Firebase/index.js';
+import {data, allUsers, addInviteFriends, deleteInviteFriends, acceptedInviteFriends} from '../../Firebase/index.js';
 export default class Friends extends Component {
     constructor(props) {
         super(props);
@@ -27,7 +27,8 @@ export default class Friends extends Component {
     }
 
     componentDidMount() {
-        this.showYourFriends();     
+        this.showYourFriends();
+        sendReferenceClass(this);     
     }
 
     componentWillReceiveProps() {
@@ -154,11 +155,11 @@ export default class Friends extends Component {
                 nextTop: 400,
             });
             usersFilter = -1;
-            uploadStatus();
             return;
         }
-        
         usersFilter = this.getFilteredSuggestions(text)
+        classFriends.render();
+        
     }
 
     getFilteredSuggestions(text) {
@@ -235,6 +236,7 @@ export default class Friends extends Component {
                                             }
                                             let textButton = checkFriends(user);
                                             let style ={backgroundColor:setColor(user)};
+                                            let styleDelete = {display : setDisplay(user)}
                                             return user.nameUser !== data.nameUser ? 
                                                 <div key={index} className="friends-users-list" style={styleFriendsUsersList}>
                                                     <img className="friends-users-list-image img-circle" src={user.pictureUrl} alt={"image-users-" + index}/>
@@ -243,7 +245,7 @@ export default class Friends extends Component {
                                                         <p className="friends-users-list-information-2">Ranking: {user.ranking}</p>
                                                         <button style={style} onClick={()=>{sendInviteToFriends(user)}} className="friends-button-add-friends">
                                                            {textButton}</button>
-                                                        <button className="friends-button-delete-invite">Odrzuć Zaproszenie</button>
+                                                        <button style={styleDelete} className="friends-button-delete-invite" onClick={()=>{deleteInviteAfterGetInvite(user)}}>Odrzuć Zaproszenie</button>
                                                     </div>
                                                 </div>
                                         : null
@@ -252,8 +254,9 @@ export default class Friends extends Component {
                                             if(index >= this.state.filterSearch) {
                                                 return null;
                                             }  
-                                            let textButton = checkFriends(user);
-                                            let style ={backgroundColor:setColor(user)}; 
+                                            let textButton = checkFriends(user, index);
+                                            let style ={backgroundColor:setColor(user)};
+                                            let styleDelete = {display : setDisplay(user)}
                                             return user.nameUser !== data.nameUser ? 
                                                 <div key={index} className="friends-users-list" style={styleFriendsUsersList}>
                                                     <img className="friends-users-list-image img-circle" src={user.pictureUrl} alt={"image-users-" + index}/>
@@ -262,7 +265,7 @@ export default class Friends extends Component {
                                                         <p className="friends-users-list-information-2">Ranking: {user.ranking}</p>
                                                         <button style={style} onClick={()=>{sendInviteToFriends(user)}} className="friends-button-add-friends">
                                                            {textButton}</button>
-                                                        <button className="friends-button-delete-invite">Odrzuć Zaproszenie</button>
+                                                        <button style={styleDelete} className="friends-button-delete-invite" onClick={()=>{deleteInviteAfterGetInvite(user)}}>Odrzuć Zaproszenie</button>
                                                     </div>
                                                 </div>
                                         : null}) 
@@ -281,42 +284,66 @@ export default class Friends extends Component {
     }
 }
 
+
 var usersFilter = -1;
+
+export var classFriends;
+function sendReferenceClass(friendClass){
+    classFriends = friendClass;
+}
+
+function setDisplay(user){
+    if(data.friends){
+        for(let i = 0; i<data.friends.length;i++){
+            if(data.friends[i].id === user.id){
+                if(data.friends[i].direction === "get"){
+                    return "block"
+                }
+            }
+        }
+            return "none";
+    }
+        return "none"; 
+}
 
 function setColor(user){
     if(data.friends){
         for(let i =0;i<data.friends.length;i++) {
-            if(user.id === data.friends[i]){
-                return "yellow";
+            if(user.id === data.friends[i].id){
+                
+                if(data.friends[i].isFriends){
+                    return "red";
+                }
+                else if(data.friends[i].direction === "send") {
+                    return "orange";
+                }
+                else {
+                    return "green";
+                }  
             }
         }
     }
-    if(data.invitesFriends){
-        for(let i =0;i<data.invitesFriends.length;i++) {
-            if(user.id === data.invitesFriends[i]){
-                return 'red';
-            }
-        }
-    }
-    return '#3498db';
+    return "#3498db";
 }
 
-function checkFriends(user) {
+function checkFriends(user, i) {
     if(data.friends){
         for(let i =0;i<data.friends.length;i++) {
-            if(user.id === data.friends[i]){
-                return 'Usuń ze znajomych';
+            if(user.id === data.friends[i].id){
+                if(data.friends[i].isFriends){
+                    return "Usuń ze znajomych";
+                }
+                else if(data.friends[i].direction === "send") {
+                    return "Usuń zaproszenie"
+                }
+    
+                else { 
+                    return "Akceptuj zaproszenie";
+                }
             }
         }
     }
-    if(data.invitesFriends){
-        for(let i =0;i<data.invitesFriends.length;i++) {
-            if(user.id === data.invitesFriends[i]){
-                return 'Usuń zaproszenie';
-            }
-        }
-    }
-    return 'Wyślij zaproszenie';
+    return "Wyślij zaproszenie";
 }
 
 var checkStatusSearchFriends = false;
@@ -333,6 +360,7 @@ export function uploadStatus() {
                 for(let i = 0; i<usersFilter.length;i++) {
                     for(let j = 0; j<allUsers.length;j++) {
                         if(usersFilter[i].id === allUsers[j].id){
+                            console.log("    ")
                             usersFilter[i] = allUsers[j];
                         }
                     }
@@ -350,39 +378,56 @@ export function uploadStatus() {
 }
 
 function checkYourFriends(selector, i , user) {
-    let change = true;
+    let deleteButtonSelector = document.getElementsByClassName("friends-button-delete-invite")[i];
     if(data.friends) {
         for(let j = 0; j < data.friends.length;j++){
             if(user){
-                if(data.friends[j] === user.id){
-                    if(selector[i].innerText !== 'Usuń ze znajomych') {
-                        selector[i].innerText = 'Usuń ze znajomych';
+                if(data.friends[j].id === user.id){
+                    if(data.friends[j].isFriends){
+                            if(selector[i].innerText !== "Usuń ze znajomych") {
+                                selector[i].innerText = "Usuń ze znajomych";
+                            }
+                            if(selector[i].style.backgroundColor !== "red"){
+                                selector[i].style.backgroundColor= "red";
+                            }
+                            if(deleteButtonSelector.style.display !== "none"){
+                                deleteButtonSelector.style.display = "none";
+                            }
                     }
-                    selector[i].style.backgroundColor = "red";
-                    change = false;
-                }
+                    else if(data.friends[j].direction === "send") {
+                        if(selector[i].innerText !== "Usuń zaproszenie") {
+                            selector[i].innerText = "Usuń zaproszenie";
+                        }
+                        if(selector[i].style.backgroundColor !== "orange"){
+                            selector[i].style.backgroundColor= "orange";
+                        }
+                        if(deleteButtonSelector.style.display !== "none"){
+                            deleteButtonSelector.style.display = "none";
+                        }
+                    }
+                    else {
+                       
+                        if(selector[i].innerText !== "Akceptuj zaproszenie") {
+                            selector[i].innerText = "Akceptuj zaproszenie";
+                        }
+                        if(selector[i].style.backgroundColor !== "green"){
+                            selector[i].style.backgroundColor= "green";
+                        }
+                        if(deleteButtonSelector.style.display !== "block"){
+                            deleteButtonSelector.style.display = "block";
+                        }
+                    }
+                    return;    
+                }     
             }
         }
     }
-    if(data.invitesFriends) {
-        for(let j = 0; j < data.invitesFriends.length;j++){
-            if(user){
-                if(data.invitesFriends[j] === user.id){
-                    if(selector[i].innerText !== 'Usuń zaproszenie') {
-                        selector[i].innerText = 'Usuń zaproszenie';
-                    }
-                    selector[i].style.backgroundColor = "red";
-                    change = false;
-                }
-            }
-        }
-    }
-    if(change){
-        if(selector[i].innerText !== 'Wyślij zaproszenie') {
-            selector[i].innerText = 'Wyślij zaproszenie';
-            selector[i].style.backgroundColor="#3498db";
-        } 
+    deleteButtonSelector.style.display = "none";
+    if(selector[i].innerText !== "Wyślij zaproszenie") {
+        selector[i].innerText = "Wyślij zaproszenie";
+        selector[i].style.backgroundColor="#3498db";
     } 
+    
 }
 
 function checkNameAndSurname(selectorName, i, user) {
@@ -392,24 +437,32 @@ function checkNameAndSurname(selectorName, i, user) {
 }
 
 function checkRanking(selectorRanking, i){
-    if(selectorRanking[i].innerText !== ('Ranking: ' + allUsers[i].ranking)){
-        selectorRanking[i].innerText = 'Ranking: ' + allUsers[i].ranking
+    if(selectorRanking[i].innerText !== ("Ranking: " + allUsers[i].ranking)){
+        selectorRanking[i].innerText = "Ranking: " + allUsers[i].ranking
     }
 }
 
 function sendInviteToFriends(user) {
     if(user && user.id !== data.id){
-        if(data.invitesFriends){
-            for(let i = 0; i < data.invitesFriends.length; i++) {
-                if(data.invitesFriends[i] === user.id){
-                 deleteInviteFriends(user.id);
+        if(data.friends){
+            for(let i = 0; i < data.friends.length; i++) {
+                if(data.friends[i].id === user.id){
+                 
+                 if(data.friends[i].direction === "get") {
+                     acceptedInviteFriends(user);
+                 }
+                 else {
+                    deleteInviteFriends(user);
+                 }
+                   
                  return;
                 }
             } 
          }
-        
-         addInviteFriends(user.id);
+         addInviteFriends(user);
     }
-    
+}
 
+function deleteInviteAfterGetInvite(user){
+    deleteInviteFriends(user);
 }

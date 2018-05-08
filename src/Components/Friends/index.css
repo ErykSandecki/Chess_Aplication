@@ -202,7 +202,7 @@
 
 .friends-users-list {
     width: 100%;
-    height: 100px;
+    height: 120px;
     border-bottom: 2px solid #e6e6e6;
 }
 
@@ -231,7 +231,7 @@
     margin-top: 10px;
     float: left;
     margin-left: 10%;
-    width: 25%;
+    width: 60%;
     background-color: #3498db;
     color: white;
     border-radius: 5px;
@@ -244,12 +244,11 @@
     margin-top: 10px;
     float: left;
     margin-left: 10%;
-    width: 30%;
-    background-color: #3498db;
+    width: 60%;
+    background-color: orange;
     color: white;
     border-radius: 5px;
     border: none;
-    display: none;
     font-size: 15px;
     height: 25px;
 }
