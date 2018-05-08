@@ -296,7 +296,7 @@ function setDisplay(user){
     if(data.friends){
         for(let i = 0; i<data.friends.length;i++){
             if(data.friends[i].id === user.id){
-                if(data.friends[i].direction === "get"){
+                if(data.friends[i].direction === "get" && !data.friends[i].isFriends){
                     return "block"
                 }
             }
@@ -448,21 +448,24 @@ function sendInviteToFriends(user) {
             for(let i = 0; i < data.friends.length; i++) {
                 if(data.friends[i].id === user.id){
                  
-                 if(data.friends[i].direction === "get") {
+                 if(data.friends[i].direction === "get" && data.friends[i].isFriends === false) {
                      acceptedInviteFriends(user);
+                     console.log("akceptacja zaproszenia")
                  }
                  else {
                     deleteInviteFriends(user);
+                    console.log("usuniecie znajomego")
                  }
-                   
                  return;
                 }
             } 
          }
          addInviteFriends(user);
+         console.log("wysłanie")
     }
 }
 
 function deleteInviteAfterGetInvite(user){
     deleteInviteFriends(user);
+    console.log("usuniecie zaproszenia")
 }
