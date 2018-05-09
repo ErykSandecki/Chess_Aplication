@@ -167,6 +167,15 @@ export default class Friends extends Component {
             suggestion.name.toLowerCase().includes(text.toLowerCase()))
       }
       
+      setNumberOfFriends() {
+        let numberFriends = 0;  
+        for(let i = 0; i<data.friends.length;i++){
+            if(data.friends[i].isFriends){
+                numberFriends++;
+            }
+          }
+          return numberFriends;
+      }
 
     render() {
         const styleFriends = {display: this.state.displayFriends};
@@ -198,8 +207,8 @@ export default class Friends extends Component {
                             <p className="friends-list-users-text">Znajomi: 
                                 <span className="badge friends-number">
                                 {data && data.friends ? 
-                                    data.friends.length - 1 
-                                    : null}
+                                    this.setNumberOfFriends() 
+                                    : 0}
                                 </span>
                             </p>
                         </div>
@@ -208,7 +217,7 @@ export default class Friends extends Component {
                                 <span className="badge friends-ranking">
                                 {data ? 
                                     data.ranking 
-                                    : null}
+                                    : 0}
                                 </span>
                             </p>
                         </div>
@@ -283,7 +292,6 @@ export default class Friends extends Component {
         )
     }
 }
-
 
 var usersFilter = -1;
 
