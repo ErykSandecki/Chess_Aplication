@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import Firebase from './Components/Firebase/index.js';
 import Intro from './Components/Intro/index.js';
 import Navigation from './Components/Navigation/index.js';
 import MenuLeftDrop from './Components/Menu-Left_Drop/index.js'
@@ -37,7 +38,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    updateAndDownloadBase();
+    //updateAndDownloadBase();
   }
 
   setStyleMarginAppLeft(marginLeftApp){
@@ -99,6 +100,7 @@ class App extends Component {
     const styleApp = {marginLeft: this.state.marginLeftApp}
     return (
       <div className="App" style={styleApp}>
+        <Firebase/>
         <LoginRegister 
           visibleForm={this.state.visibleForm}
           showVisibleForm={this.showVisibleForm}

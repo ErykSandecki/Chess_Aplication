@@ -1,8 +1,8 @@
-import firebase from 'firebase';
-import {uploadStatus, classFriends} from '../Components/Friends/index.js';
+/*import firebase from 'firebase';
+import {classFriends} from '../Components/Friends/index.js';
 
 export var allUsers;
-export var data;
+export var actuallyUser;
 
 
 var config = {
@@ -31,26 +31,27 @@ var storageRef;
 
 function updateData() {
     if(referenceUser >= 0){
-        data = allScore[referenceUser];
-        if(!data){
+        actuallyUser = allScore[referenceUser];
+        if(!actuallyUser){
             referenceUser -= 1;
-            data = allScore[referenceUser];
+            actuallyUser = allScore[referenceUser];
         }
         allUsers = [];
         for(let i = 0; i < allScore.length;i++) {
             if(allScore[i]){
-                if(data.nameUser !== allScore[i].nameUser){
+                if(actuallyUser.nameUser !== allScore[i].nameUser){
                     allUsers.push(allScore[i])
                 }
             }  
         }
-        allUsers.push(data);
+        allUsers.push(actuallyUser);
     }
-    
-    classFriends.setState({
-        filterSearch: 10,
-        nextTop: 400,
-    })
+    if(classFriends.props.vissibleFriends){
+        classFriends.setState({
+            filterSearch: 10,
+            nextTop: 400,
+        })
+    }
 }
 
 export function updateAndDownloadBase () {
@@ -68,7 +69,6 @@ function donwloadData(data) {
      
     if(!register) {
         updateData();
-        uploadStatus();
      }   
     
      if(register){
@@ -76,7 +76,7 @@ function donwloadData(data) {
         register = false;
     }
 
-    console.log(allScore);
+    
     
 }
 
@@ -90,15 +90,15 @@ export function addInviteFriends(user) {
     let newData;
     let newDataForFriends;
     // Check that user have friends table//
-    if(data.friends){
+    if(actuallyUser.friends){
         newData = {
             id: user.id,
             read:false,
             isFriends:false,
             direction:'send',
         }
-        data.friends.push(newData);
-        newData = data.friends;
+        actuallyUser.friends.push(newData);
+        newData = actuallyUser.friends;
     }
     
     else{
@@ -112,7 +112,7 @@ export function addInviteFriends(user) {
     // Check that new friends have friends table//
     if(user.friends){
         newDataForFriends = {
-            id:  data.id,
+            id:  actuallyUser.id,
             read: false,
             isFriends: false,
             direction: 'get',
@@ -123,13 +123,13 @@ export function addInviteFriends(user) {
 
     else {
         newDataForFriends = [{
-            id: data.id,
+            id: actuallyUser.id,
             read: false,
             isFriends: false,
             direction: 'get',
         }]
     }
-    let refAddSendFriend = database.ref('users').child(data.id).child('friends');
+    let refAddSendFriend = database.ref('users').child(actuallyUser.id).child('friends');
     let refAddGetFriend = database.ref('users').child(user.id).child('friends');
     refAddSendFriend.set(newData);
     refAddGetFriend.set(newDataForFriends);
@@ -139,17 +139,17 @@ export function addInviteFriends(user) {
 export function deleteInviteFriends(user) {
     let newData = [];
     let newDataForFriends = [];
-    for(let i = 0; i<data.friends.length; i++) {
-        if(data.friends[i].id !== user.id) {
-            newData.push(data.friends[i])
+    for(let i = 0; i<actuallyUser.friends.length; i++) {
+        if(actuallyUser.friends[i].id !== user.id) {
+            newData.push(actuallyUser.friends[i])
         }
     }
     for (let i = 0; i< user.friends.length; i++) {
-        if(user.friends[i].id !== data.id) {
+        if(user.friends[i].id !== actuallyUser.id) {
             newDataForFriends.push(user.friends[i])
         }
     }
-    let refDeleteSendFriend = database.ref('users').child(data.id).child('friends');
+    let refDeleteSendFriend = database.ref('users').child(actuallyUser.id).child('friends');
     let refDeleteGetFriend = database.ref('users').child(user.id).child('friends');
     refDeleteSendFriend.set(newData);
     refDeleteGetFriend.set(newDataForFriends);
@@ -160,19 +160,19 @@ export function deleteInviteFriends(user) {
 export function acceptedInviteFriends(user){
     let indexUser;
     let indexFriend;
-    for (let i = 0; i< data.friends.length;i++){
-        if(data.friends[i].id === user.id){
+    for (let i = 0; i< actuallyUser.friends.length;i++){
+        if(actuallyUser.friends[i].id === user.id){
             indexUser = i;
             break;
         }
     }
     for(let i = 0; i< user.friends.length; i++){
-        if(user.friends[i].id === data.id){
+        if(user.friends[i].id === actuallyUser.id){
             indexFriend = i;
             break;
         }
     }
-    let refAcceptedUserInvite = database.ref('users').child(data.id).child('friends').child(indexUser).child('isFriends');
+    let refAcceptedUserInvite = database.ref('users').child(actuallyUser.id).child('friends').child(indexUser).child('isFriends');
     let refAcceptedFriendInvite = database.ref('users').child(user.id).child('friends').child(indexFriend).child('isFriends');
     refAcceptedUserInvite.set(true);
     refAcceptedFriendInvite.set(true);
@@ -190,12 +190,12 @@ export function sendReferencePicture(file){
 
 function downloadId() {
    for(let i = 0; i < keys.length; i++) {
-        if(data.nameUser === scores[keys[i]].nameUser){
-           data.id = keys[i];
+        if(actuallyUser.nameUser === scores[keys[i]].nameUser){
+            actuallyUser.id = keys[i];
            referenceUser = i;
         }
     }
-    database.ref('users').child(data.id).set(data);
+    database.ref('users').child(actuallyUser.id).set(actuallyUser);
 }
 
 
@@ -204,7 +204,7 @@ export function addUser(value, hideRegisterLogin, setStatusUser) {
     referenceUser = -1;
     setData(value);
     if(fileName) {
-        storageRef = firebase.storage().ref(data.nameUser);
+        storageRef = firebase.storage().ref(actuallyUser.nameUser);
         var task = storageRef.put(fileName);
         task.on('state_changed',function progress(snapshot) {
            var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -222,14 +222,14 @@ export function addUser(value, hideRegisterLogin, setStatusUser) {
     else {
         viewCompleteRegistration(hideRegisterLogin);
         register = true;
-        data.pictureUrl="https://firebasestorage.googleapis.com/v0/b/chess-base-aa6a9.appspot.com/o/empty-logo-user.png?alt=media&token=d1e9b113-271f-4ec1-a2eb-8cd7a0f8bae9";
-        ref.push(data);
+        actuallyUser.pictureUrl="https://firebasestorage.googleapis.com/v0/b/chess-base-aa6a9.appspot.com/o/empty-logo-user.png?alt=media&token=d1e9b113-271f-4ec1-a2eb-8cd7a0f8bae9";
+        ref.push(actuallyUser);
         setStatusUser(); 
     }
 }
 
 function setData(value){
-    data = {
+    actuallyUser = {
         id: '',
         nameUser: value[0],
         email: value[1],
@@ -262,12 +262,12 @@ function viewCompleteRegistration(hideRegisterLogin) {
 }
 
 function uploadImage(status){
-    var starsRef = pathReference.child(data.nameUser);
+    var starsRef = pathReference.child(actuallyUser.nameUser);
     
     starsRef.getDownloadURL().then(function(url) {
-        data.pictureUrl = url;
+        actuallyUser.pictureUrl = url;
         register = true;
-        ref.push(data); 
+        ref.push(actuallyUser); 
         fileName = null;
     }).catch(function(error) {
         switch (error.code) {
@@ -325,3 +325,4 @@ export function tryLoginUser(userName, password, hideTableLogin, setStatusUsers)
 }
 
 
+*/
