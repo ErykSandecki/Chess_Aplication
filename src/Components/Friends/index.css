@@ -154,6 +154,7 @@
     margin-left: 4%;
     width: 92%;
     height: 85%;
+    position: relative;
     float: left;
     border-left: 2px solid #e6e6e6;
     border-right: 2px solid #e6e6e6;
@@ -277,6 +278,65 @@
     left: 40%;
     z-index: 2;
     display: none;
+}
+
+.friends-advanced-search-validation {
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    width: 95%;
+    height: 70%;
+    overflow: auto;
+}
+
+.friends-advanced-search-title {
+    font-size: 20px;
+    border: 1px solid green;
+    width: 80%;
+    margin-left: 10%;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: 600;
+    background-color: white;
+}
+
+.friends-search-advanced-exit {
+    border: 1px solid red;
+    background-color: white;
+    border-radius: 5px;
+    margin-top: 10px;
+
+}
+
+.friends-search-advanced-exit:focus {
+    outline: none;
+}
+
+.friends-advanced-search-name,
+.friends-advanced-search-surname,
+.friends-advanced-search-country,
+.friends-advanced-search-region,
+.friends-advanced-search-ranking {
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border: 1px solid #C2C2C2;
+    box-shadow: 1px 1px 4px #EBEBEB;
+    -moz-box-shadow: 1px 1px 4px #EBEBEB;
+    -webkit-box-shadow: 1px 1px 4px #EBEBEB;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: 7px;
+    outline: none;
+}
+
+.friends-advanced-button {
+    margin-top: 20px;
+    width: 20%;
 }
 
 @media only screen and (min-width: 768px) {
@@ -432,6 +492,10 @@
     }
 
     .friends-window-users {
+        height: 85%;
+    }
+
+    .friends-advanced-search-validation {
         height: 85%;
     }
 }

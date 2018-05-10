@@ -1,6 +1,7 @@
 import './index.css';
 import React, { Component } from 'react';
 import {actuallyUser, allUsers, addInviteFriends, deleteInviteFriends, acceptedInviteFriends} from '../../Firebase/index.js';
+
 export default class Friends extends Component {
     constructor(props) {
         super(props);
@@ -17,13 +18,23 @@ export default class Friends extends Component {
             styleFriendsLoaderDisplay: 'none',
             nameSearch: false,
             usersFilter: -1,
+            advancedSearch: false,
+            advancedSearchShow: false,
+            name: '',
+            surname: '',
+            country: '',
+            region: '',
+            ranking: 0,
         }
+        
         this.hideFriendsSection = this.hideFriendsSection.bind(this);
         this.showFriendsSection = this.showFriendsSection.bind(this);
         this.showYourFriends = this.showYourFriends.bind(this);
         this.showSearchFriends = this.showSearchFriends.bind(this);
         this.showMoreUsers = this.showMoreUsers.bind(this);
         this.showSuggestionSearch = this.showSuggestionSearch.bind(this);
+        this.searchAdvancedUsers = this.searchAdvancedUsers.bind(this);
+        this.getAdvancedSearch = this.getAdvancedSearch.bind(this);
     }
 
     componentDidMount() {
@@ -74,11 +85,15 @@ export default class Friends extends Component {
 
     hideFriendsSection() {
         this.props.hideFriendsSection();
-        this.setState({opacityFriendsTable: 0})
+        this.setState({
+            opacityFriendsTable: 0,
+            advancedSearch: false,
+        })
         setTimeout(() => {
             this.setState({opacityFriendsBackground: 0})
             setTimeout(() => {
                 this.setState({displayFriends: 'none'})
+                this.showYourFriends();
             },500);
         },500);
     }
@@ -148,7 +163,7 @@ export default class Friends extends Component {
                 nameSearch: false,
                 filterSearch: 10,
                 nextTop: 400,
-                usersFilter: -1,
+                usersFilter: null,
             });
             
             return;
@@ -161,6 +176,24 @@ export default class Friends extends Component {
         return allUsers.filter(suggestion => 
             suggestion.name.toLowerCase().includes(text.toLowerCase()))
       }
+    
+    searchAdvancedUsers() {
+        this.setState({advancedSearch: !this.state.advancedSearch});
+        if(this.state.advancedSearchShow) {
+            this.setState({advancedSearchShow: false});
+        }
+        this.setState({
+            name: '',
+            surname: '',
+            country: '',
+            region: '',
+            ranking: 0,
+        })
+    }
+
+    getAdvancedSearch() {
+        this.setState({advancedSearchShow: true});
+    }
       
     setNumberOfFriends() {
         let numberFriends = 0;  
@@ -251,6 +284,60 @@ export default class Friends extends Component {
     }
 
     filteredListUsers(user, index, ){
+        if(this.state.advancedSearchShow) {
+           if(this.state.name !== '') {
+               if(this.state.name.toLowerCase() !== user.name.toLowerCase()){
+                   return null;
+               }
+           }
+           if(this.state.surname !== ''){
+                if(this.state.surname.toLowerCase() !== user.surname.toLowerCase()){
+                    return null;
+                }
+           }
+           if(this.state.country !== ''){
+                if(this.state.country.toLowerCase() !== user.country.toLowerCase()){
+                    return null;
+                }
+            }
+            if(this.state.region !== ''){
+                if(this.state.region.toLowerCase() !== user.region.toLowerCase()){
+                    return null;
+                }
+           }
+           if(this.state.ranking !== 0){
+                // eslint-disable-next-line    
+                if(parseInt(this.state.ranking) !== user.ranking){
+                    return null;
+                }
+            }
+        }
+
+        if(!this.state.friendsSearch) {
+            let isFriend = false;
+            if(actuallyUser.friends) {
+                for(let i = 0; i < actuallyUser.friends.length;i++) {
+                    if(actuallyUser.friends[i].id === user.id) {
+                        isFriend = true;
+                        break;
+                    }
+                }
+                if(!isFriend) {
+                    return null;
+                }
+            }
+        }
+
+        else {
+            if(actuallyUser.friends) {
+                for(let i = 0; i < actuallyUser.friends.length;i++) {
+                    if(actuallyUser.friends[i].id === user.id) {
+                        return null;
+                    }
+                }
+            }
+        }
+
         const styleFriendsUsersList = {filter: this.state.styleFriendsUsersListFilter};
         if(index >= this.state.filterSearch) {
             return null;
@@ -326,21 +413,57 @@ export default class Friends extends Component {
                                onClick={this.showSearchFriends}>
                                Szukaj znajomych</div>
                           <div className="friends-users-table">
-                            <input placeholder="Imię" className="friends-search-username" onInput={this.showSuggestionSearch}/>
-                            <button className="friends-search-advanced">Wyszukiwanie zaawansowane</button>
+                            {this.state.advancedSearch ? 
+                                null
+                                :<input placeholder="Imię" className="friends-search-username" onInput={this.showSuggestionSearch}/>}
+                            {this.state.advancedSearch?
+                                <button className="friends-search-advanced-exit" onClick={this.searchAdvancedUsers}>Zakończ <span className="glyphicon glyphicon-remove"/></button>
+                                :<button className="friends-search-advanced" onClick={this.searchAdvancedUsers}>Wyszukiwanie zaawansowane</button>}
+                           
                             <div className="friends-window-users" onScroll={this.showMoreUsers}>
-                                <div className="friends-loader" style={styleFriendsLoader}></div>
-                                {this.state.friendsSearch ? 
-                                    this.props.vissibleFriends ?
+                                {this.state.advancedSearch ? 
+                                        this.state.advancedSearchShow ?
+                                            allUsers.map((user, index)=> {
+                                                return this.filteredListUsers(user,index);
+                                            })
+                                            :<div className="friends-advanced-search-validation">
+                                                <div className="friends-advanced-search-title">WYSZUKIWANIE ZAAWANSOWANE</div>
+                                                <div className="friends-advanced-search-name">Imię: <input placeholder="Imię"
+                                                    value={this.state.name} 
+                                                    onInput={(e)=>{this.setState({name: e.target.value})}}/></div>
+                                                <div className="friends-advanced-search-surname">Nazwisko: <input placeholder="Nazwisko"
+                                                    value={this.state.surname} 
+                                                    onInput={(e)=>{this.setState({surname: e.target.value})}}/></div>
+                                                <div className="friends-advanced-search-country">Kraj: <input placeholder="Kraj"
+                                                    value={this.state.country} 
+                                                    onInput={(e)=>{this.setState({country: e.target.value})}}/></div>
+                                                <div className="friends-advanced-search-region">Region: <input placeholder="Region"
+                                                    value={this.state.region} 
+                                                    onInput={(e)=>{this.setState({region: e.target.value})}}/></div>
+                                                <div className="friends-advanced-search-ranking">Ranking: <input placeholder="Ranking"
+                                                    value={this.state.ranking} 
+                                                    onInput={(e)=>{this.setState({ranking: e.target.value})}}
+                                                    type="number"/></div>
+                                                <button className="friends-advanced-button btn btn-success" onClick={this.getAdvancedSearch}>Szukaj</button>
+                                            </div> 
+                                :this.props.vissibleFriends ? 
+                                    this.state.friendsSearch ?
                                         this.state.nameSearch ?
-                                        this.state.usersFilter.map((user, index)=>{
-                                           return this.filteredListUsers(user,index);
+                                           this.state.usersFilter.map((user, index)=>{
+                                                return this.filteredListUsers(user,index);
                                         })
                                         :allUsers.map((user, index) => {
                                             return this.filteredListUsers(user,index);
                                           }) 
-                                    :null
-                                :null}
+                                    :this.state.nameSearch ?
+                                           this.state.usersFilter.map((user, index)=>{
+                                                return this.filteredListUsers(user,index);
+                                        })
+                                        :allUsers.map((user, index) => {
+                                            return this.filteredListUsers(user,index);
+                                    })
+                                :null} 
+                                <div className="friends-loader" style={styleFriendsLoader}></div>
                             </div>
                           </div>          
                     </div>
