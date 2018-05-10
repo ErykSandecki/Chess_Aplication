@@ -322,9 +322,10 @@ export default class Friends extends Component {
                         break;
                     }
                 }
-                if(!isFriend) {
-                    return null;
-                }
+                
+            }
+            if(!isFriend) {
+                return null;
             }
         }
 
