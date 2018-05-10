@@ -1,3 +1,7 @@
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 /* First mobile*/
 .friends {
     position: fixed;
@@ -159,11 +163,19 @@
 }
 
 .friends-exit-section {
-    opacity: 0.5;
+    border: 1px solid orange;
+    background-color: orange;
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    border-radius: 5px;
+    padding: 2px;
+
 }
 
 .friends-exit-section:hover {
-    opacity: 1;
+    filter: drop-shadow(8px 8px 10px gray);
 }
 
 .friends-exit-icon {
@@ -267,11 +279,6 @@
     display: none;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 @media only screen and (min-width: 768px) {
     .friends-users-profile-table {
         height: 170px;
@@ -308,6 +315,7 @@
         width: 75px;
         margin-top: 22.5px !important;
     }
+
     .friends-list-users,
     .friends-ranking-users {
         float: right;
@@ -376,7 +384,7 @@
     .friends-users-list-image{
         height: 100px;
         width: 100px;
-        margin-top: 10px;
+        margin-top: 10px !important;
     }
 
     .friends-list-users,
@@ -405,7 +413,7 @@
 
     .friends-exit-section {
         float: left;
-        margin-left: 13%;
+        margin-left: 7%;
         margin-top: 20px;
     }
 

@@ -1,4 +1,4 @@
-/*import firebase from 'firebase';
+import firebase from 'firebase';
 import {classFriends} from '../Components/Friends/index.js';
 
 export var allUsers;
@@ -32,10 +32,6 @@ var storageRef;
 function updateData() {
     if(referenceUser >= 0){
         actuallyUser = allScore[referenceUser];
-        if(!actuallyUser){
-            referenceUser -= 1;
-            actuallyUser = allScore[referenceUser];
-        }
         allUsers = [];
         for(let i = 0; i < allScore.length;i++) {
             if(allScore[i]){
@@ -45,12 +41,12 @@ function updateData() {
             }  
         }
         allUsers.push(actuallyUser);
-    }
-    if(classFriends.props.vissibleFriends){
-        classFriends.setState({
-            filterSearch: 10,
-            nextTop: 400,
-        })
+        if(classFriends.props.vissibleFriends){
+            classFriends.setState({
+                filterSearch: classFriends.state.filterSearch,
+                nextTop: classFriends.state.nextTop,
+            })
+        }
     }
 }
 
@@ -323,6 +319,3 @@ export function tryLoginUser(userName, password, hideTableLogin, setStatusUsers)
         }
     }
 }
-
-
-*/
