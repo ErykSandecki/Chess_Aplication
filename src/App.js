@@ -9,6 +9,7 @@ import LoginRegister from './Components/Login-Register/index.js';
 import Friends from './Components/Friends/index.js';
 import Regulations from './Components/Regulations/index.js';
 import {updateAndDownloadBase} from './Firebase/index.js';
+import {resetReferenceUser} from './Firebase/index.js';
 
 class App extends Component {
   constructor(props){
@@ -37,6 +38,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    referenceApp = this;
     updateAndDownloadBase();
   }
 
@@ -69,6 +71,11 @@ class App extends Component {
      statusLogin: !this.state.statusLogin,
      visibleForm: false
    });
+   setTimeout(()=>{
+    if(!this.state.statusLogin) {
+      resetReferenceUser();
+    }
+   },100);
   }
 
   showFriendsSection() {
@@ -98,7 +105,7 @@ class App extends Component {
   render() {
     const styleApp = {marginLeft: this.state.marginLeftApp}
     return (
-      <div className="App" style={styleApp}>
+      <div className="App" style={styleApp} onClick={this.hideAllComponent}>
         <LoginRegister 
           visibleForm={this.state.visibleForm}
           showVisibleForm={this.showVisibleForm}
@@ -148,5 +155,6 @@ class App extends Component {
 }
 
 export default App;
+export var referenceApp;
 
 

@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import {classFriends} from '../Components/Friends/index.js';
-
+import {referenceNotificationsNewFriends} from '../Components/Notifications-New-Friend/index.js';
 export var allUsers;
 export var actuallyUser;
 
@@ -20,17 +20,23 @@ var database = firebase.database();
 var ref = database.ref('users');
 var storage = firebase.storage();
 var pathReference = storage.ref();
-var referenceUser;
+var referenceUser = -1;
 var scores;
 var keys;
 var allScore = [];
 var fileName;
 var storageRef;
+var updateNotifications = false;
 
 // Update data information user actually login//
 
+export function resetReferenceUser() {
+    referenceUser = -1;
+    updateNotifications = false;
+}
+
 function updateData() {
-    if(referenceUser >= 0){
+    if(referenceUser !== -1){
         actuallyUser = allScore[referenceUser];
         allUsers = [];
         for(let i = 0; i < allScore.length;i++) {
@@ -47,7 +53,74 @@ function updateData() {
                 nextTop: classFriends.state.nextTop,
             })
         }
+
+        if(updateNotifications) {
+            checkNewNotificationsFriends();
+        }
     }
+}
+
+export function checkNewNotificationsFriends() {
+    updateNotifications = true;
+    referenceNotificationsNewFriends.sortReverseUser();
+    let newNotifications = false;
+    if(actuallyUser.friends) {
+        checkUser();
+        for(let i = 0; i< actuallyUser.friends.length; i++) {
+          if((!actuallyUser.friends[i].read && actuallyUser.friends[i].direction === "get") 
+              || (!actuallyUser.friends[i].read && actuallyUser.friends[i].direction === "send" && actuallyUser.friends[i].isFriends)) {
+             referenceNotificationsNewFriends.setState({newNotifications: true});
+             newNotifications = true;
+            }
+        }
+        if(!newNotifications) {
+            referenceNotificationsNewFriends.setState({newNotifications: false});
+        }
+    }
+    else {
+        referenceNotificationsNewFriends.setState({newNotifications: false});
+    }   
+}
+
+export function deleteNotificationFriends() {
+    if(actuallyUser.friends){
+        for(let i =0; i< actuallyUser.friends.length; i++) {
+            if(!actuallyUser.friends[i].read){
+                actuallyUser.friends[i].read = true;
+            }
+        }
+        let editFriend = database.ref('users').child(actuallyUser.id).child('friends');
+        editFriend.set(actuallyUser.friends);
+    }
+  
+}
+
+function checkUser() {
+    let usersExisting = [];
+    for(let i = 0; i < actuallyUser.friends.length; i++) {
+       for(let j = 0; j< allUsers.length;j++) {
+           if(actuallyUser.friends[i].id === allUsers[j].id){
+               usersExisting.push(allUsers[j].id);
+           }
+       }
+    } 
+    sortNotExistingUser(usersExisting);
+}
+
+function sortNotExistingUser(usersExisting) {
+    let nextUser = 0;
+    let sortFriendsExisting = []
+    for(let i =0; i<actuallyUser.friends.length; i++) {
+        if(actuallyUser.friends[i].id === usersExisting[nextUser]){
+            sortFriendsExisting.push(actuallyUser.friends[i]);
+            nextUser++;
+        }
+        if(actuallyUser.friends.length === sortFriendsExisting.length){
+            return;
+        }
+    }
+    let editFriend = database.ref('users').child(actuallyUser.id).child('friends');
+    editFriend.set(sortFriendsExisting);
 }
 
 export function updateAndDownloadBase () {
@@ -71,9 +144,6 @@ function donwloadData(data) {
         downloadId();
         register = false;
     }
-
-    
-    
 }
 
 function errData(err) {

@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css';
 import emptyLogoUser from '../../Images/empty-logo-user.png';
+import NotificationsNewFriends from '../Notifications-New-Friend/index.js';
 import {actuallyUser} from '../../Firebase/index.js';
+
 
 export default class Navigation extends Component {
     render() {
@@ -24,6 +26,7 @@ export default class Navigation extends Component {
                             <img className="nav-users img-circle" src={actuallyUser.pictureUrl} alt="nav-img"/>
                             <p className="nav-register-text">{actuallyUser.name}</p>
                             <p className="nav-register-logout" onClick={this.props.setStatusUsers}>Wyloguj</p>
+                            <NotificationsNewFriends/>
                         </React.Fragment>
                         :<React.Fragment>
                             <img className="nav-users img-circle" src={emptyLogoUser} alt="nav-empty-img"/>

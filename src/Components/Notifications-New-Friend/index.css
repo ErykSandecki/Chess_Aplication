@@ -1,0 +1,86 @@
+.notifications-friends {
+    float: left;
+    position: relative;
+    line-height: 75px;
+    margin-right: 20px;
+    font-size: 20px;
+    z-index: 3;
+}
+
+.notifications-friends-icon {
+    opacity: 0.5;
+}
+
+.notifications-friends:hover .notifications-friends-icon {
+    opacity: 1;
+}
+
+.notifications-friends-new-notifications {
+    position: absolute;
+    top: -4px;
+    z-index: 1;
+    color: red;
+    left: 15px;
+    font-size: 30px;
+}
+
+.notifications-friends-title {
+    position: absolute;
+    z-index: 2;
+    width: 250px;
+    height: 50px;
+    top: 0px;
+    background-color: rgb(55, 57, 64);
+    text-align: center;
+    color: white;
+    line-height: 50px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 20px;
+    left: -5px;
+}
+
+.notifications-friends-table {
+    position: absolute;
+    background-color: rgb(241, 241, 241);
+    width: 250px;
+    max-height: 400px;
+    top: 50px;
+    left: -5px;
+    overflow: auto;
+    border: 1px solid black;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    
+}
+
+.notifications-friends-arrow {
+    position: absolute;
+    top: -20px;
+}
+
+.notifications-friends-invite-image {
+    width: 50px;
+    height: 50px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+.notifications-friends-invite-button {
+    width: 40%;
+    margin: 5%
+}
+
+.notifications-friends-invite-underline {
+    background-color: rgb(55, 57, 64);
+    width: 100%;
+    height: 1px;
+    margin-top: 5%;
+}
+
+.notifications-friends-isfriends {
+    font-size: 15px;
+    margin-left: 10px;
+    font-weight: 600;
+}
