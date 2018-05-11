@@ -5,6 +5,7 @@
     height: 75px;
     border-bottom: 1px solid #e6e6e6;
     position: fixed;
+    z-index: 1;
 }
 
 .nav-button {
