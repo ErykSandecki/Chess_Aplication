@@ -1,0 +1,85 @@
+.message {
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+}
+
+.message-title {
+    position: relative;
+    margin-right: 20px;
+    width: 250px;
+    min-height: 40px;
+    background-color: rgb(55, 57, 64);
+    border-radius: 2px;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.message-title-text {
+    line-height: 40px;
+    margin-left: 10px;
+    font-weight: 900;
+}
+.message-title-new-message,
+.message-title-settings {
+    color: white;
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+    padding: 4px;
+}
+
+.message-title-new-message:hover,
+.message-title-settings:hover {
+    background-color: darkgray;
+    border-radius: 12px;
+}
+
+.message-contacts-filter {
+    width: 250px;
+    border: 0.5px solid black;
+    max-height: 800px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: 0.5s;
+    background-color: white;
+    direction: ltr;
+}
+
+.message-contact-filter-friends-image {
+    height: 50px;
+    width: 50px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    float: left;
+    margin-left: 5px;
+}
+
+.message-contact-filter-friends-user {
+    color: #000;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 120px;
+    float: left;
+    line-height: 70px;
+    margin-left: 10px;
+    margin-bottom: 0px;
+}
+
+.message-contact-filter-friends-status {
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
+    background-color: greenyellow;
+    float: right;
+    margin-top: 30px;
+    margin-right: 20px;
+}
+
+.message-contact-filter-friends-underline {
+    height: 1px;
+    width: 100%;
+    background-color: black;
+    float: left;
+}

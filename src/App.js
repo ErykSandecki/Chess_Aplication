@@ -7,6 +7,7 @@ import Footer from './Components/Footer/index.js'
 import Article from './Components/Article/index.js'
 import LoginRegister from './Components/Login-Register/index.js';
 import Friends from './Components/Friends/index.js';
+import Message from './Components/Message/index.js';
 import Regulations from './Components/Regulations/index.js';
 import {updateAndDownloadBase} from './Firebase/index.js';
 import {resetReferenceUser} from './Firebase/index.js';
@@ -139,6 +140,9 @@ class App extends Component {
           showVisibleForm={this.showVisibleForm}
           statusLogin={this.state.statusLogin}
           setStatusUsers={this.setStatusUsers}/>
+        {this.state.statusLogin ?
+          <Message/>
+          :null}
         <Intro/>
         <div className="picture-1">
           <div className="parallax-1"></div>

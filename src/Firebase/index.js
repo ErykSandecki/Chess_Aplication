@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import {classFriends} from '../Components/Friends/index.js';
 import {referenceNotificationsNewFriends} from '../Components/Notifications-New-Friend/index.js';
+import {referenceMessage} from '../Components/Message/index.js';
 export var allUsers;
 export var actuallyUser;
 
@@ -57,29 +58,28 @@ function updateData() {
         if(updateNotifications) {
             checkNewNotificationsFriends();
         }
+        referenceMessage.refreshChat();
     }
 }
 
 export function checkNewNotificationsFriends() {
     updateNotifications = true;
     referenceNotificationsNewFriends.sortReverseUser();
-    let newNotifications = false;
-    if(actuallyUser.friends) {
         checkUser();
-        for(let i = 0; i< actuallyUser.friends.length; i++) {
-          if((!actuallyUser.friends[i].read && actuallyUser.friends[i].direction === "get") 
-              || (!actuallyUser.friends[i].read && actuallyUser.friends[i].direction === "send" && actuallyUser.friends[i].isFriends)) {
-             referenceNotificationsNewFriends.setState({newNotifications: true});
-             newNotifications = true;
-            }
+        if(actuallyUser.friends){
+            for(let i = 0; i< actuallyUser.friends.length; i++) {
+                if((!actuallyUser.friends[i].read && actuallyUser.friends[i].direction === "get") 
+                    || (!actuallyUser.friends[i].read && actuallyUser.friends[i].direction === "send" && actuallyUser.friends[i].isFriends)) {
+                   referenceNotificationsNewFriends.setState({newNotifications: true});
+                   return;
+                  }
+              }
+                referenceNotificationsNewFriends.setState({newNotifications: false});
         }
-        if(!newNotifications) {
+      
+        else {
             referenceNotificationsNewFriends.setState({newNotifications: false});
-        }
-    }
-    else {
-        referenceNotificationsNewFriends.setState({newNotifications: false});
-    }   
+        }      
 }
 
 export function deleteNotificationFriends() {
@@ -92,19 +92,20 @@ export function deleteNotificationFriends() {
         let editFriend = database.ref('users').child(actuallyUser.id).child('friends');
         editFriend.set(actuallyUser.friends);
     }
-  
 }
 
 function checkUser() {
     let usersExisting = [];
-    for(let i = 0; i < actuallyUser.friends.length; i++) {
-       for(let j = 0; j< allUsers.length;j++) {
-           if(actuallyUser.friends[i].id === allUsers[j].id){
-               usersExisting.push(allUsers[j].id);
-           }
-       }
+    if(actuallyUser.friends){
+        for(let i = 0; i < actuallyUser.friends.length; i++) {
+            for(let j = 0; j< allUsers.length;j++) {
+                if(actuallyUser.friends[i].id === allUsers[j].id){
+                    usersExisting.push(allUsers[j].id);
+                }
+            }
+         } 
+         sortNotExistingUser(usersExisting);
     } 
-    sortNotExistingUser(usersExisting);
 }
 
 function sortNotExistingUser(usersExisting) {
@@ -119,6 +120,7 @@ function sortNotExistingUser(usersExisting) {
             return;
         }
     }
+    actuallyUser.friends = sortFriendsExisting;
     let editFriend = database.ref('users').child(actuallyUser.id).child('friends');
     editFriend.set(sortFriendsExisting);
 }
