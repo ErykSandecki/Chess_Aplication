@@ -43,7 +43,7 @@
     position: absolute;
     background-color: rgb(241, 241, 241);
     width: 250px;
-    max-height: 400px;
+    max-height: 200px;
     top: 50px;
     left: -5px;
     overflow: auto;

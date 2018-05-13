@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import {classFriends} from '../Components/Friends/index.js';
 import {referenceNotificationsNewFriends} from '../Components/Notifications-New-Friend/index.js';
-import {referenceMessage} from '../Components/Message/index.js';
+import {referenceMessage, checkOnlineUsers, resetFriendsWindowChat} from '../Components/Message/index.js';
 export var allUsers;
 export var actuallyUser;
 
@@ -28,12 +28,17 @@ var allScore = [];
 var fileName;
 var storageRef;
 var updateNotifications = false;
+var refereshChat = false;
+var checkStatus = false;
 
 // Update data information user actually login//
 
 export function resetReferenceUser() {
     referenceUser = -1;
     updateNotifications = false;
+    refereshChat = false;
+    resetFriendsWindowChat();
+    clearInterval(checkOnlineUsers);
 }
 
 function updateData() {
@@ -58,8 +63,47 @@ function updateData() {
         if(updateNotifications) {
             checkNewNotificationsFriends();
         }
-        referenceMessage.refreshChat();
+        if(!checkStatus){
+            if(refereshChat) {
+                setChat();
+                
+             }
+        }
+      
+        if(!actuallyUser.status) {
+            let setActuallyUserStatus = database.ref('users').child(actuallyUser.id).child('status');
+            setActuallyUserStatus.set(true);
+        }
     }
+}
+
+export function checkStatusOnlineUsers() {
+    if(actuallyUser.friends) {
+        for(let i = 0; i< actuallyUser.friends.length;i++) {
+            for(let j = 0; j < allUsers.length;j++) {
+              if(actuallyUser.friends[i].id === allUsers[j].id && actuallyUser.friends[i].isFriends) {
+                    setStatus(allUsers[j]);
+                    break;
+              }  
+            }
+        }
+    }
+}
+
+function setStatus(user) {
+    checkStatus = true;
+    let setOffline = database.ref('users').child(user.id).child('status');
+    setOffline.set(false);
+}
+
+export function changeStatus() {
+    checkStatus = false;
+}
+
+
+export function setChat() {
+    referenceMessage.refreshChat();
+    refereshChat = true;
 }
 
 export function checkNewNotificationsFriends() {
@@ -74,7 +118,7 @@ export function checkNewNotificationsFriends() {
                    return;
                   }
               }
-                referenceNotificationsNewFriends.setState({newNotifications: false});
+            referenceNotificationsNewFriends.setState({newNotifications: false});
         }
       
         else {
@@ -164,6 +208,11 @@ export function addInviteFriends(user) {
             read:false,
             isFriends:false,
             direction:'send',
+            message: [{
+                userPicture: user.pictureUrl,
+                userId: user.id,
+                contain: 'Jesteście znajomymi!',
+            }],
         }
         actuallyUser.friends.push(newData);
         newData = actuallyUser.friends;
@@ -175,6 +224,11 @@ export function addInviteFriends(user) {
             read:false,
             isFriends:false,
             direction:'send',
+            message: [{
+                userPicture: user.pictureUrl,
+                userId: user.id,
+                contain: 'Jesteście znajomymi!',
+            }],
         }];
     }
     // Check that new friends have friends table//
@@ -184,6 +238,11 @@ export function addInviteFriends(user) {
             read: false,
             isFriends: false,
             direction: 'get',
+            message: [{
+                userPicture: actuallyUser.pictureUrl,
+                userId: actuallyUser.id,
+                contain: 'Jesteście znajomymi!',
+            }],
         }
         user.friends.push(newDataForFriends);
         newDataForFriends = user.friends;
@@ -195,6 +254,11 @@ export function addInviteFriends(user) {
             read: false,
             isFriends: false,
             direction: 'get',
+            message: [{
+                userPicture: actuallyUser.pictureUrl,
+                userId: actuallyUser.id,
+                contain: 'Jesteście znajomymi!',
+            }],
         }]
     }
     let refAddSendFriend = database.ref('users').child(actuallyUser.id).child('friends');
@@ -311,6 +375,7 @@ function setData(value){
         phone: value[9],
         ranking: 0,
         pictureUrl: '',
+        status: 'online',
     }
 }
 

@@ -2,6 +2,7 @@
     position: fixed;
     right: 0px;
     bottom: 0px;
+    z-index: 1;
 }
 
 .message-title {
@@ -38,12 +39,17 @@
 .message-contacts-filter {
     width: 250px;
     border: 0.5px solid black;
-    max-height: 800px;
+    max-height: 700px;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     transition: 0.5s;
     background-color: white;
     direction: ltr;
+}
+
+.message-contacts-filter:hover {
+    overflow-y: auto;
+    transition: 0.5s;
 }
 
 .message-contact-filter-friends-image {
@@ -82,4 +88,70 @@
     width: 100%;
     background-color: black;
     float: left;
+}
+
+.message-window-chat {
+    position: fixed;
+    right: 280px;
+    bottom: 0px;
+    z-index: 1;
+}
+
+.message-window-chat-title {
+    position: relative;
+    width: 250px;
+    min-height: 40px;
+    background-color: rgb(55, 57, 64);
+    border-radius: 2px;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.message-window-chat-user {
+    line-height: 40px;
+    margin-left: 10px;
+}
+
+.message-window-chat-close {
+    float: right;
+    margin-top: 11px;
+    margin-right: 8px;
+    padding: 4px;
+}
+
+.message-window-chat-close:hover {
+    background-color: darkgray;
+    border-radius: 12px;
+}
+
+.message-window-chat-contain {
+    height: 250px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.message-window-chat-text {
+    width: 250px;
+    color: black;
+    width: 250px;
+    
+}
+
+.message-window-chat-area {
+    width: 100%;
+    height: 100%;
+}
+
+.message-window-chat-img-first {
+    height: 50px;
+    width: 50px;
+    border-radius: 10px;
+    margin: 5px;
+    float: left;
+}
+
+.message-window-chat-message-contain-first {
+    float: left;
+    color: black;
+    margin-top: 10px;
 }
