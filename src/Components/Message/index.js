@@ -86,7 +86,7 @@ export default class Message extends Component {
                             })}
                         </div>
                         <div className="message-window-chat-text">
-                            <textarea className="message-window-chat-text" rows="1" ></textarea>
+                            <textarea type="text" rows="1"  className="message-window-chat-text-input" />
                         </div>
                     </div>
                 </div>
