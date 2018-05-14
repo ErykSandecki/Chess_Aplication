@@ -50,13 +50,14 @@
 }
 
 .regulations-contain {
-    width: 80%;
     height: 80%;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 2% 20px 0;
     overflow: auto;
-    margin-top: 2%;
     border: 1px solid #e6e6e6;
+    padding: 0 15px;
+}
+.regulations-contain h3{
+    text-align: center;
 }
 
 .regulations-exit {
