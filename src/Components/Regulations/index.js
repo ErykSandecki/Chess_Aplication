@@ -1,49 +1,18 @@
-import './index.css';
+import './style.css';
 import React, { Component } from 'react';
 import {regulations} from '../../Resources/regulations.js';
+import Animate from 'react-smooth';
 
 export default class Regulations extends Component {
-    constructor() {
-        super();
-        this.state = {
-            styleRegular: 'none',
-            styleRegulationsBackground: 0,
-            styleRegulationsTable: 0,
-        }
-        this.showRegular = this.showRegular.bind(this);
-        this.hideRegular = this.hideRegular.bind(this);
-    }
-    
-    componentWillReceiveProps() {
-        setTimeout(()=>{
-            if(this.props.vissibleRegular) {
-                this.showRegular();
-            }
-        },1);
+    constructor(props) {
+        super(props);
     }
 
-    showRegular() {
-        this.setState({styleRegular : "block"});
-        setTimeout(()=> {
-            this.setState({styleRegulationsBackground: 0.7});
-            setTimeout(() => {
-                this.setState({styleRegulationsTable: 1});
-            },500);    
-        },100);
-    }
-
-    hideRegular() {
-        this.setState({styleRegulationsTable: 0});
-        setTimeout(()=> {
-            this.setState({styleRegulationsBackground: 0});
-            setTimeout(() => {
-                this.setState({styleRegular: "none"});
-            },500);
-            this.props.hideRegularSection();    
-        },500);
-    }
-    
     componentDidMount() {
+        this.resizeTextRegular();
+    }
+
+    resizeTextRegular(){
         let selector = document.getElementsByClassName("text-regulations");
         for(let i = 0; i < selector.length; i++) {
             if(selector[i].innerHTML.charAt(0) === "§") {
@@ -61,23 +30,21 @@ export default class Regulations extends Component {
             }
         }
     }
+
     render() {
-        const styleRegulations={display: this.state.styleRegular};
-        const styleRegulatiosBackground={opacity: this.state.styleRegulationsBackground};
-        const styleRegulationsTable={opacity: this.state.styleRegulationsTable};
-        return(
-            <div className="regulations" 
-                 style={styleRegulations}
-                 onClick={this.hideRegular}>
-            <div className="regulations-background" style={styleRegulatiosBackground}/>
-              <div className="regulations-table" style={styleRegulationsTable}>
-                <div className="regulations-title">REGULAMIN</div>
-                <div className="regulations-regular-text">
+        return(  
+                <div className={this.props.vissibleRegulation ? 
+                                "regulations"
+                                :"regulations-hide"} onClick={this.hideRegular}>
+                    <div className="regulations-background"/>
+                        <div className="regulations-table">
+                            <div className="regulations-title">REGULAMIN</div>
+                    <div className="regulations-regular-text">
                     {regulations.map(function(reg, index){
                         return <p key={index} className="text-regulations">{reg}</p>
                     })}
                 </div>
-                <div className="regulations-exit" onClick={this.hideRegisterLogin}>
+                <div className="regulations-exit" onClick={this.props.hideRegulations}>
                     <span>WYJŚCIE</span>   
                     <span className="glyphicon glyphicon-remove regulations-remove"/>                
                 </div> 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './index.css';
+import './style.css';
 import introImage from '../../Images/intro.jpg';
 import introText from '../../Images/intro-text.png';
 

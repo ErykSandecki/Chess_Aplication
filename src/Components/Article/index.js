@@ -1,4 +1,4 @@
-import './index.css';
+import './style.css';
 import React, { Component } from 'react';
 import learn from '../../Images/learn-to-play.png';
 import ranking from '../../Images/ranking.png';

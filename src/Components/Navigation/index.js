@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import './index.css';
+import './style.css';
 import emptyLogoUser from '../../Images/empty-logo-user.png';
-import NotificationsNewFriends from '../Notifications-New-Friend/index.js';
 import {actuallyUser} from '../../Firebase/index.js';
 
 
@@ -9,7 +8,7 @@ export default class Navigation extends Component {
     render() {
         return (
             <div className="nav">
-                <div className="nav-drop-menu" onClick={this.props.showMenuDropLeft}>
+                <div className="nav-drop-menu" onClick={this.props.hideApp}>
                 <div className="nav-button">
                     <div className="nav-button-contain-1"><div className="nav-button-width"/></div>
                     <div className="nav-button-contain-2"><div className="nav-button-width"/></div>
@@ -26,7 +25,6 @@ export default class Navigation extends Component {
                             <img className="nav-users img-circle" src={actuallyUser.pictureUrl} alt="nav-img"/>
                             <p className="nav-register-text">{actuallyUser.name}</p>
                             <p className="nav-register-logout" onClick={this.props.setStatusUsers}>Wyloguj</p>
-                            <NotificationsNewFriends/>
                         </React.Fragment>
                         :<React.Fragment>
                             <img className="nav-users img-circle" src={emptyLogoUser} alt="nav-empty-img"/>

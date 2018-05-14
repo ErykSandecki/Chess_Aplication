@@ -159,11 +159,11 @@
 .message-window-chat-text-input {
     min-height: 18px;
     width: 100%;
-    border: 1px solid black;
     white-space: pre-wrap;
     word-wrap: break-word;
     vertical-align: baseline;
     box-sizing: border-box;
     margin: 0;
     resize: none;
+    height: 100%;
 }

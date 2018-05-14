@@ -1,20 +1,35 @@
 .regulations {
     position: fixed;
     z-index: 3;
+    opacity: 1;
+    transition-property: visibility, opacity;
+    transition-duration: 0s, 1s;
+}
+
+.regulations-hide {
+    opacity: 0;
+    visibility: hidden;
+    transition-property: opacity, visibility;
+    transition-duration: 1s, 0s;
+    transition-delay: 0s, 1s;
 }
 
 .regulations-background {
     position: fixed;
     z-index: 3;
+    display: block;
     height: 100vh;
     width: 100%;
     background-color: black;
     transition: 0.5s;
+    top: 0px;
+    left: 0px;
 }
 
 .regulations-table {
     position: fixed;
     height: 90vh;
+    display: block;
     width: 90%;
     left: 5%;
     top: 5%;
@@ -34,7 +49,7 @@
     font-family: 'lato', 'sans-serif';
 }
 
-.regulations-regular-text {
+.regulations-contain {
     width: 80%;
     height: 80%;
     margin-left: auto;

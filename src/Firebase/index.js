@@ -1,7 +1,4 @@
 import firebase from 'firebase';
-import {classFriends} from '../Components/Friends/index.js';
-import {referenceNotificationsNewFriends} from '../Components/Notifications-New-Friend/index.js';
-import {referenceMessage, checkOnlineUsers, resetFriendsWindowChat} from '../Components/Message/index.js';
 export var allUsers;
 export var actuallyUser;
 
@@ -27,19 +24,11 @@ var keys;
 var allScore = [];
 var fileName;
 var storageRef;
-var updateNotifications = false;
-var refereshChat = false;
-var checkStatus = false;
+
 
 // Update data information user actually login//
 
-export function resetReferenceUser() {
-    referenceUser = -1;
-    updateNotifications = false;
-    refereshChat = false;
-    resetFriendsWindowChat();
-    clearInterval(checkOnlineUsers);
-}
+
 
 function updateData() {
     if(referenceUser !== -1){
@@ -53,22 +42,8 @@ function updateData() {
             }  
         }
         allUsers.push(actuallyUser);
-        if(classFriends.props.vissibleFriends){
-            classFriends.setState({
-                filterSearch: classFriends.state.filterSearch,
-                nextTop: classFriends.state.nextTop,
-            })
-        }
 
-        if(updateNotifications) {
-            checkNewNotificationsFriends();
-        }
-        if(!checkStatus){
-            if(refereshChat) {
-                setChat();
-                
-             }
-        }
+        
       
         if(!actuallyUser.status) {
             let setActuallyUserStatus = database.ref('users').child(actuallyUser.id).child('status');
@@ -77,97 +52,7 @@ function updateData() {
     }
 }
 
-export function checkStatusOnlineUsers() {
-    if(actuallyUser.friends) {
-        for(let i = 0; i< actuallyUser.friends.length;i++) {
-            for(let j = 0; j < allUsers.length;j++) {
-              if(actuallyUser.friends[i].id === allUsers[j].id && actuallyUser.friends[i].isFriends) {
-                    setStatus(allUsers[j]);
-                    break;
-              }  
-            }
-        }
-    }
-}
 
-function setStatus(user) {
-    checkStatus = true;
-    let setOffline = database.ref('users').child(user.id).child('status');
-    setOffline.set(false);
-}
-
-export function changeStatus() {
-    checkStatus = false;
-}
-
-
-export function setChat() {
-    referenceMessage.refreshChat();
-    refereshChat = true;
-}
-
-export function checkNewNotificationsFriends() {
-    updateNotifications = true;
-    referenceNotificationsNewFriends.sortReverseUser();
-        checkUser();
-        if(actuallyUser.friends){
-            for(let i = 0; i< actuallyUser.friends.length; i++) {
-                if((!actuallyUser.friends[i].read && actuallyUser.friends[i].direction === "get") 
-                    || (!actuallyUser.friends[i].read && actuallyUser.friends[i].direction === "send" && actuallyUser.friends[i].isFriends)) {
-                   referenceNotificationsNewFriends.setState({newNotifications: true});
-                   return;
-                  }
-              }
-            referenceNotificationsNewFriends.setState({newNotifications: false});
-        }
-      
-        else {
-            referenceNotificationsNewFriends.setState({newNotifications: false});
-        }      
-}
-
-export function deleteNotificationFriends() {
-    if(actuallyUser.friends){
-        for(let i =0; i< actuallyUser.friends.length; i++) {
-            if(!actuallyUser.friends[i].read){
-                actuallyUser.friends[i].read = true;
-            }
-        }
-        let editFriend = database.ref('users').child(actuallyUser.id).child('friends');
-        editFriend.set(actuallyUser.friends);
-    }
-}
-
-function checkUser() {
-    let usersExisting = [];
-    if(actuallyUser.friends){
-        for(let i = 0; i < actuallyUser.friends.length; i++) {
-            for(let j = 0; j< allUsers.length;j++) {
-                if(actuallyUser.friends[i].id === allUsers[j].id){
-                    usersExisting.push(allUsers[j].id);
-                }
-            }
-         } 
-         sortNotExistingUser(usersExisting);
-    } 
-}
-
-function sortNotExistingUser(usersExisting) {
-    let nextUser = 0;
-    let sortFriendsExisting = []
-    for(let i =0; i<actuallyUser.friends.length; i++) {
-        if(actuallyUser.friends[i].id === usersExisting[nextUser]){
-            sortFriendsExisting.push(actuallyUser.friends[i]);
-            nextUser++;
-        }
-        if(actuallyUser.friends.length === sortFriendsExisting.length){
-            return;
-        }
-    }
-    actuallyUser.friends = sortFriendsExisting;
-    let editFriend = database.ref('users').child(actuallyUser.id).child('friends');
-    editFriend.set(sortFriendsExisting);
-}
 
 export function updateAndDownloadBase () {
     ref.on("value", donwloadData, errData);

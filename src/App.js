@@ -1,160 +1,79 @@
 import React, { Component } from 'react';
 import './App.css';
-import Intro from './Components/Intro/index.js';
-import Navigation from './Components/Navigation/index.js';
-import MenuLeftDrop from './Components/Menu-Left_Drop/index.js'
-import Footer from './Components/Footer/index.js'
-import Article from './Components/Article/index.js'
-import LoginRegister from './Components/Login-Register/index.js';
-import Friends from './Components/Friends/index.js';
-import Message from './Components/Message/index.js';
-import Regulations from './Components/Regulations/index.js';
-import {updateAndDownloadBase} from './Firebase/index.js';
-import {resetReferenceUser} from './Firebase/index.js';
+
+import Intro from './components/Intro/index.js';
+import Navigation from './components/Navigation';
+import Footer from './components/Footer'
+import Article from './components/Article'
+import MenuLeftDrop from './components/MenuLeftDrop'
+import Regulations from './components/Regulations'
+
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      marginLeftApp: '0%',
-      hiddenBody: false,
-      visibleForm: false,
+      vissibleApp: true,
       statusLogin: false,
-      vissibleFriends: false,
-      vissibleRegular: false,
-      vissibleMenuDropLeft: false,
+      vissibleRegulation: false,
     }
-    this.setStyleMarginAppLeft = this.setStyleMarginAppLeft.bind(this);
-    this.showBody = this.showBody.bind(this);
-    this.hideBody = this.hideBody.bind(this);
-    this.showVisibleForm = this.showVisibleForm.bind(this);
-    this.hideVisibleForm = this.hideVisibleForm.bind(this);
-    this.setStatusUsers = this.setStatusUsers.bind(this);
-    this.showFriendsSection = this.showFriendsSection.bind(this);
-    this.hideFriendsSection = this.hideFriendsSection.bind(this);
-    this.showRegularSection = this.showRegularSection.bind(this);
-    this.hideRegularSection = this.hideRegularSection.bind(this);
-    this.showMenuDropLeft = this.showMenuDropLeft.bind(this);
-    this.hideMenuDropLeft = this.hideMenuDropLeft.bind(this);
   }
 
   componentDidMount() {
-    referenceApp = this;
-    updateAndDownloadBase();
+   
   }
 
-  setStyleMarginAppLeft(marginLeftApp){
-    this.setState({marginLeftApp})
+  hideApp() {
+    this.setState({vissibleApp: false});
   }
 
-  showBody() {
-    this.setState({hiddenBody: true});
+  showApp() {
+    this.setState({vissibleApp: true});
   }
 
-  hideBody() {
-    this.setState({hiddenBody: false});
-    this.hideMenuDropLeft();
+  showRegulations() {
+    this.setState({vissibleRegulation: true});
   }
 
-  showVisibleForm() {
-    this.setState({
-      visibleForm: true,
-      hiddenBody: false
-    });
-  }
-
-  hideVisibleForm() {
-    this.setState({visibleForm: false});
-  }
-
-  setStatusUsers() {
-   this.setState({
-     statusLogin: !this.state.statusLogin,
-     visibleForm: false
-   });
-   setTimeout(()=>{
-    if(!this.state.statusLogin) {
-      resetReferenceUser();
-    }
-   },100);
-  }
-
-  showFriendsSection() {
-    this.setState({vissibleFriends: true});
-  }
-
-  hideFriendsSection() {
-    this.setState({vissibleFriends: false});
-  }
-
-  showRegularSection() {
-    this.setState({vissibleRegular: true});
-  }
-
-  hideRegularSection() {
-    this.setState({vissibleRegular: false});
-  }
-
-  showMenuDropLeft() {
-    this.setState({vissibleMenuDropLeft: true});
-  }
-
-  hideMenuDropLeft() {
-    this.setState({vissibleMenuDropLeft: false});
+  hideRegulations() {
+    this.setState({vissibleRegulation: false});
   }
 
   render() {
-    const styleApp = {marginLeft: this.state.marginLeftApp}
     return (
-      <div className="App" style={styleApp} onClick={this.hideAllComponent}>
-        <LoginRegister 
-          visibleForm={this.state.visibleForm}
-          showVisibleForm={this.showVisibleForm}
-          statusLogin={this.state.statusLogin}
-          setStatusUsers={this.setStatusUsers}
-          hideVisibleForm={this.hideVisibleForm}
-          hiddenBody={this.state.hiddenBody}
-          showRegularSection={this.showRegularSection}/>
-        <Friends 
-          vissibleFriends={this.state.vissibleFriends}
-          hideFriendsSection={this.hideFriendsSection}/>  
-        <MenuLeftDrop 
-          vissibleMenuDropLeft={this.state.vissibleMenuDropLeft}
-          setStyleMarginAppLeft={this.setStyleMarginAppLeft}
-          hideBody={this.hideBody}
-          hiddenBody={this.state.hiddenBody} 
-          showBody={this.showBody}
-          showVisibleForm={this.showVisibleForm}
-          statusLogin={this.state.statusLogin}
-          setStatusUsers={this.setStatusUsers}
-          showFriendsSection={this.showFriendsSection}/>
-        <Regulations
-          vissibleRegular={this.state.vissibleRegular}
-          hideRegularSection={this.hideRegularSection}/>  
-          <div className={this.state.hiddenBody ?
-            "hide-body"
-            :""}
-            onClick={this.hideBody}/>
-        <Navigation
-          showMenuDropLeft={this.showMenuDropLeft}
-          showVisibleForm={this.showVisibleForm}
-          statusLogin={this.state.statusLogin}
-          setStatusUsers={this.setStatusUsers}/>
-        {this.state.statusLogin ?
-          <Message/>
-          :null}
-        <Intro/>
-        <div className="picture-1">
-          <div className="parallax-1"></div>
-        </div>
-        <Article/>
-        <div className="picture-2">
-          <div className="parallax-2"></div>
-        </div>
-        <Footer
-         showRegularSection={this.showRegularSection}/>
-      </div>
-    );
+            <div className={this.state.vissibleApp ?
+                            "App"
+                            :window.innerWidth < 768 ?
+                              "AppRightSet-50"
+                              :window.innerWidth < 1024 ?
+                                "AppRightSet-40"
+                                :"AppRightSet-30"}>
+              <div className={this.state.vissibleApp ? 
+                              ""
+                              :"hide-body"}
+                    onClick={this.showApp.bind(this)}>
+             </div>
+            <MenuLeftDrop
+              vissibleMenuDropLeft={this.state.vissibleApp}
+              showApp={this.showApp.bind(this)}/>
+            <Navigation
+              hideApp={this.hideApp.bind(this)}
+              statusLogin={this.state.statusLogin}/>
+            <Intro/>
+            <div className="picture-1">
+              <div className="parallax-1"></div>
+            </div>
+            <Article/>
+            <div className="picture-2">
+              <div className="parallax-2"></div>
+            </div>
+            <Footer
+              showRegulations={this.showRegulations.bind(this)}/>
+            <Regulations
+              vissibleRegulation={this.state.vissibleRegulation}
+              hideRegulations={this.hideRegulations.bind(this)}/>
+          </div>
+            );
   }
 }
 
