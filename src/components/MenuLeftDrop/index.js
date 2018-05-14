@@ -4,7 +4,7 @@ import './style.css';
 export default class MenuLeftDrop extends Component {
     render() {
         return(
-            <div className={this.props.vissibleMenuDropLeft ? 
+            <div className={this.props.visibleMenuDropLeft ? 
                                 "hide-menu-drop-left"
                                 :window.innerWidth < 768 ? 
                                     "menu-drop-left-50"

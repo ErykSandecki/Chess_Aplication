@@ -7,58 +7,79 @@ import Footer from './components/Footer'
 import Article from './components/Article'
 import MenuLeftDrop from './components/MenuLeftDrop'
 import Regulations from './components/Regulations'
-
+import LoginRegister from './components/LoginRegister';
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      vissibleApp: true,
+      visibleApp: true,
       statusLogin: false,
-      vissibleRegulation: false,
+      visibleRegulation: false,
+      sectionRegisterLogin: {
+        visibleBackGround: false,
+        visibleRegister: false,
+        visibleLogin: false,
+      }
     }
+    this.setSectionRegisterLogin = this.setSectionRegisterLogin.bind(this);
   }
 
   componentDidMount() {
-   
+
   }
 
   hideApp() {
-    this.setState({vissibleApp: false});
+    this.setState({visibleApp: false});
   }
 
   showApp() {
-    this.setState({vissibleApp: true});
+    this.setState({visibleApp: true});
   }
 
   showRegulations() {
-    this.setState({vissibleRegulation: true});
+    this.setState({visibleRegulation: true});
   }
 
   hideRegulations() {
-    this.setState({vissibleRegulation: false});
+    this.setState({visibleRegulation: false});
+  }
+
+  setSectionRegisterLogin(visibleBackGround, visibleRegister, visibleLogin) {
+    this.setState({
+        sectionRegisterLogin: {
+          visibleBackGround: visibleBackGround,
+          visibleRegister: visibleRegister,
+          visibleLogin: visibleLogin,
+        }
+      })
   }
 
   render() {
     return (
-            <div className={this.state.vissibleApp ?
+            <div className={this.state.visibleApp ?
                             "App"
                             :window.innerWidth < 768 ?
                               "AppRightSet-50"
                               :window.innerWidth < 1024 ?
                                 "AppRightSet-40"
                                 :"AppRightSet-30"}>
-              <div className={this.state.vissibleApp ? 
+              <div className={this.state.visibleApp ? 
                               ""
                               :"hide-body"}
                     onClick={this.showApp.bind(this)}>
              </div>
+            <LoginRegister
+              sectionRegisterLogin={this.state.sectionRegisterLogin}
+              setSectionRegisterLogin={this.setSectionRegisterLogin}
+              showRegulations={this.showRegulations.bind(this)}/>
             <MenuLeftDrop
-              vissibleMenuDropLeft={this.state.vissibleApp}
+              visibleMenuDropLeft={this.state.visibleApp}
               showApp={this.showApp.bind(this)}/>
             <Navigation
               hideApp={this.hideApp.bind(this)}
-              statusLogin={this.state.statusLogin}/>
+              statusLogin={this.state.statusLogin}
+              setSectionRegisterLogin={this.setSectionRegisterLogin}/>
             <Intro/>
             <div className="picture-1">
               <div className="parallax-1"></div>
@@ -70,7 +91,7 @@ class App extends Component {
             <Footer
               showRegulations={this.showRegulations.bind(this)}/>
             <Regulations
-              vissibleRegulation={this.state.vissibleRegulation}
+              visibleRegulation={this.state.visibleRegulation}
               hideRegulations={this.hideRegulations.bind(this)}/>
           </div>
             );

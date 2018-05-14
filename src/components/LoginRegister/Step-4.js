@@ -1,4 +1,4 @@
-import './index.css';
+import './style.css';
 import React, { Component } from 'react';
 
 export default class Step4 extends Component {
@@ -16,7 +16,7 @@ export default class Step4 extends Component {
                 <input type="checkbox"/>
                 <span> * Zapoznałem się i akceptuję powyższy 
                     <span className="register-login-regular"
-                          onClick={this.props.showRegularSection}>regulamin.</span>
+                          onClick={this.props.showRegulations}>regulamin.</span>
                 </span>
                 <input type="file" className="register-login-register-upload-input" onChange={this.props.uploadPicture}/>
             </React.Fragment>
