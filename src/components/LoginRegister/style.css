@@ -15,7 +15,7 @@
 
 .register-login-table {
     position: fixed;
-    height: 80vh;
+    height: 825px;
     width: 90%;
     left: 5%;
     top: 5%;
@@ -34,7 +34,7 @@
 
 .login-register-glyphicon-remove {
     float: right;
-    line-height: 50px;
+    margin-top: 17px;
     margin-right: 15px;
 }
 
@@ -167,11 +167,10 @@
 
 .register-login-register-complete {
     z-index: 4;
-    opacity: 1;
     position: fixed;
     height: 100vh;
     width: 100%;
-    display: none;
+    display: block;
 }
 
 .register-login-register-complete-block {
@@ -181,7 +180,6 @@
     left: 20%;
     top: 40%;
     background-color: white;
-    opacity: 0;
     transition: 1s;
     border-radius: 5px;
     text-align: center;
@@ -229,7 +227,7 @@
 
 .register-login-login-users-table {
     position: fixed;
-    height: 80vh;
+    height: 850px;
     width: 90%;
     left: 5%;
     top: 5%;
@@ -238,24 +236,6 @@
     border-radius: 20px;
     text-align: center;
 }
-
-.example-enter {
-    opacity: 0.01;
-  }
-  
-  .example-enter.example-enter-active {
-    opacity: 1;
-    transition: opacity 500ms ease-in;
-  }
-  
-  .example-leave {
-    opacity: 1;
-  }
-  
-  .example-leave.example-leave-active {
-    opacity: 0.01;
-    transition: opacity 300ms ease-in;
-  }
 
 .register-login-save-password {
     text-align: center;
@@ -294,19 +274,15 @@
     border: 1px solid #e6e6e6;
     border-radius: 10px;
     z-index: 1;
-    opacity: 0;
     transition: 0.5s;
-    display: none;
 }
 
 .register-login-arrow-up-wrong {
     position: absolute;
-    z-index: 0;
     z-index: 2;
     top: 2px;
     left: 10px;
     transition: 0.5s;
-    opacity: 0;
 }
 
 .register-login-check-save-password {

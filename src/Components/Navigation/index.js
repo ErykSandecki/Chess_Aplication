@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import './style.css';
 import emptyLogoUser from '../../Images/empty-logo-user.png';
-import {actuallyUser} from '../../Firebase/index.js';
-
 
 export default class Navigation extends Component {
     render() {
@@ -22,12 +20,21 @@ export default class Navigation extends Component {
                 <div className="nav-option">
                     {this.props.statusLogin ? 
                         <React.Fragment>
-                            <img className="nav-users img-circle" src={actuallyUser.pictureUrl} alt="nav-img"/>
-                            <p className="nav-register-text">{actuallyUser.name}</p>
-                            <p className="nav-register-logout" onClick={this.props.setStatusUsers}>Wyloguj</p>
+                            <img className="nav-users img-circle" 
+                                 src={this.props.actuallyUser.pictureUrl} 
+                                 alt="nav-img"
+                            />
+                            <p className="nav-register-text">{this.props.actuallyUser.nameUser}</p>
+                            <p className="nav-register-logout" 
+                               onClick={this.props.setStatusLoginUser}
+                            >
+                                Wyloguj
+                            </p>
                         </React.Fragment>
                         :<React.Fragment>
-                            <img className="nav-users img-circle" src={emptyLogoUser} alt="nav-empty-img"/>
+                            <img className="nav-users img-circle" 
+                                 src={emptyLogoUser} 
+                                alt="nav-empty-img"/>
                             <p onClick={()=>{
                                     this.props.setSectionRegisterLogin(true, true, false);
                                 }} 

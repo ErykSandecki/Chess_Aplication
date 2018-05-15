@@ -13,12 +13,27 @@ export default class MenuLeftDrop extends Component {
                                         :"menu-drop-left-30"}>
                 <div className="menu-drop-left-language-exit">
                     <p className="menu-drop-left-language">POLSKI</p>
-                    <div className="menu-drop-left-drop-login-register" onClick={this.props.showApp}>
+                    <div className="menu-drop-left-drop-login-register" 
+                         onClick={this.props.showApp}
+                    >
                         <span className="glyphicon glyphicon-remove menu-drop-left-glyphicon-remove"></span>
                         <p className="menu-drop-left-exit-drop-menu">WYJŚCIE</p>
                     </div>
                 </div>
-                <div className="menu-drop-left-login-register-drop">
+                <div className="menu-drop-left-login-register-drop"
+                    onClick={this.props.statusLogin ? 
+                                ()=>{
+                                        this.props.setStatusLoginUser();
+                                        this.props.showApp();
+                                    }
+                                :()=>{
+                                        this.props.showApp();
+                                        setTimeout(()=>{
+                                            this.props.setSectionRegisterLogin(true, true, false);
+                                        },500);
+                                     }
+                            }
+                >
                     <p className="menu-drop-left-login-register-drop-text"> 
                         {this.props.statusLogin ?
                          "WYLOGUJ"   

@@ -8,11 +8,15 @@ import Article from './components/Article'
 import MenuLeftDrop from './components/MenuLeftDrop'
 import Regulations from './components/Regulations'
 import LoginRegister from './components/LoginRegister';
+import Firebase from './components/Firebase';
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      databaseUsers: null,
+      usersData: null,
+      actuallyUser: null,
       visibleApp: true,
       statusLogin: false,
       visibleRegulation: false,
@@ -23,10 +27,6 @@ class App extends Component {
       }
     }
     this.setSectionRegisterLogin = this.setSectionRegisterLogin.bind(this);
-  }
-
-  componentDidMount() {
-
   }
 
   hideApp() {
@@ -45,6 +45,10 @@ class App extends Component {
     this.setState({visibleRegulation: false});
   }
 
+  getReferenceDataBase = (databaseUsers) => {this.setState({databaseUsers});};
+
+  updateUsers = (usersData) => {this.setState({usersData});}
+
   setSectionRegisterLogin(visibleBackGround, visibleRegister, visibleLogin) {
     this.setState({
         sectionRegisterLogin: {
@@ -52,8 +56,12 @@ class App extends Component {
           visibleRegister: visibleRegister,
           visibleLogin: visibleLogin,
         }
-      })
-  }
+      });
+  };
+
+  setActullayUser = (actuallyUser) => {this.setState({actuallyUser})};
+
+  setStatusLoginUser = () => {this.setState({statusLogin: !this.state.statusLogin});};
 
   render() {
     return (
@@ -68,32 +76,45 @@ class App extends Component {
                               ""
                               :"hide-body"}
                     onClick={this.showApp.bind(this)}>
-             </div>
-            <LoginRegister
-              sectionRegisterLogin={this.state.sectionRegisterLogin}
-              setSectionRegisterLogin={this.setSectionRegisterLogin}
-              showRegulations={this.showRegulations.bind(this)}/>
-            <MenuLeftDrop
-              visibleMenuDropLeft={this.state.visibleApp}
-              showApp={this.showApp.bind(this)}/>
-            <Navigation
-              hideApp={this.hideApp.bind(this)}
-              statusLogin={this.state.statusLogin}
-              setSectionRegisterLogin={this.setSectionRegisterLogin}/>
-            <Intro/>
-            <div className="picture-1">
-              <div className="parallax-1"></div>
+              </div>
+              <Firebase
+                getReferenceDataBase={this.getReferenceDataBase}
+                databaseUsers={this.state.databaseUsers}
+                updateUsers={this.updateUsers}/>
+              <LoginRegister
+                sectionRegisterLogin={this.state.sectionRegisterLogin}
+                setSectionRegisterLogin={this.setSectionRegisterLogin}
+                showRegulations={this.showRegulations.bind(this)}
+                setStatusLoginUser={this.setStatusLoginUser}
+                usersData={this.state.usersData}
+                setActullayUser={this.setActullayUser}/>
+              <MenuLeftDrop
+                visibleMenuDropLeft={this.state.visibleApp}
+                showApp={this.showApp.bind(this)}
+                setSectionRegisterLogin={this.setSectionRegisterLogin}
+                statusLogin={this.state.statusLogin}
+                setStatusLoginUser={this.setStatusLoginUser}/>
+              <Navigation
+                hideApp={this.hideApp.bind(this)}
+                setSectionRegisterLogin={this.setSectionRegisterLogin}
+                statusLogin={this.state.statusLogin}
+                setStatusLoginUser={this.setStatusLoginUser}
+                usersData={this.state.usersData}
+                actuallyUser={this.state.actuallyUser}/>
+              <Intro/>
+              <div className="picture-1">
+                <div className="parallax-1"></div>
+              </div>
+              <Article/>
+              <div className="picture-2">
+                <div className="parallax-2"></div>
+              </div>
+              <Footer
+                showRegulations={this.showRegulations.bind(this)}/>
+              <Regulations
+                visibleRegulation={this.state.visibleRegulation}
+                hideRegulations={this.hideRegulations.bind(this)}/>
             </div>
-            <Article/>
-            <div className="picture-2">
-              <div className="parallax-2"></div>
-            </div>
-            <Footer
-              showRegulations={this.showRegulations.bind(this)}/>
-            <Regulations
-              visibleRegulation={this.state.visibleRegulation}
-              hideRegulations={this.hideRegulations.bind(this)}/>
-          </div>
             );
   }
 }
