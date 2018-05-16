@@ -1,13 +1,15 @@
 import './style.css';
 import React, { Component } from 'react';
+
 import logoUser from '../../Images/users-login.png';
 import completeLogo from '../../Images/register-accepted.png';
+import arrowUp from '../../Images/arrow-up.png';
+import FadeIn from 'react-fade-in';
+
 import Step1 from './Step-1.js';
 import Step2 from './Step-2.js';
 import Step3 from './Step-3.js';
 import Step4 from './Step-4.js';
-import arrowUp from '../../Images/arrow-up.png';
-import FadeIn from 'react-fade-in';
 
 export default class LoginRegister extends Component {   
     constructor(props) {
@@ -21,11 +23,15 @@ export default class LoginRegister extends Component {
             userName: '',
             password: '',
             badLoginOrPassword: false,
+            widthBar: '0%',
         }
         this.resetSectionRegisterLogin = this.resetSectionRegisterLogin.bind(this);
         this.nextStep = this.nextStep.bind(this);
         this.getValueTheStepRegister = this.getValueTheStepRegister.bind(this);
         this.tryLoginUser = this.tryLoginUser.bind(this);
+        this.registerNewUser = this.registerNewUser.bind(this);
+        this.uploadImage = this.uploadImage.bind(this);
+        this.newUser = null;
     };
 
     resetSectionRegisterLogin() {
@@ -40,6 +46,15 @@ export default class LoginRegister extends Component {
             badLoginOrPassword: false,
         })
     }
+
+    nextStep() {
+        this.setState({stepRegister: this.state.stepRegister + 1});
+        if(this.state.stepRegister > 2) {
+           setTimeout(() => {
+                this.registerNewUser();
+           },2000)
+        }
+    };
 
     getValueTheStepRegister(step, value) {
         if(step === 1) {
@@ -66,27 +81,100 @@ export default class LoginRegister extends Component {
                         actuallyUser = user; 
                         return user.nameUser === this.state.nameUser && 
                                user.password === this.state.password})) {
-                this.setState({badLoginOrPassword: false});
                 this.props.setActullayUser(actuallyUser);
                 this.props.setStatusLoginUser();
                 this.resetSectionRegisterLogin();
-                this.props.setSectionRegisterLogin(false,false,false);
-
+                this.props.setSectionRegisterLogin(false, false, false);
         }
         else {
             this.setState({badLoginOrPassword: true})
         }    
     }
 
-    nextStep() {
-        this.setState({stepRegister: this.state.stepRegister + 1});
-        if(this.state.stepRegister > 2) {
-           setTimeout(() => {
-                this.setState({stepRegister: 0});
-                this.props.setSectionRegisterLogin(false,false,false);
-           },2000)
+    registerNewUser() {
+        this.props.setStatusRegisterNewUser(true);
+        this.newUser = this.setData();
+        if(this.state.valueStep4.pictureFile) {
+            let storageRef = this.props.storage.ref(this.newUser.nameUser);
+            var task = storageRef.put(this.state.valueStep4.pictureFile);
+            task.on('state_changed',(snapshot) => {
+                var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                this.setState({widthBar: percentage + '%'});
+                if(percentage === 100) {
+                    setTimeout(() => { 
+                        this.props.setSectionRegisterLogin(true, false, false);
+                        this.setState({stepRegister: 5});
+                        this.uploadImage();      
+                    },1000);
+                }
+             }, function error(err) {
+             })
         }
-    };
+        else {
+            this.newUser.pictureUrl ="https://firebasestorage.googleapis.com/v0/b/chess-base-aa6a9.appspot.com/o/empty-logo-user.png?alt=media&token=89078076-6626-4c14-8ca9-64d4552f4dc8";
+            this.props.databaseUsers.push(this.newUser);
+            this.props.setSectionRegisterLogin(true, false, false);
+            this.setState({stepRegister: 5});
+            setTimeout(() => {
+                this.afterRegister();
+            },2000);
+        }
+    }
+
+    uploadImage(status) {
+        let pathReference = this.props.storage.ref();
+        let starsRef = pathReference.child(this.newUser.nameUser);
+        starsRef.getDownloadURL().then((url) => {
+            this.newUser.pictureUrl = url;
+            this.props.databaseUsers.push(this.newUser);
+            setTimeout(()=>{
+                this.afterRegister();
+            },2000) 
+        }).catch(function(error) {
+            switch (error.code) {
+                case 'storage/object_not_found':
+                        break;
+    
+                case 'storage/unauthorized':
+                        break;
+    
+                case 'storage/canceled':
+                        break;
+    
+                case 'storage/unknown':
+                        break;
+                default :
+                        break;    
+            }
+        });
+    }
+
+    afterRegister() {
+        this.resetSectionRegisterLogin();
+        this.props.setSectionRegisterLogin(false,false,false);
+        this.props.setActullayUser(this.newUser);
+        this.props.setStatusLoginUser();
+        this.setState({widthBar: '0%'});
+    }
+
+    setData = () => {
+        return {
+            id: '',
+            nameUser: this.state.valueStep1.valueFisrt,
+            email: this.state.valueStep1.valueSecond,
+            password: this.state.valueStep1.valueThird,
+            name: this.state.valueStep2.valueFisrt,
+            surname: this.state.valueStep2.valueSecond,
+            country: this.state.valueStep2.valueThird,
+            dateSince: this.state.valueStep2.valueFourth,
+            city: this.state.valueStep3.valueFisrt,
+            region: this.state.valueStep3.valueSecond,
+            phone: this.state.valueStep3.valueThird,
+            ranking: 0,
+            pictureUrl: '',
+            status: 'online',
+        }
+    }
 
     render() {
         return(
@@ -134,12 +222,12 @@ export default class LoginRegister extends Component {
                                         <Step3
                                             getValueTheStepRegister={this.getValueTheStepRegister}
                                             nextStep={this.nextStep}/>
-                                        :this.state.stepRegister === 3 ?
+                                        :this.state.stepRegister >= 3 ?
                                             <Step4
                                             showRegulations={this.props.showRegulations}
                                             getValueTheStepRegister={this.getValueTheStepRegister}
                                             nextStep={this.nextStep}
-                                            setSectionRegisterLogin={this.props.setSectionRegisterLogin}/>
+                                            widthBar={this.state.widthBar}/>
                                         :null}
                             </React.Fragment>
                             <div className="register-login-form-register-pointers">
@@ -166,7 +254,7 @@ export default class LoginRegister extends Component {
                                 </div>
                                 <div 
                                     className="register-login-form-register-pointer"
-                                    style={this.state.stepRegister === 3 ? 
+                                    style={this.state.stepRegister >= 3 ? 
                                         {backgroundColor:'rgb(92,184,92)'}
                                         :{backgroundColor:'gray'}}
                                 >
@@ -256,7 +344,7 @@ export default class LoginRegister extends Component {
                     </FadeIn>
                     :null
                 }
-                {this.state.stepRegister === 4 ?
+                {this.state.stepRegister === 5 ?
                             <FadeIn>
                                 <div className="register-login-register-complete">
                                     <div className="register-login-register-complete-block">

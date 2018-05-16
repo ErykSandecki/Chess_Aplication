@@ -5,7 +5,7 @@ export default class Step4 extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pictureFIle: null,
+            pictureFile: null,
             acceptanceRegulation: false,
         }
         this.sendValue = this.sendValue.bind(this);
@@ -21,7 +21,7 @@ export default class Step4 extends Component {
         this.upload.current.click();
     }
 
-    uploadPicture = (e) => {this.setState({pictureFIle: e.target.files[0]})};
+    uploadPicture = (e) => {this.setState({pictureFile: e.target.files[0]})};
 
     setAcceptanceRegulation = (e) => {this.setState({acceptanceRegulation: !this.state.acceptanceRegulation})};
 
@@ -37,6 +37,7 @@ export default class Step4 extends Component {
                 </button>
                 <div className="progress register-login-progress-bar-register-upload-picture">
                     <div className="progress-bar-register-upload-picture-status progress-bar progress-bar-success progress-bar-striped" 
+                         style={{width: this.props.widthBar}}
                          role="progressbar" 
                          aria-valuenow="40" 
                          aria-valuemin="0" 
@@ -59,9 +60,8 @@ export default class Step4 extends Component {
                        ref={this.upload}/>
                 <button className="register-login-button-register-login-last-step btn btn-success" 
                         onClick={()=>{
-                                      this.props.setSectionRegisterLogin(true, false, false);  
-                                      this.props.nextStep();
                                       this.sendValue();
+                                      this.props.nextStep();
                                      }
                                 }
                 >

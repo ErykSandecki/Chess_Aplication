@@ -9,7 +9,10 @@ export default class Footer extends Component {
                     <p className="footer-menu-text col-xs-12 col-sm-offset-1 col-sm-2">Kontakt</p>
                     <p className="footer-menu-text col-xs-12 col-sm-2">FAQs</p>
                     <p className="footer-menu-text col-xs-12 col-sm-2"
-                       onClick={this.props.showRegulations}>Regulamin</p>
+                       onClick={this.props.showRegulations}
+                    >
+                       Regulamin
+                    </p>
                     <p className="footer-menu-text col-xs-12 col-sm-2">Polityka</p>
                     <p className="footer-menu-text col-xs-12 col-sm-2">Członkowie</p>
                 </div>

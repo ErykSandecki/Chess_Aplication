@@ -40,8 +40,19 @@ export default class MenuLeftDrop extends Component {
                         :"ZAREJESTRUJ/ZALOGUJ"}
                     </p>
                 </div>
-                <div className="menu-drop-left-friends-drop">
-                    <p className="menu-drop-left-friends-drop-text" >ZNAJOMI</p>
+                <div className="menu-drop-left-friends-drop"
+                     onClick={this.props.statusLogin ? 
+                                ()=>{
+                                        this.props.showApp();
+                                    }
+                               :()=>{
+                                      this.props.showApp();
+                                      setTimeout(()=>{
+                                            this.props.setSectionRegisterLogin(true, true, false);
+                                        },500);
+                                    }}
+                >
+                    <p className="menu-drop-left-friends-drop-text">ZNAJOMI</p>
                 </div>
             </div>
                 )

@@ -15,11 +15,13 @@ class App extends Component {
     super(props);
     this.state = {
       databaseUsers: null,
+      storage: null,
       usersData: null,
       actuallyUser: null,
       visibleApp: true,
       statusLogin: false,
       visibleRegulation: false,
+      statusRegisterNewUser: false,
       sectionRegisterLogin: {
         visibleBackGround: false,
         visibleRegister: false,
@@ -47,6 +49,8 @@ class App extends Component {
 
   getReferenceDataBase = (databaseUsers) => {this.setState({databaseUsers});};
 
+  getReferenceStorage = (storage) => {this.setState({storage})};
+
   updateUsers = (usersData) => {this.setState({usersData});}
 
   setSectionRegisterLogin(visibleBackGround, visibleRegister, visibleLogin) {
@@ -58,6 +62,8 @@ class App extends Component {
         }
       });
   };
+
+  setStatusRegisterNewUser = (value) => {this.setState({statusRegisterNewUser: value})};
 
   setActullayUser = (actuallyUser) => {this.setState({actuallyUser})};
 
@@ -80,14 +86,20 @@ class App extends Component {
               <Firebase
                 getReferenceDataBase={this.getReferenceDataBase}
                 databaseUsers={this.state.databaseUsers}
-                updateUsers={this.updateUsers}/>
+                updateUsers={this.updateUsers}
+                statusRegisterNewUser={this.state.statusRegisterNewUser}
+                setStatusRegisterNewUser={this.setStatusRegisterNewUser}
+                getReferenceStorage={this.getReferenceStorage}/>
               <LoginRegister
                 sectionRegisterLogin={this.state.sectionRegisterLogin}
                 setSectionRegisterLogin={this.setSectionRegisterLogin}
                 showRegulations={this.showRegulations.bind(this)}
                 setStatusLoginUser={this.setStatusLoginUser}
                 usersData={this.state.usersData}
-                setActullayUser={this.setActullayUser}/>
+                setActullayUser={this.setActullayUser}
+                databaseUsers={this.state.databaseUsers}
+                storage={this.state.storage}
+                setStatusRegisterNewUser={this.setStatusRegisterNewUser}/>
               <MenuLeftDrop
                 visibleMenuDropLeft={this.state.visibleApp}
                 showApp={this.showApp.bind(this)}

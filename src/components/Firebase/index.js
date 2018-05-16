@@ -19,7 +19,9 @@ export default class Firebase extends Component {
 
     componentDidMount() {
         let databaseUsers= firebase.database().ref('users')
+        let storageRef = firebase.storage();
         this.props.getReferenceDataBase(databaseUsers);
+        this.props.getReferenceStorage(storageRef);
         databaseUsers.on("value",this.downloadDatabase, this.errData);
     };
 
@@ -31,7 +33,17 @@ export default class Firebase extends Component {
             allScore.push(scores[keys[i]]);
         }
         this.props.updateUsers(allScore);
+        
+        if(this.props.statusRegisterNewUser) {
+            this.setIdUser(allScore, keys);
+            this.props.setStatusRegisterNewUser(false);
+        }
     };
+
+    setIdUser(allScore, keys) {
+        allScore[allScore.length - 1].id = keys[keys.length - 1];
+        firebase.database().ref('users').child(keys[keys.length - 1]).set(allScore[allScore.length - 1]);
+    }
 
     errData(err) {
         console.log(err);
