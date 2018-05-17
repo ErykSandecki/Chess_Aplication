@@ -22,6 +22,12 @@ export default class Friends extends Component {
         this.props.setVisibleFriends();
     }
 
+    check(e) {
+        console.log(e.target.scrollTop);
+        console.log(e.target.scrollHeight)
+        console.log('cleint top:' +e.target.clientHeight);
+    }
+
     renderUsers(user, index) {
             return (
                 <div key={index} className="friends-users-list" >
@@ -83,8 +89,10 @@ export default class Friends extends Component {
                                     <div className="friends-users-your-friends"
                                         onClick={() => {this.changeSelectSearch('local')}}
                                         style={this.state.selectSearch === 'local'?
-                                                    {height: '24px'}
-                                                    :{filter: 'brightness(60%)'}
+                                                    {height: '24px',
+                                                     filter: 'brightness(100%)',
+                                                    }
+                                                    :null
                                               }     
                                     >
                                         Twoi znajomi
@@ -92,14 +100,18 @@ export default class Friends extends Component {
                                     <div className="friends-users-search-friends"
                                         onClick={() => {this.changeSelectSearch('global')}}
                                         style={this.state.selectSearch === 'global'?
-                                                    {height: '24px'}
-                                                    :{filter: 'brightness(60%)'}
+                                                    {height: '24px',
+                                                     filter: 'brightness(100%)',
+                                                    }
+                                                    :null
                                               }
                                     >
                                         Szukaj znajomych
                                     </div>
                                     <div className="friends-users-table">
-                                        <div className="friends-window-users">
+                                        <div className="friends-window-users"
+                                             onScroll={this.check}
+                                        >
                                               {this.state.selectSearch === 'global'?
                                                 this.props.usersData.filter((user)=>
                                                     {return user.nameUser !== this.props.actuallyUser.nameUser}).map((user, index)=>

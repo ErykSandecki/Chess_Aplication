@@ -53,7 +53,7 @@ export default class LoginRegister extends Component {
         if(this.state.stepRegister > 2) {
            setTimeout(() => {
                 this.registerNewUser();
-           },2000)
+           },100);
         }
     };
 
@@ -116,9 +116,9 @@ export default class LoginRegister extends Component {
             this.props.databaseUsers.push(this.newUser);
             this.props.setSectionRegisterLogin(true, false, false);
             this.setState({stepRegister: 5});
-            setTimeout(() => {
+            setTimeout(()=>{
                 this.afterRegister();
-            },2000);
+            },2000); 
         }
     }
 
