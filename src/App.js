@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import Firebase from './components/Firebase';
 import Intro from './components/Intro/index.js';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer'
@@ -8,7 +9,7 @@ import Article from './components/Article'
 import MenuLeftDrop from './components/MenuLeftDrop'
 import Regulations from './components/Regulations'
 import LoginRegister from './components/LoginRegister';
-import Firebase from './components/Firebase';
+import Friends from './components/Friends';
 
 class App extends Component {
   constructor(props){
@@ -22,6 +23,7 @@ class App extends Component {
       statusLogin: false,
       visibleRegulation: false,
       statusRegisterNewUser: false,
+      visibleFriends: false,
       sectionRegisterLogin: {
         visibleBackGround: false,
         visibleRegister: false,
@@ -69,6 +71,8 @@ class App extends Component {
 
   setStatusLoginUser = () => {this.setState({statusLogin: !this.state.statusLogin});};
 
+  setVisibleFriends = () => {this.setState({visibleFriends: !this.state.visibleFriends});};
+
   render() {
     return (
             <div className={this.state.visibleApp ?
@@ -90,6 +94,13 @@ class App extends Component {
                 statusRegisterNewUser={this.state.statusRegisterNewUser}
                 setStatusRegisterNewUser={this.setStatusRegisterNewUser}
                 getReferenceStorage={this.getReferenceStorage}/>
+              {this.state.visibleFriends ?
+                <Friends
+                  setVisibleFriends={this.setVisibleFriends}
+                  usersData={this.state.usersData}
+                  actuallyUser={this.state.actuallyUser}/>
+                :null
+               }
               <LoginRegister
                 sectionRegisterLogin={this.state.sectionRegisterLogin}
                 setSectionRegisterLogin={this.setSectionRegisterLogin}
@@ -105,7 +116,8 @@ class App extends Component {
                 showApp={this.showApp.bind(this)}
                 setSectionRegisterLogin={this.setSectionRegisterLogin}
                 statusLogin={this.state.statusLogin}
-                setStatusLoginUser={this.setStatusLoginUser}/>
+                setStatusLoginUser={this.setStatusLoginUser}
+                setVisibleFriends={this.setVisibleFriends}/>
               <Navigation
                 hideApp={this.hideApp.bind(this)}
                 setSectionRegisterLogin={this.setSectionRegisterLogin}

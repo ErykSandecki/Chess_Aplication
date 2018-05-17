@@ -44,6 +44,9 @@ export default class MenuLeftDrop extends Component {
                      onClick={this.props.statusLogin ? 
                                 ()=>{
                                         this.props.showApp();
+                                        setTimeout(()=>{
+                                            this.props.setVisibleFriends();
+                                        },500);
                                     }
                                :()=>{
                                       this.props.showApp();
