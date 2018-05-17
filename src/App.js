@@ -55,6 +55,11 @@ class App extends Component {
 
   updateUsers = (usersData) => {this.setState({usersData});}
 
+  setActullayUser = (actuallyUser) => {this.setState({actuallyUser})
+setTimeout(()=>{
+  console.log(this.state.actuallyUser)
+},500)};
+
   setSectionRegisterLogin(visibleBackGround, visibleRegister, visibleLogin) {
     this.setState({
         sectionRegisterLogin: {
@@ -66,8 +71,6 @@ class App extends Component {
   };
 
   setStatusRegisterNewUser = (value) => {this.setState({statusRegisterNewUser: value})};
-
-  setActullayUser = (actuallyUser) => {this.setState({actuallyUser})};
 
   setStatusLoginUser = () => {this.setState({statusLogin: !this.state.statusLogin});};
 
@@ -91,9 +94,12 @@ class App extends Component {
                 getReferenceDataBase={this.getReferenceDataBase}
                 databaseUsers={this.state.databaseUsers}
                 updateUsers={this.updateUsers}
+                setActullayUser={this.setActullayUser}
                 statusRegisterNewUser={this.state.statusRegisterNewUser}
                 setStatusRegisterNewUser={this.setStatusRegisterNewUser}
-                getReferenceStorage={this.getReferenceStorage}/>
+                getReferenceStorage={this.getReferenceStorage}
+                statusLogin={this.state.statusLogin}
+                actuallyUser={this.state.actuallyUser}/>
               {this.state.visibleFriends ?
                 <Friends
                   setVisibleFriends={this.setVisibleFriends}

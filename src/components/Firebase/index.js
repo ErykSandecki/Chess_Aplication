@@ -31,6 +31,11 @@ export default class Firebase extends Component {
         let allScore = [];
         for(let i = 0; i < keys.length; i++) {
             allScore.push(scores[keys[i]]);
+            if(this.props.statusLogin) {
+               if(allScore[i].nameUser === this.props.actuallyUser.nameUser) {
+                    this.props.setActullayUser(allScore[i]);
+               } 
+            }
         }
         this.props.updateUsers(allScore);
         
