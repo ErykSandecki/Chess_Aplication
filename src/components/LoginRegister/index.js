@@ -1,4 +1,3 @@
-import './style.css';
 import React, { Component } from 'react';
 
 import logoUser from '../../Images/users-login.png';
@@ -10,6 +9,8 @@ import Step1 from './Step-1.js';
 import Step2 from './Step-2.js';
 import Step3 from './Step-3.js';
 import Step4 from './Step-4.js';
+
+import './style.css';
 
 export default class LoginRegister extends Component {   
     constructor(props) {

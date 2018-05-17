@@ -1,8 +1,10 @@
-import './style.css';
 import React, { Component } from 'react';
+
 import learn from '../../Images/learn-to-play.png';
 import ranking from '../../Images/ranking.png';
 import tournament from '../../Images/tournament.png';
+
+import './style.css';
 
 export default class Article extends Component {
     render() {

@@ -1,5 +1,6 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
+
 import firebase from 'firebase';
 
 export default class Firebase extends Component {

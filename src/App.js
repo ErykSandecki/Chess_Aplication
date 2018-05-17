@@ -55,10 +55,7 @@ class App extends Component {
 
   updateUsers = (usersData) => {this.setState({usersData});}
 
-  setActullayUser = (actuallyUser) => {this.setState({actuallyUser})
-setTimeout(()=>{
-  console.log(this.state.actuallyUser)
-},500)};
+  setActullayUser = (actuallyUser) => {this.setState({actuallyUser})};
 
   setSectionRegisterLogin(visibleBackGround, visibleRegister, visibleLogin) {
     this.setState({

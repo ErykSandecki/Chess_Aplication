@@ -1,5 +1,6 @@
-import './style.css';
 import React, { Component } from 'react';
+
+import './style.css';
 
 import FadeIn from 'react-fade-in';
 
@@ -11,7 +12,7 @@ export default class Friends extends Component {
         }
 
         this.exitSearch = this.exitSearch.bind(this);
-        this.filterUsers = this.filterUsers.bind(this);
+        this.renderUsers = this.renderUsers.bind(this);
     }
 
     changeSelectSearch = (value) => {this.setState({selectSearch: value});}
@@ -21,11 +22,7 @@ export default class Friends extends Component {
         this.props.setVisibleFriends();
     }
 
-    filterUsers(user, index) {
-        if(user.nameUser === this.props.actuallyUser.nameUser) {
-            return null;
-        }
-        else {
+    renderUsers(user, index) {
             return (
                 <div key={index} className="friends-users-list" >
                     <img className="friends-users-list-image" 
@@ -46,7 +43,6 @@ export default class Friends extends Component {
                     </button>
                 </div>
                    )
-        }
     }
 
     render() {
@@ -105,9 +101,11 @@ export default class Friends extends Component {
                                     <div className="friends-users-table">
                                         <div className="friends-window-users">
                                               {this.state.selectSearch === 'global'?
-                                                this.props.usersData.map((user, index)=>{
-                                                    return this.filterUsers(user, index);
-                                                }) 
+                                                this.props.usersData.filter((user)=>
+                                                    {return user.nameUser !== this.props.actuallyUser.nameUser}).map((user, index)=>
+                                                        {
+                                                            return this.renderUsers(user, index);
+                                                        }) 
                                               :null}
                                         </div>
                                     <div className="friends-loader"></div>

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import './style.css';
+
 import introImage from '../../Images/intro.jpg';
 import introText from '../../Images/intro-text.png';
+
+import './style.css';
 
 export default class Intro extends Component {
     render() {
