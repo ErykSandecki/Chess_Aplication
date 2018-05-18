@@ -89,6 +89,10 @@
     background-color: rgb(177, 177, 177);
 }
 
+.friends-advanced-search-input:hover {
+    border: 1px solid #3498db;
+}
+
 .friends-users {
     float: left;
     width: 90%;
@@ -187,44 +191,6 @@
     transition: 0.5s;
 }
 
-.friends-exit-section {
-    float: left;
-    position: relative;
-    width: 95%;
-    margin-left: 2.5%;
-    margin-right: 2.5%;
-    height: 20px;
-    text-align: center;
-    background-color: rgb(43, 43, 43);
-    margin-top: 15px;
-    height: 50px;
-    border-radius: 15px;
-}
-
-.friends-exit-section-table {
-    width: 20%;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid rgb(128, 128, 128);
-    margin-top: 9px;
-    padding: 1px;
-    border-radius: 5px;
-    background-color: orange;
-    color: rgb(43, 43, 43);
-    font-size: 15px;
-    height: 30px;
-    position: relative;
-    line-height: 30px;
-}
-
-.friends-exit-section-table:hover {
-    filter: drop-shadow(8px 8px 10px gray);
-}
-
-.friends-exit-icon {
-    margin-left: 2px;
-}
-
 .friends-users-list {
     width: 90%;
     height: 100px;
@@ -289,6 +255,73 @@
     float: left;
     margin-bottom: 5px;
     position: relative;
+}
+
+
+.friends-exit-section {
+    float: left;
+    position: relative;
+    width: 95%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    height: 20px;
+    text-align: center;
+    background-color: rgb(43, 43, 43);
+    margin-top: 15px;
+    height: 50px;
+    border-radius: 15px;
+}
+
+.friends-exit-section-table {
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid rgb(128, 128, 128);
+    margin-top: 9px;
+    padding: 1px;
+    border-radius: 5px;
+    background-color: orange;
+    color: rgb(43, 43, 43);
+    font-size: 15px;
+    height: 30px;
+    position: relative;
+    line-height: 30px;
+}
+
+.friends-exit-section-table:hover {
+    filter: drop-shadow(8px 8px 10px gray);
+}
+
+.friends-exit-icon {
+    margin-left: 2px;
+}
+
+.friends-loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    top: 35%;
+    left: 40%;
+    z-index: 2;
+    display: block;
+}
+
+.friends-loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    top: 35%;
+    left: 40%;
+    z-index: 2;
+    display: block;
 }
 
 @media only screen and (min-width: 768px) {

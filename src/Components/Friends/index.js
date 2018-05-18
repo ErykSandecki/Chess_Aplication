@@ -9,23 +9,118 @@ export default class Friends extends Component {
         super(props);
         this.state = {
             selectSearch: 'local',
+            renderNumberUser: 5,
+            nextFilter: false,
+            nameForFilter: '',
+            surnameForFilter: '',
+            countryForFilter: '',
+            rankingForFilter: '',
         }
+
+        this.actuallyNumberRenderUser = -1;
 
         this.exitSearch = this.exitSearch.bind(this);
         this.renderUsers = this.renderUsers.bind(this);
+        this.checkScrollUsers = this.checkScrollUsers.bind(this);
     }
 
     changeSelectSearch = (value) => {this.setState({selectSearch: value});}
 
     exitSearch() {
-        this.setState({selectSearch: 'local'});
         this.props.setVisibleFriends();
     }
 
-    check(e) {
-        console.log(e.target.scrollTop);
-        console.log(e.target.scrollHeight)
-        console.log('cleint top:' +e.target.clientHeight);
+    checkScrollUsers(e) {
+        if((e.target.scrollTop) >= (e.target.scrollHeight - e.target.clientHeight)) {
+            if(this.state.renderNumberUser < this.props.usersData.length){
+                this.setState({renderNumberUser: this.state.renderNumberUser + 5});
+                this.setState({nextFilter: true});
+                setTimeout(()=>{
+                    this.setState({nextFilter: false});
+                },500);
+            } 
+        }
+    }
+
+    showSuggestionSearchForName = (e) => {
+        let nameForFilter = e.target.value;
+        this.setState({
+            nameForFilter: nameForFilter,
+            renderNumberUser: 5,
+        })
+    }
+
+    showSuggestionSearchForSurname = (e) => {
+        let surnameForFilter = e.target.value;
+        this.setState({
+            surnameForFilter: surnameForFilter,
+            renderNumberUser: 5,
+        })
+    }
+
+    showSuggestionSearchForCountry = (e) => {
+        let countryForFilter = e.target.value;
+        this.setState({
+            countryForFilter: countryForFilter,
+            renderNumberUser: 5,
+        })
+    }
+
+    showSuggestionSearchForRanking = (e) => {
+        let rankingForFilter = e.target.value;
+        this.setState({
+            rankingForFilter: rankingForFilter,
+            renderNumberUser: 5,
+        })
+    }
+
+    checkFilterName = (user) => {
+        if(this.state.nameForFilter !== '') {
+            if(user.name.toLowerCase().includes(this.state.nameForFilter.toLowerCase())) {
+                return true;
+            }
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    checkFilterSurname = (user) => {
+        if(this.state.surnameForFilter !== '') {
+            if(user.surname.toLowerCase().includes(this.state.surnameForFilter.toLowerCase())) {
+                return true;
+            }
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    checkFilterCountry = (user) => {
+        if(this.state.countryForFilter !== '') {
+            if(user.country.toLowerCase().includes(this.state.countryForFilter.toLowerCase())) {
+                return true;
+            }
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    checkFilterRanking = (user) => {
+        if(this.state.rankingForFilter !== '') {
+            // eslint-disable-next-line
+            if(user.ranking === parseInt(this.state.rankingForFilter)) {
+                return true;
+            }
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     renderUsers(user, index) {
@@ -52,6 +147,7 @@ export default class Friends extends Component {
     }
 
     render() {
+        this.actuallyNumberRenderUser = -1;
         return(
             <FadeIn>
                 <div className="friends">
@@ -67,21 +163,25 @@ export default class Friends extends Component {
                                     <div className="friends-advanced-search-block-input">
                                         <input className="friends-advanced-search-input"
                                             placeholder="IMIE"
+                                            onInput={this.showSuggestionSearchForName}
                                         />
                                     </div>
                                     <div className="friends-advanced-search-block-input">
                                         <input className="friends-advanced-search-input"
                                                placeholder="NAZWISKO"
+                                               onInput={this.showSuggestionSearchForSurname}
                                         />
                                     </div>
                                     <div className="friends-advanced-search-block-input">
                                         <input className="friends-advanced-search-input"
                                                placeholder="KRAJ"
+                                               onInput={this.showSuggestionSearchForCountry}
                                         />
                                     </div>
                                     <div className="friends-advanced-search-block-input">
                                         <input className="friends-advanced-search-input"
                                                placeholder="RANKING"
+                                               onInput={this.showSuggestionSearchForRanking}
                                         />
                                     </div>
                                 </div>
@@ -110,17 +210,28 @@ export default class Friends extends Component {
                                     </div>
                                     <div className="friends-users-table">
                                         <div className="friends-window-users"
-                                             onScroll={this.check}
+                                             onScroll={this.checkScrollUsers}
                                         >
                                               {this.state.selectSearch === 'global'?
                                                 this.props.usersData.filter((user)=>
-                                                    {return user.nameUser !== this.props.actuallyUser.nameUser}).map((user, index)=>
-                                                        {
-                                                            return this.renderUsers(user, index);
-                                                        }) 
+                                                    {if(user.nameUser !== this.props.actuallyUser.nameUser) {this.actuallyNumberRenderUser++};
+                                                     return user.nameUser !== this.props.actuallyUser.nameUser && 
+                                                            this.actuallyNumberRenderUser < this.state.renderNumberUser &&
+                                                            this.checkFilterName(user) &&
+                                                            this.checkFilterSurname(user) &&
+                                                            this.checkFilterCountry(user) &&
+                                                            this.checkFilterRanking(user)}).map((user, index)=> {
+                                                                    return this.renderUsers(user, index);
+                                                                }) 
                                               :null}
                                         </div>
-                                    <div className="friends-loader"></div>
+                                        <div className="friends-loader"
+                                             style={this.state.nextFilter ?
+                                                    {display: 'block'}
+                                                   :{display: 'none'}
+                                                   }
+                                        >
+                                        </div>
                                 </div>          
                             </div>
                         </div>
