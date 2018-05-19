@@ -230,7 +230,7 @@ export default class Friends extends Component {
         return <button className="friends-button-delete-friends"
                        onClick={()=>{this.deleteUserOrInvite(user,index)}}
                 >
-                    Usuń ze znajomych
+                    Usuń ze znajomych 
                     <span className="friends-remove-invite glyphicon glyphicon-remove"/>
                 </button>
     }
@@ -319,6 +319,16 @@ export default class Friends extends Component {
         return true;
     }
 
+    checkAllFilter(user) {
+        if(this.checkFilterName(user) &&
+           this.checkFilterSurname(user) &&
+           this.checkFilterCountry(user) &&
+           this.checkFilterRanking(user)){
+               return true;
+           }
+        return false;   
+    }
+
     render() {
         this.actuallyNumberRenderUser = -1;
         return(
@@ -392,10 +402,7 @@ export default class Friends extends Component {
                                                     {if(user.nameUser !== this.props.actuallyUser.nameUser && !this.checkThatIsFriend(user, true)) {this.actuallyNumberRenderUser++};
                                                      return user.nameUser !== this.props.actuallyUser.nameUser && 
                                                             this.actuallyNumberRenderUser < this.state.renderNumberUser &&
-                                                            this.checkFilterName(user) &&
-                                                            this.checkFilterSurname(user) &&
-                                                            this.checkFilterCountry(user) &&
-                                                            this.checkFilterRanking(user)&&
+                                                            this.checkAllFilter(user)&&
                                                             this.checkThatIsFriend(user, false)}).map((user, index)=> {
                                                                     return this.renderUsers(user, index);
                                                                 }) 
@@ -407,42 +414,53 @@ export default class Friends extends Component {
                                                         <React.Fragment>
                                                             <div className="friends-window-send-invite">Wysłane zaproszenia</div>
                                                             {this.props.actuallyUser.friends.filter((friend)=>{
-                                                                return friend.direction === 'send' && !friend.isFriends
+                                                                return friend.direction === 'send' && 
+                                                                       !friend.isFriends &&
+                                                                        this.checkAllFilter(this.props.usersData.find((user)=>{
+                                                                            return user.id === friend.id
+                                                                        }))
                                                             }).map((friend, index)=>{
                                                                    return this.renderUsers(this.props.usersData.find((user)=>{
                                                                        return user.id === friend.id
                                                                    }), index);
                                                                 })}
-                                                        </React.Fragment>
-                                                        :null}
+                                                            </React.Fragment>
+                                                            :null}
                                                         {this.props.actuallyUser.friends.find((friend)=>{
                                                             return friend.direction === 'get' && !friend.isFriends
                                                         })?
                                                             <React.Fragment>
-                                                                <div className="friends-window-get-invite">Odebrane</div>
+                                                                <div className="friends-window-get-invite">Odebrane Zaproszenia</div>
                                                                 {this.props.actuallyUser.friends.filter((friend)=>{
-                                                                    return friend.direction === 'get' && !friend.isFriends
+                                                                    return friend.direction === 'get' && 
+                                                                           !friend.isFriends  &&
+                                                                           this.checkAllFilter(this.props.usersData.find((user)=>{
+                                                                                return user.id === friend.id
+                                                                            }))
                                                                     }).map((friend, index)=>{
                                                                         return this.renderUsers(this.props.usersData.find((user)=>{
                                                                             return user.id === friend.id
                                                                         }), index);
                                                                 })}
-                                                        </React.Fragment>
-                                                        :null}
+                                                            </React.Fragment>
+                                                            :null}
                                                         {this.props.actuallyUser.friends.find((friend)=>{
                                                             return friend.isFriends
                                                         })?
                                                             <React.Fragment>
                                                                 <div className="friends-window-your-friend">Znajomi</div>
                                                                 {this.props.actuallyUser.friends.filter((friend)=>{
-                                                                    return friend.isFriends
+                                                                    return friend.isFriends  &&
+                                                                           this.checkAllFilter(this.props.usersData.find((user)=>{
+                                                                                return user.id === friend.id
+                                                                            }))
                                                                     }).map((friend, index)=>{
                                                                         return this.renderUsers(this.props.usersData.find((user)=>{
                                                                             return user.id === friend.id
                                                                         }), index);
                                                                 })}
-                                                        </React.Fragment>
-                                                        :null}        
+                                                            </React.Fragment>
+                                                            :null}        
                                                 </React.Fragment>
                                                 :null
                                               }

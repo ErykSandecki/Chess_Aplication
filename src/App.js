@@ -51,7 +51,7 @@ class App extends Component {
 
   getReferenceDataBase = (databaseUsers) => {this.setState({databaseUsers});};
 
-  getReferenceStorage = (storage) => {this.setState({storage})};
+  getReferenceStorage = (storage) => {this.setState({storage});};
 
   updateUsers = (usersData) => {this.setState({usersData});}
 
@@ -129,7 +129,8 @@ class App extends Component {
                 statusLogin={this.state.statusLogin}
                 setStatusLoginUser={this.setStatusLoginUser}
                 usersData={this.state.usersData}
-                actuallyUser={this.state.actuallyUser}/>
+                actuallyUser={this.state.actuallyUser}
+                databaseUsers={this.state.databaseUsers}/>
               <Intro/>
               <div className="picture-1">
                 <div className="parallax-1"></div>

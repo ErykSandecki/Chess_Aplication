@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import NotificationsNewFriends from '../NotificationsNewFriend';
+
 import emptyLogoUser from '../../Images/empty-logo-user.png';
 
 import './style.css';
@@ -32,6 +34,10 @@ export default class Navigation extends Component {
                             >
                                 Wyloguj
                             </p>
+                            <NotificationsNewFriends
+                                actuallyUser={this.props.actuallyUser}
+                                usersData={this.props.usersData}
+                                databaseUsers={this.props.databaseUsers}/>
                         </React.Fragment>
                         :<React.Fragment>
                             <img className="nav-users img-circle" 
