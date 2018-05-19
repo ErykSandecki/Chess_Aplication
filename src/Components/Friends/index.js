@@ -219,7 +219,7 @@ export default class Friends extends Component {
                         Akceptuj zaproszenie +
                     </button>
                     <button className="friends-button-delete-invite"
-                        onClick={()=>{this.deleteInvite(user,index)}}
+                        onClick={()=>{this.deleteUserOrInvite(user,index)}}
                     >
                         Usuń zaproszenie -
                     </button>
@@ -290,7 +290,6 @@ export default class Friends extends Component {
     }
     
     changeDataBase(actuallyUser, user) {
-        console.log(actuallyUser);
         let refYourUser = this.props.databaseUsers.child(actuallyUser.id).child('friends');
         let refFriend = this.props.databaseUsers.child(user.id).child('friends');
         refYourUser.set(actuallyUser.friends);
