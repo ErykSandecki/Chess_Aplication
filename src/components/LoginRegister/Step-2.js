@@ -64,7 +64,6 @@ export default class Step1 extends Component {
                 >
                     Następny Krok
                 </button>              
-                }
             </React.Fragment>
         )
     }

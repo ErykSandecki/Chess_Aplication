@@ -153,7 +153,6 @@ export default class LoginRegister extends Component {
     afterRegister() {
         this.resetSectionRegisterLogin();
         this.props.setSectionRegisterLogin(false,false,false);
-        this.props.setActullayUser(this.newUser);
         this.props.setStatusLoginUser();
         this.setState({widthBar: '0%'});
     }

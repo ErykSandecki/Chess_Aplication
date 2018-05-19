@@ -22,6 +22,8 @@ export default class Friends extends Component {
         this.exitSearch = this.exitSearch.bind(this);
         this.renderUsers = this.renderUsers.bind(this);
         this.checkScrollUsers = this.checkScrollUsers.bind(this);
+        this.sendInvite = this.sendInvite.bind(this);
+        this.checkThatIsFriend = this.checkThatIsFriend.bind(this);
     }
 
     changeSelectSearch = (value) => {this.setState({selectSearch: value});}
@@ -44,34 +46,70 @@ export default class Friends extends Component {
 
     showSuggestionSearchForName = (e) => {
         let nameForFilter = e.target.value;
-        this.setState({
-            nameForFilter: nameForFilter,
-            renderNumberUser: 5,
-        })
+        if(nameForFilter !== '')
+        {
+            this.setState({
+                nameForFilter: nameForFilter,
+                renderNumberUser: this.props.usersData.length,
+            })
+        }
+        else {
+            this.setState({
+                nameForFilter: '',
+                renderNumberUser: 5,
+            })
+        }
     }
 
     showSuggestionSearchForSurname = (e) => {
         let surnameForFilter = e.target.value;
-        this.setState({
-            surnameForFilter: surnameForFilter,
-            renderNumberUser: 5,
-        })
+        if(surnameForFilter !== '')
+        {
+            this.setState({
+                surnameForFilter: surnameForFilter,
+                renderNumberUser: this.props.usersData.length,
+            })
+        }
+        else {
+            this.setState({
+                surnameForFilter: '',
+                renderNumberUser: 5,
+            })
+        }
     }
 
     showSuggestionSearchForCountry = (e) => {
         let countryForFilter = e.target.value;
-        this.setState({
-            countryForFilter: countryForFilter,
-            renderNumberUser: 5,
-        })
+        if(countryForFilter !== '')
+        {
+            this.setState({
+                countryForFilter: countryForFilter,
+                renderNumberUser: this.props.usersData.length,
+            })
+        }
+        else {
+            this.setState({
+                countryForFilter: '',
+                renderNumberUser: 5,
+            })
+        }
     }
 
     showSuggestionSearchForRanking = (e) => {
         let rankingForFilter = e.target.value;
-        this.setState({
-            rankingForFilter: rankingForFilter,
-            renderNumberUser: 5,
-        })
+        if(rankingForFilter !== '')
+        {
+            this.setState({
+                rankingForFilter: rankingForFilter,
+                renderNumberUser: this.props.usersData.length,
+            })
+        }
+        else {
+            this.setState({
+                rankingForFilter: '',
+                renderNumberUser: 5,
+            })
+        }
     }
 
     checkFilterName = (user) => {
@@ -112,8 +150,7 @@ export default class Friends extends Component {
 
     checkFilterRanking = (user) => {
         if(this.state.rankingForFilter !== '') {
-            // eslint-disable-next-line
-            if(user.ranking === parseInt(this.state.rankingForFilter)) {
+            if(user.ranking === +this.state.rankingForFilter) {
                 return true;
             }
             return false;
@@ -124,7 +161,13 @@ export default class Friends extends Component {
     }
 
     renderUsers(user, index) {
-            return (
+        let friend;
+        if(this.props.actuallyUser.friends) {
+            friend =  this.props.actuallyUser.friends.find((friend)=>{
+                           return friend.id === user.id
+                        })
+        }   
+        return (
                 <div key={index} className="friends-users-list" >
                     <img className="friends-users-list-image" 
                          src={user.pictureUrl}
@@ -138,12 +181,143 @@ export default class Friends extends Component {
                             {user.ranking}
                         </p>
                     </div>
-                    <button className="friends-button-add-friends">
-                            Dodaj znajomego
-                            <span className="glyphicon glyphicon-user"/>
-                    </button>
+                    {friend ?
+                        friend.direction === 'send' &&
+                        !friend.isFriends ?
+                            this.buttonDeleteInviteFriends(user,index)
+                            :!friend.isFriends ?
+                                this.buttonAcceptedAndDeleteInvite(user,index)
+                                :this.buttonDeleteFriends(user,index)
+                       :this.buttonAddInvite(user,index)}
                 </div>
                    )
+    }
+
+    buttonAddInvite(user, index) {
+        return <button className="friends-button-add-friends"
+                    onClick={()=>{this.sendInvite(user,index)}}
+                    >
+                    Dodaj znajomego
+                    <span className="glyphicon glyphicon-user"/>
+        </button>
+    }
+
+    buttonDeleteInviteFriends(user,index) {
+        return <button className="friends-button-delete-invite-for-friends"
+                       onClick={()=>{this.deleteUserOrInvite(user,index)}}
+                >
+                    Usuń zaproszenie 
+                    <span className="friends-remove-invite glyphicon glyphicon-remove"/>
+                </button>
+    }
+
+    buttonAcceptedAndDeleteInvite(user, index) {
+        return  <React.Fragment>
+                    <button className="friends-button-accepted-invite"
+                        onClick={()=>{this.acceptedInvite(user,index)}}
+                    >
+                        Akceptuj zaproszenie +
+                    </button>
+                    <button className="friends-button-delete-invite"
+                        onClick={()=>{this.deleteInvite(user,index)}}
+                    >
+                        Usuń zaproszenie -
+                    </button>
+                </React.Fragment>
+    }
+
+    buttonDeleteFriends(user, index) {
+        return <button className="friends-button-delete-friends"
+                       onClick={()=>{this.deleteUserOrInvite(user,index)}}
+                >
+                    Usuń ze znajomych
+                    <span className="friends-remove-invite glyphicon glyphicon-remove"/>
+                </button>
+    }
+
+    sendInvite(user,index) {
+        let actuallyUser = this.props.actuallyUser;
+        if(!user.friends) {
+            user.friends = [];
+        }
+        if(!actuallyUser.friends) {
+            actuallyUser.friends = [];
+        }
+        user.friends.push(this.createFriend(actuallyUser, 'get'));
+        actuallyUser.friends.push(this.createFriend(user, 'send'));
+        this.changeDataBase(actuallyUser, user);
+    }
+
+    createFriend(user, direction) {
+        let newDataForFriends = {
+             id:  user.id,
+             read: false,
+             isFriends: false,
+             direction: direction,
+             message: [{
+                 userPicture: user.pictureUrl,
+                 userId: user.id,
+                 contain: 'Jesteście znajomymi!',
+             }],
+         }
+         return newDataForFriends;
+     }
+
+     deleteUserOrInvite(user, index) {
+        let actuallyUser = this.props.actuallyUser;
+        let actuallyUserIndex = actuallyUser.friends.findIndex((friend)=>{
+            return friend.id === user.id
+        });
+        let userIndex = user.friends.findIndex((friend)=>{
+            return friend.id === actuallyUser.id
+        });
+        actuallyUser.friends.splice(actuallyUserIndex, actuallyUserIndex + 1);
+        user.friends.splice(userIndex, userIndex + 1);
+        this.changeDataBase(actuallyUser, user);
+    }
+
+    acceptedInvite(user,index) {
+        let actuallyUser = this.props.actuallyUser;
+        let actuallyUserIndex = actuallyUser.friends.findIndex((friends)=>{
+         return friends.id === user.id   
+        })
+        let userIndex = user.friends.findIndex((friend)=>{
+            return friend.id === actuallyUser.id
+        });
+        actuallyUser.friends[actuallyUserIndex].isFriends = true;
+        user.friends[userIndex].isFriends = true;
+        this.changeDataBase(actuallyUser, user);
+    }
+    
+    changeDataBase(actuallyUser, user) {
+        console.log(actuallyUser);
+        let refYourUser = this.props.databaseUsers.child(actuallyUser.id).child('friends');
+        let refFriend = this.props.databaseUsers.child(user.id).child('friends');
+        refYourUser.set(actuallyUser.friends);
+        refFriend.set(user.friends);
+    }
+
+    checkThatIsFriend(user, checkNumberFilter) {
+        let actuallyUser = this.props.actuallyUser;
+        if(actuallyUser.friends) {
+            if(actuallyUser.friends.find((friend)=>{
+                return friend.id === user.id
+            })) {
+                if(checkNumberFilter) {
+                    return true;
+                }
+                return false;
+            }
+            if(checkNumberFilter) {
+                return false;
+            }
+            return true;
+        }
+       
+        if(checkNumberFilter) {
+            return false;
+        }
+        return true;
     }
 
     render() {
@@ -210,20 +384,76 @@ export default class Friends extends Component {
                                     </div>
                                     <div className="friends-users-table">
                                         <div className="friends-window-users"
-                                             onScroll={this.checkScrollUsers}
+                                             onScroll={this.state.selectSearch === 'global' ?
+                                                        this.checkScrollUsers
+                                                        :null}
                                         >
                                               {this.state.selectSearch === 'global'?
                                                 this.props.usersData.filter((user)=>
-                                                    {if(user.nameUser !== this.props.actuallyUser.nameUser) {this.actuallyNumberRenderUser++};
+                                                    {if(user.nameUser !== this.props.actuallyUser.nameUser && !this.checkThatIsFriend(user, true)) {this.actuallyNumberRenderUser++};
                                                      return user.nameUser !== this.props.actuallyUser.nameUser && 
                                                             this.actuallyNumberRenderUser < this.state.renderNumberUser &&
                                                             this.checkFilterName(user) &&
                                                             this.checkFilterSurname(user) &&
                                                             this.checkFilterCountry(user) &&
-                                                            this.checkFilterRanking(user)}).map((user, index)=> {
+                                                            this.checkFilterRanking(user)&&
+                                                            this.checkThatIsFriend(user, false)}).map((user, index)=> {
                                                                     return this.renderUsers(user, index);
                                                                 }) 
-                                              :null}
+                                              :this.props.actuallyUser.friends ?
+                                                <React.Fragment>
+                                                    {this.props.actuallyUser.friends.find((friend)=>{
+                                                       return friend.direction === 'send' && !friend.isFriends
+                                                    })?
+                                                        <React.Fragment>
+                                                            <div className="friends-window-send-invite">Wysłane zaproszenia</div>
+                                                            {this.props.actuallyUser.friends.filter((friend)=>{
+                                                                return friend.direction === 'send' && !friend.isFriends
+                                                            }).map((friend, index)=>{
+                                                                   return this.renderUsers(this.props.usersData.find((user)=>{
+                                                                       return user.id === friend.id
+                                                                   }), index);
+                                                                })}
+                                                        </React.Fragment>
+                                                        :null}
+                                                        {this.props.actuallyUser.friends.find((friend)=>{
+                                                            return friend.direction === 'get' && !friend.isFriends
+                                                        })?
+                                                            <React.Fragment>
+                                                                <div className="friends-window-get-invite">Odebrane</div>
+                                                                {this.props.actuallyUser.friends.filter((friend)=>{
+                                                                    return friend.direction === 'get' && !friend.isFriends
+                                                                    }).map((friend, index)=>{
+                                                                        return this.renderUsers(this.props.usersData.find((user)=>{
+                                                                            return user.id === friend.id
+                                                                        }), index);
+                                                                })}
+                                                        </React.Fragment>
+                                                        :null}
+                                                        {this.props.actuallyUser.friends.find((friend)=>{
+                                                            return friend.isFriends
+                                                        })?
+                                                            <React.Fragment>
+                                                                <div className="friends-window-your-friend">Znajomi</div>
+                                                                {this.props.actuallyUser.friends.filter((friend)=>{
+                                                                    return friend.isFriends
+                                                                    }).map((friend, index)=>{
+                                                                        return this.renderUsers(this.props.usersData.find((user)=>{
+                                                                            return user.id === friend.id
+                                                                        }), index);
+                                                                })}
+                                                        </React.Fragment>
+                                                        :null}        
+                                                </React.Fragment>
+                                                :null
+                                              }
+                                        <div className="friends-window-users-blur"
+                                             style={this.state.nextFilter ?
+                                                     {display: 'block'}
+                                                    :{display: 'none'}
+                                                   }
+                                        >
+                                        </div>      
                                         </div>
                                         <div className="friends-loader"
                                              style={this.state.nextFilter ?

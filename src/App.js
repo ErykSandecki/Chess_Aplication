@@ -101,7 +101,8 @@ class App extends Component {
                 <Friends
                   setVisibleFriends={this.setVisibleFriends}
                   usersData={this.state.usersData}
-                  actuallyUser={this.state.actuallyUser}/>
+                  actuallyUser={this.state.actuallyUser}
+                  databaseUsers={this.state.databaseUsers}/>
                 :null
                }
               <LoginRegister
@@ -113,7 +114,8 @@ class App extends Component {
                 setActullayUser={this.setActullayUser}
                 databaseUsers={this.state.databaseUsers}
                 storage={this.state.storage}
-                setStatusRegisterNewUser={this.setStatusRegisterNewUser}/>
+                setStatusRegisterNewUser={this.setStatusRegisterNewUser}
+                actuallyUser={this.actuallyUser}/>
               <MenuLeftDrop
                 visibleMenuDropLeft={this.state.visibleApp}
                 showApp={this.showApp.bind(this)}
