@@ -59,10 +59,12 @@ export default class Step4 extends Component {
                        onChange={this.uploadPicture}
                        ref={this.upload}/>
                 <button className="register-login-button-register-login-last-step btn btn-success" 
-                        onClick={()=>{
-                                      this.sendValue();
-                                      this.props.nextStep();
-                                     }
+                         onClick={this.props.adminBase.status === 'online' ?
+                                    () =>{
+                                        this.sendValue();
+                                        this.props.nextStep();
+                                      }
+                                :null
                                 }
                 >
                     Zarejestruj

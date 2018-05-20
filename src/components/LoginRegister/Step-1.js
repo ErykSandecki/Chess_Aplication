@@ -55,11 +55,14 @@ export default class Step1 extends Component {
                     <div className="register-login-form-register-underline"></div>
                 </div>
                 <button className={"register-login-button-register-login-next-step btn btn-success"} 
-                        onClick={() =>{
+                        onClick={this.props.adminBase ?
+                                    this.props.adminBase.status === 'online' ?
+                                    () =>{
                                         this.sendValue();
                                         this.props.nextStep();
                                       }
-                                }
+                                    :null
+                                :null}
                 >
                     Następny Krok
                 </button>              

@@ -24,7 +24,7 @@ export default class MenuLeftDrop extends Component {
                 <div className="menu-drop-left-login-register-drop"
                     onClick={this.props.statusLogin ? 
                                 ()=>{
-                                        this.props.setStatusLoginUser();
+                                        this.props.setStatusLoginUser(false);
                                         this.props.showApp();
                                     }
                                 :()=>{

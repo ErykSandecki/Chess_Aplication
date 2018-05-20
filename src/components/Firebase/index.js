@@ -16,14 +16,18 @@ export default class Firebase extends Component {
         });
 
         this.downloadDatabase = this.downloadDatabase.bind(this);
+        this.downloadAdminBase = this.downloadAdminBase.bind(this);
     }
 
     componentDidMount() {
+        let adminData = firebase.database().ref('admin');
         let databaseUsers= firebase.database().ref('users')
         let storageRef = firebase.storage();
+        this.props.setDataAdmin(adminData);
         this.props.getReferenceDataBase(databaseUsers);
         this.props.getReferenceStorage(storageRef);
-        databaseUsers.on("value",this.downloadDatabase, this.errData);
+        adminData.on("value" , this.downloadAdminBase, this.errData);
+        databaseUsers.on("value", this.downloadDatabase, this.errData);
     };
 
     downloadDatabase(data) {
@@ -39,16 +43,46 @@ export default class Firebase extends Component {
                } 
             }
         }
-        if(this.checkExistingUser(allScore, actuallyUser)) {
-            this.props.setActullayUser(actuallyUser);
-            this.props.updateUsers(allScore);
-            if(this.props.statusRegisterNewUser) {
-                this.setIdUser(allScore, keys);
-                this.props.setStatusRegisterNewUser(false);
-            }   
+
+        this.actuallyUserForRefresh = allScore;
+    
+        if(this.props.statusLogin){
+            if(this.props.actuallyUser.nameUser !== 'admin'){
+                if(actuallyUser.status === 'offline') {
+                    actuallyUser.status = 'online';
+                    firebase.database().ref('users').child(actuallyUser.id).set(actuallyUser);   
+                }
+                this.props.setActullayUser(actuallyUser);
+                this.props.updateUsers(allScore);
+            }
+            else {
+                if(this.checkExistingUser(allScore)){
+                    this.props.updateUsers(allScore);
+                }
+            }
         }
+        
+        else {
+            this.props.updateUsers(allScore);
+        }
+        
+        if(this.props.statusRegisterNewUser) {
+            this.setIdUser(allScore, keys);
+            this.props.setStatusRegisterNewUser(false);
+        }   
              
     };
+
+    downloadAdminBase(data) {
+        let scores = data.val();
+        this.props.setAdminBase(scores);
+        if(this.props.statusLogin) {
+            if(this.props.adminBase.status === 'offline') {
+                this.props.setStatusLoginUser(false);
+            }
+        }
+       
+    }
 
     setIdUser(allScore, keys) {
         allScore[allScore.length - 1].id = keys[keys.length - 1];

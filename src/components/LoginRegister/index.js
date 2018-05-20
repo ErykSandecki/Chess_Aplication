@@ -24,6 +24,7 @@ export default class LoginRegister extends Component {
             userName: '',
             password: '',
             badLoginOrPassword: false,
+            statusAdmin: 'offline',
             widthBar: '0%',
         }
         this.resetSectionRegisterLogin = this.resetSectionRegisterLogin.bind(this);
@@ -36,8 +37,11 @@ export default class LoginRegister extends Component {
     };
 
     resetSectionRegisterLogin() {
-        this.setState({stepRegister: 0});
-        this.setState({badLoginOrPassword: false}) 
+        this.setState({
+                stepRegister: 0,
+                badLoginOrPassword: false,
+                statusAdmin: false,
+            });
     };
 
     clearInputLoginPassword = () => {
@@ -45,6 +49,7 @@ export default class LoginRegister extends Component {
             nameUser: '',
             password: '',
             badLoginOrPassword: false,
+            statusAdmin: false,
         })
     }
 
@@ -79,17 +84,44 @@ export default class LoginRegister extends Component {
     tryLoginUser() {
         let actuallyUser;
         if(this.props.usersData.find(user => {
-                        actuallyUser = user; 
-                        return user.nameUser === this.state.nameUser && 
-                               user.password === this.state.password})) {
-                this.props.setActullayUser(actuallyUser);
-                this.props.setStatusLoginUser();
-                this.resetSectionRegisterLogin();
-                this.props.setSectionRegisterLogin(false, false, false);
+                    actuallyUser = user; 
+                    return user.nameUser === this.state.nameUser && 
+                           user.password === this.state.password})) {
+                            if(this.props.adminBase.status === 'online') {
+                                if(actuallyUser.status === 'offline') {
+                                    actuallyUser.status = 'online';
+                                    this.props.databaseUsers.child(actuallyUser.id).set(actuallyUser);   
+                                }
+                                this.setAfterLogin(actuallyUser); 
+                            }               
+                            else {
+                                this.setState({
+                                    badLoginOrPassword: true,
+                                    statusAdmin: true,
+                                })
+                            }
         }
+        else if(this.props.adminBase.nameUser === this.state.nameUser &&
+                this.props.adminBase.password === this.state.password) {
+                   this.setAfterLogin(this.props.adminBase);
+                   setTimeout(()=>{
+                    this.props.adminData.child('status').set('online');
+                    this.props.refreshStatus(true);
+                   },1000);
+                }
         else {
-            this.setState({badLoginOrPassword: true})
+            this.setState({
+                badLoginOrPassword: true,
+                statusAdmin: false,
+            })
         }    
+    }
+
+    setAfterLogin(user) {
+        this.props.setActullayUser(user);
+        this.props.setStatusLoginUser(true);
+        this.resetSectionRegisterLogin();
+        this.props.setSectionRegisterLogin(false, false, false);
     }
 
     registerNewUser() {
@@ -112,7 +144,7 @@ export default class LoginRegister extends Component {
              })
         }
         else {
-            this.newUser.pictureUrl ="https://firebasestorage.googleapis.com/v0/b/chess-base-aa6a9.appspot.com/o/empty-logo-user.png?alt=media&token=89078076-6626-4c14-8ca9-64d4552f4dc8";
+            this.newUser.pictureUrl ="https://firebasestorage.googleapis.com/v0/b/chess-base-aa6a9.appspot.com/o/empty-logo-user.png?alt=media&token=acfc9373-e111-420e-a02f-25763452d581";
             this.props.databaseUsers.push(this.newUser);
             this.props.setSectionRegisterLogin(true, false, false);
             this.setState({stepRegister: 5});
@@ -153,7 +185,7 @@ export default class LoginRegister extends Component {
     afterRegister() {
         this.resetSectionRegisterLogin();
         this.props.setSectionRegisterLogin(false,false,false);
-        this.props.setStatusLoginUser();
+        this.props.setStatusLoginUser(true);
         this.setState({widthBar: '0%'});
     }
 
@@ -213,19 +245,23 @@ export default class LoginRegister extends Component {
                                 {this.state.stepRegister === 0 ? 
                                 <Step1
                                     getValueTheStepRegister={this.getValueTheStepRegister}
+                                    adminBase = {this.props.adminBase}
                                     nextStep={this.nextStep}/>
                                 :this.state.stepRegister === 1 ?
                                     <Step2
                                         getValueTheStepRegister={this.getValueTheStepRegister}
+                                        adminBase = {this.props.adminBase}
                                         nextStep={this.nextStep}/>
                                     :this.state.stepRegister === 2 ?
                                         <Step3
                                             getValueTheStepRegister={this.getValueTheStepRegister}
+                                            adminBase = {this.props.adminBase}
                                             nextStep={this.nextStep}/>
                                         :this.state.stepRegister >= 3 ?
                                             <Step4
                                             showRegulations={this.props.showRegulations}
                                             getValueTheStepRegister={this.getValueTheStepRegister}
+                                            adminBase = {this.props.adminBase}
                                             nextStep={this.nextStep}
                                             widthBar={this.state.widthBar}/>
                                         :null}
@@ -312,7 +348,10 @@ export default class LoginRegister extends Component {
                                                  alt="arrow-up"
                                             />                        
                                             <div className="register-login-table-wrong-password-login">
-                                                <p>Złe hasło lub zła nazwa użytkowika</p>
+                                               {this.state.statusAdmin ?
+                                                     <p>Strona nie aktywna !</p>
+                                                    :<p>Złe hasło lub zła nazwa użytkowika!</p>
+                                                }
                                             </div>
                                         </React.Fragment>
                                         :null

@@ -15,6 +15,8 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      adminBase: null,
+      adminData: null,
       databaseUsers: null,
       storage: null,
       usersData: null,
@@ -30,9 +32,16 @@ class App extends Component {
         visibleLogin: false,
       }
     }
+    this.refresh = null;
+
     this.setSectionRegisterLogin = this.setSectionRegisterLogin.bind(this);
+    this.refreshStatus = this.refreshStatus.bind(this);
   }
 
+  setAdminBase = (adminBase) => {this.setState({adminBase})}
+  
+  setDataAdmin = (adminData) => {this.setState({adminData})}
+  
   hideApp() {
     this.setState({visibleApp: false});
   }
@@ -69,7 +78,29 @@ class App extends Component {
 
   setStatusRegisterNewUser = (value) => {this.setState({statusRegisterNewUser: value})};
 
-  setStatusLoginUser = () => {this.setState({statusLogin: !this.state.statusLogin});};
+  setStatusLoginUser = (statusLogin) => {
+    this.setState({statusLogin});
+    if(!statusLogin) {
+      if(this.state.actuallyUser.nameUser === 'admin') {
+          this.state.adminData.child('status').set('offline');
+      }
+      this.setActullayUser(null);
+    }
+  };
+
+  refreshStatus(status) {
+    if(status){
+      this.refresh = setInterval(()=>{
+        this.state.usersData.forEach((user)=>{
+          user.status = 'offline';
+          this.state.databaseUsers.child(user.id).set(user);
+        })
+      },60000);      
+    }
+    else {
+      clearInterval(this.refresh);
+    }
+  }
 
   setVisibleFriends = () => {this.setState({visibleFriends: !this.state.visibleFriends});};
 
@@ -88,62 +119,73 @@ class App extends Component {
                     onClick={this.showApp.bind(this)}>
               </div>
               <Firebase
-                getReferenceDataBase={this.getReferenceDataBase}
-                databaseUsers={this.state.databaseUsers}
-                updateUsers={this.updateUsers}
-                setActullayUser={this.setActullayUser}
-                statusRegisterNewUser={this.state.statusRegisterNewUser}
-                setStatusRegisterNewUser={this.setStatusRegisterNewUser}
-                getReferenceStorage={this.getReferenceStorage}
-                statusLogin={this.state.statusLogin}
-                actuallyUser={this.state.actuallyUser}/>
+                adminBase = {this.state.adminBase}
+                setAdminBase = {this.setAdminBase}
+                setDataAdmin = {this.setDataAdmin}
+                getReferenceDataBase = {this.getReferenceDataBase}
+                databaseUsers = {this.state.databaseUsers}
+                updateUsers = {this.updateUsers}
+                setActullayUser = {this.setActullayUser}
+                statusRegisterNewUser = {this.state.statusRegisterNewUser}
+                setStatusRegisterNewUser = {this.setStatusRegisterNewUser}
+                getReferenceStorage = {this.getReferenceStorage}
+                setStatusLoginUser = {this.setStatusLoginUser}
+                statusLogin = {this.state.statusLogin}
+                actuallyUser = {this.state.actuallyUser}
+                usersData = {this.state.usersData}/>
               {this.state.visibleFriends ?
                 <Friends
                   setVisibleFriends={this.setVisibleFriends}
                   usersData={this.state.usersData}
                   actuallyUser={this.state.actuallyUser}
-                  databaseUsers={this.state.databaseUsers}/>
+                  databaseUsers={this.state.databaseUsers}
+                  statusLogin = {this.state.statusLogin}/>
                 :null
                }
               <LoginRegister
-                sectionRegisterLogin={this.state.sectionRegisterLogin}
-                setSectionRegisterLogin={this.setSectionRegisterLogin}
-                showRegulations={this.showRegulations.bind(this)}
-                setStatusLoginUser={this.setStatusLoginUser}
-                usersData={this.state.usersData}
-                setActullayUser={this.setActullayUser}
-                databaseUsers={this.state.databaseUsers}
-                storage={this.state.storage}
-                setStatusRegisterNewUser={this.setStatusRegisterNewUser}
-                actuallyUser={this.actuallyUser}/>
+                adminBase = {this.state.adminBase}
+                adminData = {this.state.adminData}  
+                sectionRegisterLogin = {this.state.sectionRegisterLogin}
+                setSectionRegisterLogin = {this.setSectionRegisterLogin}
+                showRegulations = {this.showRegulations.bind(this)}
+                setStatusLoginUser = {this.setStatusLoginUser}
+                usersData = {this.state.usersData}
+                setActullayUser = {this.setActullayUser}
+                databaseUsers = {this.state.databaseUsers}
+                storage = {this.state.storage}
+                setStatusRegisterNewUser = {this.setStatusRegisterNewUser}
+                actuallyUser = {this.actuallyUser}
+                refreshStatus = {this.refreshStatus}/>
               <MenuLeftDrop
-                visibleMenuDropLeft={this.state.visibleApp}
-                showApp={this.showApp.bind(this)}
-                setSectionRegisterLogin={this.setSectionRegisterLogin}
-                statusLogin={this.state.statusLogin}
-                setStatusLoginUser={this.setStatusLoginUser}
-                setVisibleFriends={this.setVisibleFriends}/>
+                refreshStatus = {this.refreshStatus}
+                visibleMenuDropLeft = {this.state.visibleApp}
+                showApp = {this.showApp.bind(this)}
+                setSectionRegisterLogin = {this.setSectionRegisterLogin}
+                statusLogin = {this.state.statusLogin}
+                setStatusLoginUser = {this.setStatusLoginUser}
+                setVisibleFriends = {this.setVisibleFriends}/>
               <Navigation
-                hideApp={this.hideApp.bind(this)}
-                setSectionRegisterLogin={this.setSectionRegisterLogin}
-                statusLogin={this.state.statusLogin}
-                setStatusLoginUser={this.setStatusLoginUser}
-                usersData={this.state.usersData}
-                actuallyUser={this.state.actuallyUser}
-                databaseUsers={this.state.databaseUsers}/>
+                hideApp = {this.hideApp.bind(this)}
+                setSectionRegisterLogin = {this.setSectionRegisterLogin}
+                statusLogin = {this.state.statusLogin}
+                setStatusLoginUser = {this.setStatusLoginUser}
+                usersData = {this.state.usersData}
+                actuallyUser = {this.state.actuallyUser}
+                databaseUsers = {this.state.databaseUsers}
+                refreshStatus = {this.refreshStatus}/>
               <Intro/>
-              <div className="picture-1">
-                <div className="parallax-1"></div>
+              <div className = "picture-1">
+                <div className = "parallax-1"></div>
               </div>
               <Article/>
-              <div className="picture-2">
-                <div className="parallax-2"></div>
+              <div className = "picture-2">
+                <div className = "parallax-2"></div>
               </div>
               <Footer
-                showRegulations={this.showRegulations.bind(this)}/>
+                showRegulations = {this.showRegulations.bind(this)}/>
               <Regulations
-                visibleRegulation={this.state.visibleRegulation}
-                hideRegulations={this.hideRegulations.bind(this)}/>
+                visibleRegulation = {this.state.visibleRegulation}
+                hideRegulations = {this.hideRegulations.bind(this)}/>
             </div>
             );
   }

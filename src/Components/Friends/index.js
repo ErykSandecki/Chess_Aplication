@@ -164,10 +164,14 @@ export default class Friends extends Component {
         let friend;
         if(this.props.actuallyUser.friends) {
             friend =  this.props.actuallyUser.friends.find((friend)=>{
+                           if(!user){
+                               return false;
+                           } 
                            return friend.id === user.id
                         })
-        }   
-        return (
+        }
+        if(user){
+            return (
                 <div key={index} className="friends-users-list" >
                     <img className="friends-users-list-image" 
                          src={user.pictureUrl}
@@ -191,6 +195,11 @@ export default class Friends extends Component {
                        :this.buttonAddInvite(user,index)}
                 </div>
                    )
+        }
+        else {
+            return null;
+        }   
+        
     }
 
     buttonAddInvite(user, index) {
@@ -252,6 +261,7 @@ export default class Friends extends Component {
         let newDataForFriends = {
              id:  user.id,
              read: false,
+             showNotifications: false,
              isFriends: false,
              direction: direction,
              message: [{
@@ -332,6 +342,8 @@ export default class Friends extends Component {
     render() {
         this.actuallyNumberRenderUser = -1;
         return(
+            this.props.actuallyUser.nameUser !== 'admin' &&
+            this.props.statusLogin ?
             <FadeIn>
                 <div className="friends">
                     <div className="friends-background"
@@ -493,6 +505,7 @@ export default class Friends extends Component {
                     </div>
                 </div>
             </FadeIn>
+            :null
         )
     }
 }

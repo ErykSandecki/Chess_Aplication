@@ -10,7 +10,8 @@ export default class Navigation extends Component {
     render() {
         return (
             <div className="nav">
-                <div className="nav-drop-menu" onClick={this.props.hideApp}>
+                <div className="nav-drop-menu" 
+                onClick={this.props.hideApp}>
                 <div className="nav-button">
                     <div className="nav-button-contain-1"><div className="nav-button-width"/></div>
                     <div className="nav-button-contain-2"><div className="nav-button-width"/></div>
@@ -30,14 +31,20 @@ export default class Navigation extends Component {
                             />
                             <p className="nav-register-text">{this.props.actuallyUser.nameUser}</p>
                             <p className="nav-register-logout" 
-                               onClick={this.props.setStatusLoginUser}
+                               onClick={() =>{
+                                                this.props.setStatusLoginUser(false)
+                                                if(this.props.actuallyUser.nameUser === 'admin'){
+                                                    this.props.refreshStatus(false)
+                                                }
+                                              }}
                             >
                                 Wyloguj
                             </p>
                             <NotificationsNewFriends
                                 actuallyUser={this.props.actuallyUser}
                                 usersData={this.props.usersData}
-                                databaseUsers={this.props.databaseUsers}/>
+                                databaseUsers={this.props.databaseUsers}
+                                statusLogin = {this.props.statusLogin}/>
                         </React.Fragment>
                         :<React.Fragment>
                             <img className="nav-users img-circle" 
