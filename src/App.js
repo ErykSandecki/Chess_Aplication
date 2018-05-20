@@ -84,7 +84,8 @@ class App extends Component {
       if(this.state.actuallyUser.nameUser === 'admin') {
           this.state.adminData.child('status').set('offline');
       }
-      this.setActullayUser(null);
+        this.setState({visibleFriends: false});
+        this.setActullayUser(null);
     }
   };
 
