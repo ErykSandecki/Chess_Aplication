@@ -21,11 +21,12 @@ export default class NotificationsNewFriends extends Component {
         this.setVisibleNotifications = this.setVisibleNotifications.bind(this);
     }
 
-    componentDidUpdate(prevProps){
+    componentDidUpdate(prevProps, prevState){
         if(prevProps.actuallyUser !== this.props.actuallyUser){
            this.readNewNotificationsNewFriends();
         }
-        if(this.state.notifications) {
+        if((this.state.notifications && prevState.notifications !== this.state.notifications) || 
+            prevProps.actuallyUser !== this.props.actuallyUser) {
             if(this.timeNotification){
                 clearTimeout(this.timeNotification);
             }
@@ -160,11 +161,12 @@ export default class NotificationsNewFriends extends Component {
     clearNotifications() {
         let actuallyFriends = this.props.actuallyUser.friends;
         actuallyFriends.forEach((friend)=>{
-            if(!friend.showNotifications){
-                friend.showNotifications = true;
+                if(!friend.showNotifications){
+                    friend.showNotifications = true;
             } 
-        })
+        });
        this.props.databaseUsers.child(this.props.actuallyUser.id).child('friends').set(actuallyFriends);
+       this.oldLengthNotifications = 0;
     }
 
     render() {

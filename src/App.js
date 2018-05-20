@@ -92,7 +92,8 @@ class App extends Component {
   refreshStatus(status) {
     if(status){
       this.refresh = setInterval(()=>{
-        this.state.usersData.forEach((user)=>{
+        let users = this.state.usersData;
+        users.forEach((user)=>{
           user.status = 'offline';
           this.state.databaseUsers.child(user.id).set(user);
         })
