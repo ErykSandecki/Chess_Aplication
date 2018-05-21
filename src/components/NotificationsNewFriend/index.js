@@ -28,25 +28,33 @@ export default class NotificationsNewFriends extends Component {
         }
         if((this.state.notifications && prevState.notifications !== this.state.notifications) || 
             prevProps.actuallyUser !== this.props.actuallyUser) {
-            if(this.props.actuallyUser.friends){
-                if(!this.props.actuallyUser.friends[
+            // When send invite not change showNotifiactions in firebase in last friend in your acutally login user//
+            if(this.props.actuallyUser.friends) {
+                if(!this.props.actuallyUser.friends [
                     this.props.actuallyUser.friends.length - 1
                     ].isFriends 
                 &&
-                this.props.actuallyUser.friends[
+                this.props.actuallyUser.friends [
                     this.props.actuallyUser.friends.length - 1
-                    ].direction === "send"){
+                    ].direction === "send") {
                         return;
                     }
             };  
-            if(this.timeNotification){
+            if(this.timeNotification) {
                 clearTimeout(this.timeNotification);
             }
-            if(!this.props.actuallyUser.friends){
+            if(!this.props.actuallyUser.friends) {
                 this.setState({notifications: null});
                 return;
             }
-            this.timeNotification = setTimeout(()=>{
+            if(this.props.actuallyUser.friends [
+                this.props.actuallyUser.friends.length - 1
+                ].showNotifications) {
+                    this.setState({notifications: null});
+                    return;
+                }
+            
+            this.timeNotification = setTimeout(() => {
                 this.setState({notifications: null});
                 this.clearNotifications();
             },5000)
@@ -59,7 +67,7 @@ export default class NotificationsNewFriends extends Component {
 
     renderNotifications(user, index, friend) {
         if(user) {
-            if(friend.direction !== 'send' || friend.isFriends){
+            if(friend.direction !== 'send' || friend.isFriends) {
                 return <div key={index} className="notifications-friends-invite">
                             <img className="notifications-friends-invite-image" src={user.pictureUrl} alt={user.name}/>
                             <div className="notifications-friends-invite-name-surname">{user.name + ' ' + user.surname}</div>
@@ -193,6 +201,7 @@ export default class NotificationsNewFriends extends Component {
             } 
         });
        this.props.databaseUsers.child(this.props.actuallyUser.id).child('friends').set(actuallyFriends);
+       this.prevLengthUserFriends = null;
     }
 
     render() {
