@@ -17,6 +17,7 @@ export default class NotificationsNewFriends extends Component {
         } 
 
         this.timeNotification = null;
+        this.clearBugsNotifications= null;
 
         this.readNewNotificationsNewFriends = this.readNewNotificationsNewFriends.bind(this);
         this.setVisibleNotifications = this.setVisibleNotifications.bind(this);
@@ -25,6 +26,12 @@ export default class NotificationsNewFriends extends Component {
     componentDidUpdate(prevProps, prevState){
         if(prevProps.actuallyUser !== this.props.actuallyUser){
            this.readNewNotificationsNewFriends();
+        }
+        if(this.state.notifications) {
+            clearTimeout(this.clearBugsNotifications);
+            this.clearBugsNotifications = setTimeout(() =>{
+                this.setState({notifications: null});
+            },5500);
         }
         if((this.state.notifications && prevState.notifications !== this.state.notifications) || 
             prevProps.actuallyUser !== this.props.actuallyUser) {
