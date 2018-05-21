@@ -104,7 +104,7 @@ export default class LoginRegister extends Component {
         else if(this.props.adminBase.nameUser === this.state.nameUser &&
                 this.props.adminBase.password === this.state.password) {
                    this.setAfterLogin(this.props.adminBase);
-                   setTimeout(()=>{
+                   setTimeout(() => {
                     this.props.adminData.child('status').set('online');
                     this.props.refreshStatus(true);
                    },1000);
@@ -148,7 +148,7 @@ export default class LoginRegister extends Component {
             this.props.databaseUsers.push(this.newUser);
             this.props.setSectionRegisterLogin(true, false, false);
             this.setState({stepRegister: 5});
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.afterRegister();
             },2000); 
         }
@@ -160,7 +160,7 @@ export default class LoginRegister extends Component {
         starsRef.getDownloadURL().then((url) => {
             this.newUser.pictureUrl = url;
             this.props.databaseUsers.push(this.newUser);
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.afterRegister();
             },2000) 
         }).catch(function(error) {
@@ -215,7 +215,7 @@ export default class LoginRegister extends Component {
                     <FadeIn>
                         <div 
                             className="register-login-background"
-                            onClick={()=>{
+                            onClick={() => {
                                 if(this.state.stepRegister < 4) {
                                     this.resetSectionRegisterLogin();
                                     this.props.setSectionRegisterLogin(false,false,false);
@@ -233,7 +233,7 @@ export default class LoginRegister extends Component {
                                  alt="logo-user"
                             />
                             <div className="register-login-exit-validation"
-                                 onClick={()=>{
+                                 onClick={() => {
                                     this.resetSectionRegisterLogin(); 
                                     this.props.setSectionRegisterLogin(false,false,false);
                                 }}
@@ -297,7 +297,7 @@ export default class LoginRegister extends Component {
                                 </div>
                             </div>
                             <p className="register-login-form-register-already-account" 
-                                onClick={()=>{
+                                onClick={() => {
                                     this.props.setSectionRegisterLogin(true,false,true);
                                     this.clearInputLoginPassword();
                                 }}
@@ -319,7 +319,7 @@ export default class LoginRegister extends Component {
                                 <span className="glyphicon glyphicon-remove login-register-glyphicon-remove"></span>
                                 <p 
                                     className="login-register-exit-menu" 
-                                    onClick={()=>{
+                                    onClick={() => {
                                                     this.resetSectionRegisterLogin();
                                                     this.props.setSectionRegisterLogin(false,false,false);
                                             }}
@@ -372,7 +372,7 @@ export default class LoginRegister extends Component {
                             </button>
                             <p 
                                 className="register-login-form-login-already-account"
-                                onClick={()=>{
+                                onClick={() => {
                                                 this.props.setSectionRegisterLogin(true,true,false);
                                              }
                                         }
@@ -387,7 +387,8 @@ export default class LoginRegister extends Component {
                             <FadeIn>
                                 <div className="register-login-register-complete">
                                     <div className="register-login-register-complete-block">
-                                        <p className="register-login-register-complete-text">Rejestacja Przebiegła Pomyślnie!
+                                        <p className="register-login-register-complete-text">
+                                            Rejestacja Przebiegła Pomyślnie!
                                             <img className="register-login-register-complete-img" 
                                                  src={completeLogo} 
                                                  alt="complete-logo"

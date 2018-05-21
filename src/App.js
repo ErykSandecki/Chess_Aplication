@@ -38,9 +38,9 @@ class App extends Component {
     this.refreshStatus = this.refreshStatus.bind(this);
   }
 
-  setAdminBase = (adminBase) => {this.setState({adminBase})}
+  setAdminBase = (adminBase) => {this.setState({adminBase});};
   
-  setDataAdmin = (adminData) => {this.setState({adminData})}
+  setDataAdmin = (adminData) => {this.setState({adminData});};
   
   hideApp() {
     this.setState({visibleApp: false});
@@ -64,7 +64,7 @@ class App extends Component {
 
   updateUsers = (usersData) => {this.setState({usersData});}
 
-  setActullayUser = (actuallyUser) => {this.setState({actuallyUser})};
+  setActullayUser = (actuallyUser) => {this.setState({actuallyUser});};
 
   setSectionRegisterLogin(visibleBackGround, visibleRegister, visibleLogin) {
     this.setState({
@@ -81,7 +81,7 @@ class App extends Component {
   setStatusLoginUser = (statusLogin) => {
     this.setState({statusLogin});
     if(!statusLogin) {
-      if(this.state.actuallyUser.nameUser === 'admin') {
+        if(this.state.actuallyUser.nameUser === 'admin') {
           this.state.adminData.child('status').set('offline');
       }
         this.setState({visibleFriends: false});
@@ -90,12 +90,12 @@ class App extends Component {
   };
 
   refreshStatus(status) {
-    if(status){
-      this.refresh = setInterval(()=>{
-        let users = this.state.usersData;
-        users.forEach((user)=>{
-          user.status = 'offline';
-          this.state.databaseUsers.child(user.id).set(user);
+    if(status) {
+        this.refresh = setInterval(() => {
+          let users = this.state.usersData;
+          users.forEach((user) => {
+            user.status = 'offline';
+            this.state.databaseUsers.child(user.id).set(user);
         })
       },60000);      
     }
@@ -108,17 +108,17 @@ class App extends Component {
 
   render() {
     return (
-            <div className={this.state.visibleApp ?
+            <div className = {this.state.visibleApp ?
                             "App"
                             :window.innerWidth < 768 ?
                               "AppRightSet-50"
                               :window.innerWidth < 1024 ?
                                 "AppRightSet-40"
                                 :"AppRightSet-30"}>
-              <div className={this.state.visibleApp ? 
+              <div className = {this.state.visibleApp ? 
                               ""
                               :"hide-body"}
-                    onClick={this.showApp.bind(this)}>
+                    onClick = {this.showApp.bind(this)}>
               </div>
               <Firebase
                 adminBase = {this.state.adminBase}
@@ -137,10 +137,10 @@ class App extends Component {
                 usersData = {this.state.usersData}/>
               {this.state.visibleFriends ?
                 <Friends
-                  setVisibleFriends={this.setVisibleFriends}
-                  usersData={this.state.usersData}
-                  actuallyUser={this.state.actuallyUser}
-                  databaseUsers={this.state.databaseUsers}
+                  setVisibleFriends = {this.setVisibleFriends}
+                  usersData = {this.state.usersData}
+                  actuallyUser = {this.state.actuallyUser}
+                  databaseUsers = {this.state.databaseUsers}
                   statusLogin = {this.state.statusLogin}/>
                 :null
                }
@@ -174,7 +174,8 @@ class App extends Component {
                 usersData = {this.state.usersData}
                 actuallyUser = {this.state.actuallyUser}
                 databaseUsers = {this.state.databaseUsers}
-                refreshStatus = {this.refreshStatus}/>
+                refreshStatus = {this.refreshStatus}
+                setVisibleFriends = {this.setVisibleFriends}/>
               <Intro/>
               <div className = "picture-1">
                 <div className = "parallax-1"></div>

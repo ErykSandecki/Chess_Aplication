@@ -17,7 +17,9 @@ export default class Navigation extends Component {
                     <div className="nav-button-contain-2"><div className="nav-button-width"/></div>
                     <div className="nav-button-contain-3"><div className="nav-button-width"/></div>
                 </div>
-                <p className="nav-text-button">MENU</p>
+                <p className="nav-text-button">
+                    MENU
+                </p>
                 </div>
                 <span className="nav-icon fa fa-linkedin"></span>
                 <span className="nav-icon fa fa-twitter"></span>
@@ -31,7 +33,7 @@ export default class Navigation extends Component {
                             />
                             <p className="nav-register-text">{this.props.actuallyUser.nameUser}</p>
                             <p className="nav-register-logout" 
-                               onClick={() =>{
+                               onClick={() => {
                                                 this.props.setStatusLoginUser(false)
                                                 if(this.props.actuallyUser.nameUser === 'admin'){
                                                     this.props.refreshStatus(false)
@@ -44,20 +46,23 @@ export default class Navigation extends Component {
                                 actuallyUser={this.props.actuallyUser}
                                 usersData={this.props.usersData}
                                 databaseUsers={this.props.databaseUsers}
-                                statusLogin = {this.props.statusLogin}/>
+                                statusLogin = {this.props.statusLogin}
+                                setVisibleFriends = {this.props.setVisibleFriends}/>
                         </React.Fragment>
                         :<React.Fragment>
                             <img className="nav-users img-circle" 
                                  src={emptyLogoUser} 
                                 alt="nav-empty-img"/>
-                            <p onClick={()=>{
+                            <p onClick={() => {
                                     this.props.setSectionRegisterLogin(true, true, false);
                                 }} 
                                 className="nav-register-login"
                             >
                                 ZAREJESTRUJ/ ZALOGUJ
                             </p>
-                            <p className="nav-member">JESTEŚ JUŻ CZŁONKIEM?</p>
+                            <p className="nav-member">
+                                JESTEŚ JUŻ CZŁONKIEM?
+                            </p>
                         </React.Fragment>        
                     }   
                 </div> 

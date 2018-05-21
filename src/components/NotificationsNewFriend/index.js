@@ -1,9 +1,10 @@
-import './style.css';
-
 import React, { Component } from 'react';
+
 import FadeIn from 'react-fade-in';
 
 import arrowUpNotifications from '../../Images/arrow-up-notifications.png';
+
+import './style.css';
 
 export default class NotificationsNewFriends extends Component {
     constructor(props){
@@ -27,6 +28,17 @@ export default class NotificationsNewFriends extends Component {
         }
         if((this.state.notifications && prevState.notifications !== this.state.notifications) || 
             prevProps.actuallyUser !== this.props.actuallyUser) {
+            if(this.props.actuallyUser.friends){
+                if(!this.props.actuallyUser.friends[
+                    this.props.actuallyUser.friends.length - 1
+                    ].isFriends 
+                &&
+                this.props.actuallyUser.friends[
+                    this.props.actuallyUser.friends.length - 1
+                    ].direction === "send"){
+                        return;
+                    }
+            };  
             if(this.timeNotification){
                 clearTimeout(this.timeNotification);
             }
@@ -52,11 +64,15 @@ export default class NotificationsNewFriends extends Component {
                             <img className="notifications-friends-invite-image" src={user.pictureUrl} alt={user.name}/>
                             <div className="notifications-friends-invite-name-surname">{user.name + ' ' + user.surname}</div>
                             {friend.isFriends ?
-                                <p className="notifications-friends-isfriends">Jesteście nowymi znajomymi!</p>
+                                <p className="notifications-friends-isfriends">
+                                    Jesteście nowymi znajomymi!
+                                </p>
                                 :<React.Fragment>
-                                    <p className="notifications-friends-isfriends">Zostałeś zaproszony/a!</p>
-                                    <button className="notifications-friends-invite-button btn btn-success" onClick={()=>{this.acceptedInviteFriends(user)}}>Zaakceptuj</button>
-                                    <button className="notifications-friends-invite-button btn btn-warning" onClick={()=>{this.deleteInviteFriends(user)}}>Usuń</button>
+                                    <p className="notifications-friends-isfriends">
+                                        Zostałeś zaproszony/a!
+                                    </p>
+                                    <button className="notifications-friends-invite-button btn btn-success" onClick={() => {this.acceptedInviteFriends(user)}}>Zaakceptuj</button>
+                                    <button className="notifications-friends-invite-button btn btn-warning" onClick={() => {this.deleteInviteFriends(user)}}>Usuń</button>
                                 </React.Fragment>
                             }
                             <div className="notifications-friends-invite-underline"></div>
@@ -68,10 +84,10 @@ export default class NotificationsNewFriends extends Component {
 
     acceptedInviteFriends(user) {
         let actuallyUser = this.props.actuallyUser;
-        let actuallyUserIndex = actuallyUser.friends.findIndex((friends)=>{
+        let actuallyUserIndex = actuallyUser.friends.findIndex((friends) => {
          return friends.id === user.id   
         })
-        let userIndex = user.friends.findIndex((friend)=>{
+        let userIndex = user.friends.findIndex((friend) => {
             return friend.id === actuallyUser.id
         });
         actuallyUser.friends[actuallyUserIndex].isFriends = true;
@@ -81,10 +97,10 @@ export default class NotificationsNewFriends extends Component {
 
     deleteInviteFriends(user) {
         let actuallyUser = this.props.actuallyUser;
-        let actuallyUserIndex = actuallyUser.friends.findIndex((friend)=>{
+        let actuallyUserIndex = actuallyUser.friends.findIndex((friend) => {
             return friend.id === user.id
         });
-        let userIndex = user.friends.findIndex((friend)=>{
+        let userIndex = user.friends.findIndex((friend) => {
             return friend.id === actuallyUser.id
         });
         actuallyUser.friends.splice(actuallyUserIndex, actuallyUserIndex + 1);
@@ -102,7 +118,7 @@ export default class NotificationsNewFriends extends Component {
     setVisibleNotifications() {
         this.setState({showNotifiactions: !this.state.showNotifiactions});
         if(this.props.actuallyUser.friends) {
-            this.props.actuallyUser.friends.forEach((friend)=>{
+            this.props.actuallyUser.friends.forEach((friend) => {
                 if(!friend.read) {
                     friend.read = true;
                 }
@@ -115,58 +131,68 @@ export default class NotificationsNewFriends extends Component {
     readNewNotificationsNewFriends() {
        if(this.props.actuallyUser.friends) {
            let friends = this.props.actuallyUser.friends;
-           let anyFriend;
-           if(friends.find((friend)=>{
+           if(friends.find((friend) => {
                 return (friend.direction === 'get' && !friend.read && !friend.isFriends) ||
                        (friend.direction === 'send' && !friend.read && friend.isFriends)
            })) {              
              this.setState({newNotifications: true});
-             friends.find((friend)=>{
-                 anyFriend = friend;
-                 return !friend.showNotifications
-             })
-             if(!anyFriend.showNotifications) {
-                    let notifications;
-                    notifications = friends.filter((friend)=>{
-                        return friend.direction === 'get' && !friend.read && !friend.isFriends && !friend.showNotifications
-                               
-                    }).map((friend)=>{
-                        return friend;
-                    });
-                   this.setState({notifications});
-             }
-           }
+             this.checkShowNotifications(friends)
+            }
+           
            else {
             this.setState({newNotifications: false});
            }
        }
     }
 
+    checkShowNotifications(friends){
+        if(friends.find((friend) => {
+            return !friend.showNotifications
+        })){
+               let notifications;
+               notifications = friends.filter((friend) => {
+                   return (friend.direction === 'get' && !friend.read && !friend.isFriends && !friend.showNotifications) ||
+                          (friend.direction === 'send' && !friend.read && friend.isFriends && !friend.showNotifications)                        
+                          
+               }).map((friend) => {
+                   return friend;
+               });
+              this.setState({notifications});
+        }
+    }
+
     renderNewInviteNotifications(friend, index) {
-        let user = this.props.usersData.find((user)=>{
+        let user = this.props.usersData.find((user) => {
             return user.id === friend.id
         })
         return <FadeIn key={index}>
-                    <div className="notifications-show-new">
+                    <div className="notifications-show-new"
+                         onClick={this.props.setVisibleFriends}
+                    >
                         <img className="notifications-show-new-image" 
-                        src={user.pictureUrl}
-                        alt={'notifications'+index}
+                             src={user.pictureUrl}
+                             alt={'notifications' + index}
                         />
-                        <p className="notifications-show-new-user">{user.name + ' ' + user.surname}</p>
-                        <p className="notifications-show-new-text">Zaprasza cię do znajomych!</p>
+                        <p className="notifications-show-new-user">
+                            {user.name + ' ' + user.surname}
+                        </p>
+                        <p className="notifications-show-new-text">
+                            {friend.direction === 'get' ? 
+                                "Zaprasza cię do znajomych!"
+                                :"Zaproszenie Przyjęte!"}
+                        </p>
                     </div>
                </FadeIn>
     }
 
     clearNotifications() {
         let actuallyFriends = this.props.actuallyUser.friends;
-        actuallyFriends.forEach((friend)=>{
-                if(!friend.showNotifications){
+        actuallyFriends.forEach((friend) => {
+                if(!friend.showNotifications) {
                     friend.showNotifications = true;
             } 
         });
        this.props.databaseUsers.child(this.props.actuallyUser.id).child('friends').set(actuallyFriends);
-       this.oldLengthNotifications = 0;
     }
 
     render() {
@@ -176,7 +202,7 @@ export default class NotificationsNewFriends extends Component {
             <React.Fragment>
             {this.state.notifications ?
                 <div className="notifications-show-table">
-                {this.state.notifications.map((friend, index)=>{
+                {this.state.notifications.map((friend, index) => {
                     return this.renderNewInviteNotifications(friend, index);
                 })}
                 </div>
@@ -208,8 +234,8 @@ export default class NotificationsNewFriends extends Component {
                          /></div>
                     <div className="notifications-friends-table">
                     {this.props.actuallyUser.friends ?
-                        this.props.actuallyUser.friends.slice(0).reverse().map((friend, index)=>{
-                            return this.renderNotifications(this.props.usersData.find((user)=>{
+                        this.props.actuallyUser.friends.slice(0).reverse().map((friend, index) => {
+                            return this.renderNotifications(this.props.usersData.find((user) => {
                                 return user.id === friend.id;
                             }),index, friend);
                         })    
@@ -224,5 +250,3 @@ export default class NotificationsNewFriends extends Component {
         )
     }
 }
-
-export var referenceNotificationsNewFriends;

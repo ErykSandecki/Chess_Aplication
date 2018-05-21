@@ -13,23 +13,27 @@ export default class MenuLeftDrop extends Component {
                                         "menu-drop-left-40"
                                         :"menu-drop-left-30"}>
                 <div className="menu-drop-left-language-exit">
-                    <p className="menu-drop-left-language">POLSKI</p>
+                    <p className="menu-drop-left-language">
+                        POLSKI
+                    </p>
                     <div className="menu-drop-left-drop-login-register" 
                          onClick={this.props.showApp}
                     >
                         <span className="glyphicon glyphicon-remove menu-drop-left-glyphicon-remove"></span>
-                        <p className="menu-drop-left-exit-drop-menu">WYJŚCIE</p>
+                        <p className="menu-drop-left-exit-drop-menu">
+                            WYJŚCIE
+                        </p>
                     </div>
                 </div>
                 <div className="menu-drop-left-login-register-drop"
                     onClick={this.props.statusLogin ? 
-                                ()=>{
+                                () => {
                                         this.props.setStatusLoginUser(false);
                                         this.props.showApp();
                                     }
-                                :()=>{
+                                :() => {
                                         this.props.showApp();
-                                        setTimeout(()=>{
+                                        setTimeout(() => {
                                             this.props.setSectionRegisterLogin(true, true, false);
                                         },500);
                                      }
@@ -43,20 +47,22 @@ export default class MenuLeftDrop extends Component {
                 </div>
                 <div className="menu-drop-left-friends-drop"
                      onClick={this.props.statusLogin ? 
-                                ()=>{
+                                () => {
                                         this.props.showApp();
-                                        setTimeout(()=>{
+                                        setTimeout(() => {
                                             this.props.setVisibleFriends();
                                         },500);
                                     }
-                               :()=>{
+                               :() => {
                                       this.props.showApp();
-                                      setTimeout(()=>{
+                                      setTimeout(() => {
                                             this.props.setSectionRegisterLogin(true, true, false);
                                         },500);
                                     }}
                 >
-                    <p className="menu-drop-left-friends-drop-text">ZNAJOMI</p>
+                    <p className="menu-drop-left-friends-drop-text">
+                        ZNAJOMI
+                    </p>
                 </div>
             </div>
                 )
