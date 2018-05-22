@@ -277,8 +277,8 @@ export default class Friends extends Component {
         let userIndex = user.friends.findIndex((friend) => {
             return friend.id === actuallyUser.id
         });
-        actuallyUser.friends.splice(actuallyUserIndex, actuallyUserIndex + 1);
-        user.friends.splice(userIndex, userIndex + 1);
+        actuallyUser.friends.splice(actuallyUserIndex, 1);
+        user.friends.splice(userIndex, 1);
         this.changeDataBase(actuallyUser, user);
     }
 

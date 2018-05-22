@@ -76,8 +76,13 @@ export default class NotificationsNewFriends extends Component {
         if(user) {
             if(friend.direction !== 'send' || friend.isFriends) {
                 return <div key={index} className="notifications-friends-invite">
-                            <img className="notifications-friends-invite-image" src={user.pictureUrl} alt={user.name}/>
-                            <div className="notifications-friends-invite-name-surname">{user.name + ' ' + user.surname}</div>
+                            <img className="notifications-friends-invite-image" 
+                                 src={user.pictureUrl} 
+                                 alt={user.name}
+                            />
+                            <div className="notifications-friends-invite-name-surname">
+                                {user.name + ' ' + user.surname}
+                            </div>
                             {friend.isFriends ?
                                 <p className="notifications-friends-isfriends">
                                     Jesteście nowymi znajomymi!
@@ -86,8 +91,16 @@ export default class NotificationsNewFriends extends Component {
                                     <p className="notifications-friends-isfriends">
                                         Zostałeś zaproszony/a!
                                     </p>
-                                    <button className="notifications-friends-invite-button btn btn-success" onClick={() => {this.acceptedInviteFriends(user)}}>Zaakceptuj</button>
-                                    <button className="notifications-friends-invite-button btn btn-warning" onClick={() => {this.deleteInviteFriends(user)}}>Usuń</button>
+                                    <button className="notifications-friends-invite-button btn btn-success" 
+                                            onClick={() => {this.acceptedInviteFriends(user)}}
+                                    >
+                                        Zaakceptuj
+                                    </button>
+                                    <button className="notifications-friends-invite-button btn btn-warning" 
+                                            onClick={() => {this.deleteInviteFriends(user)}}
+                                    >
+                                        Usuń
+                                    </button>
                                 </React.Fragment>
                             }
                             <div className="notifications-friends-invite-underline"></div>
@@ -118,8 +131,8 @@ export default class NotificationsNewFriends extends Component {
         let userIndex = user.friends.findIndex((friend) => {
             return friend.id === actuallyUser.id
         });
-        actuallyUser.friends.splice(actuallyUserIndex, actuallyUserIndex + 1);
-        user.friends.splice(userIndex, userIndex + 1);
+        actuallyUser.friends.splice(actuallyUserIndex, 1);
+        user.friends.splice(userIndex, 1);
         this.changeDataBase(actuallyUser, user);
     }
 
@@ -181,12 +194,11 @@ export default class NotificationsNewFriends extends Component {
             return user.id === friend.id
         })
         return <FadeIn key={index}>
-                    <div className="notifications-show-new"
-                         onClick={this.props.setVisibleFriends}
-                    >
+                    <div className="notifications-show-new">
                         <img className="notifications-show-new-image" 
                              src={user.pictureUrl}
                              alt={'notifications' + index}
+                             onClick={this.props.setVisibleFriends}
                         />
                         <p className="notifications-show-new-user">
                             {user.name + ' ' + user.surname}
@@ -196,8 +208,16 @@ export default class NotificationsNewFriends extends Component {
                                 "Zaprasza cię do znajomych!"
                                 :"Zaproszenie Przyjęte!"}
                         </p>
+                        <span className="glyphicon glyphicon-remove notifications-show-new-exit"
+                              onClick={this.hideDivNotificationsShow}  
+                        >
+                        </span>
                     </div>
                </FadeIn>
+    }
+
+    hideDivNotificationsShow(e) {
+        e.target.parentNode.style.display = 'none';
     }
 
     clearNotifications() {
