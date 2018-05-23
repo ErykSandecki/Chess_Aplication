@@ -265,6 +265,7 @@ export default class Friends extends Component {
                  userId: user.id,
                  contain: 'Jesteście znajomymi!',
              }],
+             resizeArea: [0,0,0,0],
          }
          return newDataForFriends;
      }

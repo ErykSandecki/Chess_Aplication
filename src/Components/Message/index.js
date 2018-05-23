@@ -1,7 +1,8 @@
-import './index.css';
 import React, { Component } from 'react';
-import {actuallyUser, allUsers, setChat, checkStatusOnlineUsers, changeStatus} from '../../Firebase/index.js';
+
 import FadeIn from 'react-fade-in';
+
+import './style.css';
 
 export default class Message extends Component {
     
@@ -9,33 +10,21 @@ export default class Message extends Component {
         super(props);
         this.state = {
             showChat: false,
-            firstCheckStatus: true,
-            vissibleWindowChat: false
+            vissibleWindowChat: false,
+            actuallyUserChat: null,
         }
+        this.lengthWordTextArea = null;
+
         this.showChat = this.showChat.bind(this);
         this.refreshChat = this.refreshChat.bind(this);
-        this.showWindowChat = this.showWindowChat.bind(this);
-    }
-
-    componentDidMount() {
-        referenceMessage = this;
-        if(this.state.firstCheckStatus) {
-            this.setState({firstCheckStatus: false});
-            checkStatusOnlineUsers();
-        } 
-        setChat();
-        checkOnlineUsers = setInterval(()=>{
-            checkStatusOnlineUsers();
-            setTimeout(()=>{
-                changeStatus();
-                this.refreshChat();
-            },1000);
-        },30000)
+        this.addUserToChat = this.addUserToChat.bind(this);
     }
 
     showChat() {
         this.setState({showChat: !this.state.showChat});
     }
+
+  
 
     refreshChat() {
         if(this.state.showChat){
@@ -43,90 +32,116 @@ export default class Message extends Component {
         }
     }
 
-    showWindowChat(user, index) {
-        if(!visibleWindow) {
-            return;
+    renderMessage(contain, index) {
+        if(contain.contain === "Jesteście znajomymi!") {
+            return <div key={index} className="message-window-chat-message-first">
+                        <img className="message-window-chat-img-first" 
+                             src={contain.userPicture}
+                             alt={index}/>
+                        <div className="message-window-chat-message-contain-first">
+                            {contain.contain}
+                        </div>
+                    </div> 
         }
-        let userData;
-        for(let i = 0; i<allUsers.length;i++) {
-            if(user.id === allUsers[i].id && user.isFriends){
-                userData = allUsers[i];
+    }
+
+    addUserToChat(user, index) {
+        let actuallyUserChat;
+        if(!this.state.actuallyUserChat) {
+            actuallyUserChat = [user];
+            this.setState({
+                actuallyUserChat : actuallyUserChat,
+                vissibleWindowChat : true,
+            });
+        }
+        else {
+            if(!this.state.actuallyUserChat.find((searchUser) => {
+                return searchUser.id === user.id;
+            })){
+                actuallyUserChat = this.state.actuallyUserChat;
+                actuallyUserChat.push(user);
+                this.setState(actuallyUserChat);
             }
-        } 
-        if(!userData){
-            return null;
         }
-        if(friendsWindowChat){
-            for(let i = 0; i<friendsWindowChat.length;i++) {
-                if(friendsWindowChat[i].id === userData.id) {
-                    return;
-                }
-            }
-        }
-        friendsWindowChat.push(userData);
-        this.setState({vissibleWindowChat: true});
     }
 
     renderWindowChat(user, index) {
-        let message;
-        for(let i = 0; i < actuallyUser.friends.length;i++) {
-            if(actuallyUser.friends[i].id === user.id) {
-                message = actuallyUser.friends[i].message;
-                break;
-            }
-        }
-
+        let friendResizeArea = this.props.actuallyUser.friends.find((friend) => {
+            return friend.id === user.id;
+        })
         return <div key={index} className="message-window-chat">
                     <div className="message-window-chat-title">
-                        <span className="message-window-chat-user">{user.name + ' ' + user.surname}</span>
-                        <span className="message-window-chat-close glyphicon glyphicon-remove " onClick={()=>{this.deleteAnyWindowChat(user)}}></span>
+                        <span className="message-window-chat-user">
+                            {user.name + ' ' + user.surname}
+                        </span>
+                        <span className="message-window-chat-close glyphicon glyphicon-remove " 
+                        >
+                        </span>
                         <div className="message-window-chat-contain">
-                            {message.map((contain, index)=>{
-                                return this.renderMessage(contain,index);
-                            })}
+                           
                         </div>
                         <div className="message-window-chat-text">
-                            <textarea type="text" rows="1"  className="message-window-chat-text-input" />
+                            <textarea className="message-to-send" 
+                                      name="message-to-send"  
+                                      placeholder="Napisz nową wiadomość" 
+                                      rows="1"
+                                      onInput={(e) => {this.setHeightChat(e, friendResizeArea)}}
+                                      onKeyDown={(e) => {this.sendMessage(e, friendResizeArea)}}
+                                      >
+                            </textarea>
+                            <button className="message-window-send-message">
+                                Wyślij
+                            </button>          
                         </div>
                     </div>
                 </div>
     }
 
-    renderMessage(contain, index) {
-        if(contain.contain === "Jesteście znajomymi!"){
-            return <div key={index} className="message-window-chat-message-first">
-                        <img className="message-window-chat-img-first" src={contain.userPicture}/>
-                        <div className="message-window-chat-message-contain-first">{contain.contain}</div>
-                    </div> 
+    sendMessage(e, friendResizeArea) {
+        if(e.keyCode === 13 && !e.shiftKey){
+            e.preventDefault();
+            
+            e.target.rows = 1;
+            console.log(e.target.value);
+            e.target.value = '';
+            e.target.parentNode.previousSibling.style.height = '250px';
+        }
+        
+    }
+
+    setHeightChat(e, friendResizeArea) {
+        if(e.target.value.length < friendResizeArea.resizeArea[e.target.rows - 1]){
+            e.target.rows -= 1;
+            e.target.parentNode.previousSibling.style.height = (250 - 23 * (e.target.rows-1)) + 'px';
+        }
+        if((e.target.scrollHeight === 42 && e.target.rows === 1) ||
+            (e.target.scrollHeight === 61 && e.target.rows === 2) ||
+            (e.target.scrollHeight === 80 && e.target.rows === 3)) {
+            friendResizeArea.resizeArea[e.target.rows] = e.target.value.length;
+            e.target.parentNode.previousSibling.style.height = (250 - 23 * e.target.rows) + 'px';
+            e.target.rows += 1;    
         }
     }
 
-    deleteAnyWindowChat(user) {
-        for (let i = 0; i<friendsWindowChat.length;i++) {
-            if(friendsWindowChat[i].id === user.id) {
-                friendsWindowChat.splice(i,i+1);
-            }
-        }
-        this.setState({vissibleWindowChat: true});
-    }
-
-    renderListFriendsChat(user, index) {        
-        let userData;
-        for(let i = 0; i<allUsers.length;i++) {
-            if(user.id === allUsers[i].id && user.isFriends){
-                userData = allUsers[i];
-            }
-        } 
-        if(!userData){
-            return null;
-        }
-
-        return  <div key={index} className="message-contact-filter-friends" 
-                        onClick={()=>{visibleWindow = true;
-                            this.showWindowChat(user, index)}}>
-                    <img src={userData.pictureUrl} alt={index} className="message-contact-filter-friends-image"/>
-                    <p className="message-contact-filter-friends-user">{userData.name + ' ' + userData.surname}</p>
-                    {userData.status ?
+    renderListFriendsChat(friend, index) {        
+        let user = this.props.usersData.find((user) => {
+                        return friend.id === user.id;
+                    })
+                                        
+        return  <div className="message-contact-filter-friends" 
+                     key={index}
+                     onClick={() => {
+                         this.addUserToChat(user, index);
+                     }}
+                >
+                    <img className="message-contact-filter-friends-image" 
+                         src={user.pictureUrl} 
+                         alt={index}
+                    />
+                    <p className="message-contact-filter-friends-user">
+                        {user.name + ' ' + user.surname}
+                    </p>
+                    {user.status === 'online' ?
                         <div className="message-contact-filter-friends-status"></div>
                         :null}             
                     <div className="message-contact-filter-friends-underline"></div>
@@ -138,36 +153,45 @@ export default class Message extends Component {
                 <React.Fragment>
                     <div className="message">
                         <div className="message-title">
-                            <span className="message-title-text" onClick={this.showChat}>Wiadomości</span>
+                            <span className="message-title-text" 
+                                  onClick={this.showChat}
+                            >
+                                Wiadomości
+                            </span>
                             <span className="message-title-settings glyphicon glyphicon-cog"></span>
                             <span className="message-title-new-message glyphicon glyphicon-plus"></span>
-                            {actuallyUser.friends ?
-                                this.state.showChat ?
+                            {this.props.actuallyUser.friends && this.state.showChat ?     
                                 <FadeIn>
                                     <div className="message-contacts-filter">
-                                        {actuallyUser.friends.map((user, index)=>{
-                                            return this.renderListFriendsChat(user,index)
-                                        })}
+                                        {this.props.actuallyUser.friends.filter((friend) => {
+                                           return friend.isFriends && this.props.usersData.find((user)=>{
+                                                return user.id === friend.id && user.status === 'online';    
+                                           })}).map((friend, index) => {
+                                                                            return this.renderListFriendsChat(friend, index)
+                                                                            }
+                                                                        )
+                                        }
+                                        {
+                                            this.props.actuallyUser.friends.filter((friend) => {
+                                            return friend.isFriends && this.props.usersData.find((user)=>{
+                                                return user.id === friend.id && user.status === 'offline';    
+                                           })}).map((friend , index) => {
+                                                                            return this.renderListFriendsChat(friend, index);
+                                                                        })
+                                        }
                                     </div>
                                 </FadeIn>
-                                    :null
-                                : null}
+                            :null}
+                            {this.state.vissibleWindowChat ?
+                                this.state.actuallyUserChat.map((user , index) => {
+                                    return this.renderWindowChat(user ,index);
+                                })
+                                :null
+                            }
                         </div>
                     </div>
-                    {friendsWindowChat.length && this.state.vissibleWindowChat ?
-                    friendsWindowChat.map((user,index)=>{
-                        return this.renderWindowChat(user,index);
-                    })
-                    : null}
                 </React.Fragment>
                )
     }
 }
-export var checkOnlineUsers;
-export var referenceMessage;
-var visibleWindow = false;
-var friendsWindowChat = [];
 
-export function resetFriendsWindowChat() {
-    friendsWindowChat = [];
-}

@@ -1,11 +1,6 @@
 body {
-  cursor: url(Images/cursor-move.png), auto;
   height: 1500px;
   overflow-x: hidden;
-}
-button:hover,
-input:hover {
-  cursor: url(Images/cursor-move.png), auto;
 }
 
 .App {

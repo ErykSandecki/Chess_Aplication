@@ -10,6 +10,7 @@ import MenuLeftDrop from './components/MenuLeftDrop'
 import Regulations from './components/Regulations'
 import LoginRegister from './components/LoginRegister';
 import Friends from './components/Friends';
+import Message from './components/Message';
 
 class App extends Component {
   constructor(props){
@@ -32,7 +33,8 @@ class App extends Component {
         visibleLogin: false,
       }
     }
-    this.refresh = null;
+    this.refreshStatusCheck = null;
+    this.refreshActiveUsers = null;
 
     this.setSectionRegisterLogin = this.setSectionRegisterLogin.bind(this);
     this.refreshStatus = this.refreshStatus.bind(this);
@@ -91,16 +93,25 @@ class App extends Component {
 
   refreshStatus(status) {
     if(status) {
-        this.refresh = setInterval(() => {
+        this.refreshStatusCheck = setInterval(() => {
           let users = this.state.usersData;
           users.forEach((user) => {
-            user.status = 'offline';
+            user.checkStatus = false;
             this.state.databaseUsers.child(user.id).set(user);
-        })
-      },60000);      
-    }
+        });
+        setTimeout(() => {
+          let users = this.state.usersData;
+          users.forEach((user) => {
+              if(!user.checkStatus) {
+                user.status = 'offline'
+                this.state.databaseUsers.child(user.id).set(user);
+              }
+            });
+          },1000);
+        },60000);
+      }       
     else {
-      clearInterval(this.refresh);
+      clearInterval(this.refreshStatusCheck);
     }
   }
 
@@ -144,6 +155,13 @@ class App extends Component {
                   statusLogin = {this.state.statusLogin}/>
                 :null
                }
+              {this.state.statusLogin ?
+                <Message
+                  usersData = {this.state.usersData}
+                  actuallyUser = {this.state.actuallyUser}
+                  databaseUsers = {this.state.databaseUsers}/>
+                :null
+              } 
               <LoginRegister
                 adminBase = {this.state.adminBase}
                 adminData = {this.state.adminData}  

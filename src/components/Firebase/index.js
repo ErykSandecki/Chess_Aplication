@@ -49,8 +49,9 @@ export default class Firebase extends Component {
     
         if(this.props.statusLogin) {
             if(this.props.actuallyUser.nameUser !== 'admin') {
-                if(actuallyUser.status === 'offline') {
+                if(actuallyUser.status === 'offline' || !actuallyUser.checkStatus) {
                     actuallyUser.status = 'online';
+                    actuallyUser.checkStatus = true;
                     firebase.database().ref('users').child(actuallyUser.id).set(actuallyUser);   
                 }
                 this.props.setActullayUser(actuallyUser);
