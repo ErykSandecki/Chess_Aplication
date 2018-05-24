@@ -44,37 +44,6 @@ export default class Message extends Component {
                 this.setState({showAddUserChat: false});
             }
         }
-        if(this.props.actuallyUser.friends) { 
-           if(this.state.actuallyUserChat) {
-            let newActuallyUserChat = this.props.actuallyUser.friends.filter((friend)=> {
-              return this.state.actuallyUserChat.find((user)=> {
-                   return user.id === friend.id
-            }) 
-            })
-            if(newActuallyUserChat.length !== this.state.actuallyUserChat.length){
-                this.setState({actuallyUserChat: newActuallyUserChat});
-                console.log("niestety");
-            }
-            else {
-                for(let i = 0; i< this.state.actuallyUserChat.length; i++) {
-                    for(let j = 0; j< this.props.usersData.length; j++) {
-                        if(this.state.actuallyUserChat[i].id === this.props.usersData[j].id) {
-                            for(let k = 0; k<this.props.usersData[j].friends.length;k++) {
-                                if(this.props.usersData[j].friends[k].id === this.props.actuallyUser.id){
-                                   if(this.props.usersData[j].friends[k].message.length !== this.state.actuallyUserChat[i].friends[k].message.length) {
-                                       let message = this.props.usersData[j].friends[k].message;
-                                       let chatUser = this.state.actuallyUserChat;
-                                       chatUser[i].friends[k].message = message;
-                                       this.setState({actuallyUserChat: chatUser});
-                                   }
-                                }
-                            }
-                        }
-                    }
-                }
-            }    
-           }
-        }
     }
 
 
@@ -388,6 +357,7 @@ export default class Message extends Component {
                 actuallyUserChat : actuallyUserChat,
                 showAddUserChat : false,
             });
+            console.log("jesr");
         let windowChatFirst = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.childNodes[4].firstChild;
         windowChatFirst.childNodes[2].style.height = "250px";
         windowChatFirst.childNodes[3].firstChild.value = '';
@@ -430,52 +400,102 @@ export default class Message extends Component {
                                     </div>
                                 </FadeIn>
                             :null}
-                            {this.state.vissibleWindowChat ?
+                            {this.state.vissibleWindowChat && this.props.actuallyUser.friends ?
                                 this.state.actuallyUserChat.map((user , index) => {
-                                    return this.renderWindowChat(user ,index);
+                                    let refreshUser = this.props.usersData.find((searchuser)=>{
+                                        return user.id === searchuser.id
+                                    })
+                                    if(this.props.actuallyUser.friends.find((friend)=>{
+                                        return friend.id === refreshUser.id;
+                                    })){
+                                        return this.renderWindowChat(refreshUser, index);
+                                    }
+                                    else {
+                                        return null;
+                                    } 
                                 })
                                 :null
                             }
                             <FadeIn>
-                            {this.state.showAddUserChat ?
+                            {this.state.showAddUserChat && this.props.actuallyUser.friends ?
                                 <div className="message-window-additional-user"
                                      style={styleRightAdditionalUser}  
                                 >
                                     {window.innerWidth < 860 ?
-                                        this.state.actuallyUserChat.map((user, index) => {
-                                            if(index > 0) {
-                                                return this.renderAdditionalUser(user ,index);
-                                            }
-                                            else {
-                                                return null;
-                                            }
-                                        })
-                                            :window.innerWidth < 1150 ?
-                                                this.state.actuallyUserChat.map((user, index) => {
-                                                    if(index > 1){
+                                        this.state.actuallyUserChat.map((user , index) => {
+                                            let refreshUser = this.props.usersData.find((searchuser)=>{
+                                                return user.id === searchuser.id
+                                            })
+                                            if(this.props.actuallyUser.friends.find((friend)=>{
+                                                return friend.id === refreshUser.id;
+                                            })) {
+                                                if(index > 0) {
                                                     return this.renderAdditionalUser(user ,index);
                                                 }
                                                 else {
                                                     return null;
                                                 }
+                                            }
+                                            else {
+                                                return null;
+                                            }
+                                    })
+                                    :window.innerWidth < 1150 ?
+                                            this.state.actuallyUserChat.map((user , index) => {
+                                                let refreshUser = this.props.usersData.find((searchuser)=>{
+                                                    return user.id === searchuser.id
+                                                })
+                                                if(this.props.actuallyUser.friends.find((friend)=>{
+                                                    return friend.id === refreshUser.id;
+                                                })) {
+                                                    if(index > 1) {
+                                                        return this.renderAdditionalUser(user ,index);
+                                                    }
+                                                    else {
+                                                        return null;
+                                                    }
+                                                }
+                                                else {
+                                                    return null;
+                                                }
                                             })
-                                                :window.innerWidth < 1450 ?
-                                                    this.state.actuallyUserChat.map((user, index) => {
-                                                        if(index > 2){
-                                                        return this.renderAdditionalUser(user ,index);
+                                    :window.innerWidth < 1450 ?
+                                                this.state.actuallyUserChat.map((user , index) => {
+                                                    let refreshUser = this.props.usersData.find((searchuser)=> {
+                                                        return user.id === searchuser.id
+                                                    })
+                                                    if(this.props.actuallyUser.friends.find((friend)=> {
+                                                        return friend.id === refreshUser.id;
+                                                    })){
+                                                        if(index > 2) {
+                                                            return this.renderAdditionalUser(user ,index);
+                                                        }
+                                                        else {
+                                                        return null;
+                                                        }
                                                     }
                                                     else {
                                                         return null;
-                                                        }
+                                                    }
+                                                })
+                                                :this.state.actuallyUserChat.map((user , index) => {
+                                                    let refreshUser = this.props.usersData.find((searchuser)=>{
+                                                        return user.id === searchuser.id
                                                     })
-                                                    :this.state.actuallyUserChat.map((user, index) => {
-                                                        if(index > 3){
-                                                        return this.renderAdditionalUser(user ,index);
+                                                    if(this.props.actuallyUser.friends.find((friend)=>{
+                                                        return friend.id === refreshUser.id;
+                                                    })){
+                                                        if(index > 3) {
+                                                            return this.renderAdditionalUser(user ,index);
+                                                        }
+                                                        else {
+                                                            return null;
+                                                        }
                                                     }
                                                     else {
                                                         return null;
-                                                        }
-                                                    })
+                                                    }
+                                })
                                     }               
                                 </div>
                                 :null
