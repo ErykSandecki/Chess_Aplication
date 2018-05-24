@@ -44,6 +44,25 @@ export default class Message extends Component {
                 this.setState({showAddUserChat: false});
             }
         }
+        if(this.props.actuallyUser.friends) {
+            if(this.state.actuallyUserChat){
+                let checkUser;
+                checkUser = this.state.actuallyUserChat.filter((user)=> {
+                    return this.props.actuallyUser.friends.find((friend) => {
+                        return friend.id === user.id;
+                    })
+                })
+                if(checkUser.length !== this.state.actuallyUserChat.length) {
+                    if(checkUser.length === 0) {
+                        this.setState({actuallyUserChat: null})
+                    }
+                    else {
+                        this.setState({actuallyUserChat: checkUser});
+                    }
+                }
+            }
+        }
+        console.log(this.state.actuallyUserChat);
     }
 
 
