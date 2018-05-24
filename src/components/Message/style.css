@@ -22,7 +22,8 @@
     font-weight: 900;
 }
 
-.message-title-text:hover {
+.message-title-text:hover,
+.message-title:hover {
     cursor: pointer;
 }
 
@@ -114,7 +115,6 @@
 
 .message-window-chat {
     position: fixed;
-    right: 280px;
     bottom: 1px;
     z-index: 1;
     width: 250px;
@@ -151,6 +151,9 @@
     height: 250px;
     background-color: white;
     border: 1px solid black;
+    overflow-y: auto;
+    width: 250px;
+    position: relative;
 }
 
 .message-window-chat-text {
@@ -208,4 +211,84 @@
     margin: 0;
     resize: none;
     height: 100%;
+}
+
+.message-windows-hide-already-window-chat {
+    position: fixed;
+    width: 30px;
+    top: unset;
+    bottom: 1px;
+    height: 30px;
+    background-color: white;
+    color: rgb(55, 57, 64);
+    border: 1px solid black;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.message-window-additional-user {
+    background-color: white;
+    border: 1px solid black;
+    min-width: 50px;
+    position: fixed;
+    top: unset;
+    bottom: 30px;
+}
+
+.message-additional-user {
+    height: 15px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    color: #000;
+    font-size: 12px;
+}
+
+.message-additional-user:hover {
+    cursor: pointer;
+    background-color: rgb(55, 57, 64);
+    color: white;
+}
+
+.message-additional-user-text {
+    float: left;
+    margin-bottom: 0px;
+    position: relative;
+    margin-left: 5px;
+}
+
+.message-delete-additional-user {
+    float: right;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.message-window-chat-message-next {
+    width: 200px;
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.message-window-chat-message-contain-next {
+    float: right;
+    padding: 5px;
+    border-radius: 5px;
+    min-height: 10px;
+    width: 150px;
+    margin-left: 5px;
+}
+
+.message-window-chat-message-contain-next-text {
+    overflow-wrap: break-word;
+}
+
+.message-window-chat-img-next {
+    width: 40px;
+    height: 40px;
+    float: left;
+    border-radius: 20px;
+    margin-left: 5px;
 }
