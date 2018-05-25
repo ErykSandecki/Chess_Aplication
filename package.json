@@ -12,6 +12,7 @@
     "react-fade-in": "^0.1.5",
     "react-scripts": "1.1.4",
     "react-smooth": "^1.0.0",
+    "react-sound": "^1.2.0",
     "redux": "^4.0.0",
     "three": "^0.92.0"
   },

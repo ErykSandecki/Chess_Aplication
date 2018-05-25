@@ -1,8 +1,8 @@
-import './style.css';
-
 import React, { Component } from 'react';
+
 import FadeIn from 'react-fade-in';
 
+import './style.css';
 
 export default class Message extends Component {
     
@@ -24,6 +24,7 @@ export default class Message extends Component {
         this.refreshOnResize = this.refreshOnResize.bind(this);
         this.changeUser = this.changeUser.bind(this);
 
+        this.messagesEnd = [];
         window.addEventListener('resize', this.refreshOnResize)
     }
 
@@ -62,7 +63,99 @@ export default class Message extends Component {
                 }
             }
         }
-        console.log(this.state.actuallyUserChat);
+        if(this.props.chatUsersWindow) {
+            this.props.chatUsersWindow.forEach((chatUser) => {
+                this.addUserToChat(chatUser);
+            })
+        }
+    }
+
+    scrollToBottom = (messagesEnd) => {
+        if(messagesEnd) {
+            messagesEnd.scrollTop = messagesEnd.scrollHeight - messagesEnd.clientHeight;
+        }
+      }
+
+    renderListFriendsChat(friend, index) {        
+        let user = this.props.usersData.find((user) => {
+                        return friend.id === user.id;
+                    })
+                                        
+        return  <div className="message-contact-filter-friends" 
+                     key={index}
+                     onClick={() => {
+                         this.addUserToChat(user, index);
+                     }}
+                >
+                    <img className="message-contact-filter-friends-image" 
+                         src={user.pictureUrl} 
+                         alt={index}
+                    />
+                    <p className="message-contact-filter-friends-user">
+                        {user.name + ' ' + user.surname}
+                    </p>
+                    {user.status === 'online' ?
+                        <div className="message-contact-filter-friends-status"></div>
+                        :null}             
+                    <div className="message-contact-filter-friends-underline"></div>
+                </div>
+    }
+
+    renderWindowChat(user, index) {
+        let friendResizeArea = this.props.actuallyUser.friends.find((friend , index) => {
+            return friend.id === user.id;
+        })
+        let indexActuallyFriends = this.props.actuallyUser.friends.findIndex((friend , index) => {
+            return friend.id === user.id;
+        })
+        let styleRight = {right: '280px'};
+        if(index > 0) {
+            styleRight = this.setPostionWindow(index);
+        }
+        if(styleRight !== -1) {
+            return <div className="message-window-chat"
+            key={index}
+            style={styleRight}
+        >
+            <div className="message-window-chat-title"
+                 onClick={(e) => {this.closeOrHideWindowChatAnyUser(e, index)}}
+            >
+                <span className="message-window-chat-user">
+                    {user.name + ' ' + user.surname}
+                </span>
+                <span className="message-window-chat-close glyphicon glyphicon-remove" >
+                </span>
+                <div className="message-window-chat-contain"
+                     ref={(e) => {this.scrollToBottom(e);}}>
+                   {friendResizeArea.message.map((contain , index) => {
+                       return this.renderMessage(contain, index)
+                   })}
+                </div>
+                <div className="message-window-chat-text">
+                    <textarea className="message-to-send" 
+                              name="message-to-send"  
+                              placeholder="Napisz nową wiadomość" 
+                              rows="1"
+                              onInput={(e) => {this.setHeightChat(e, friendResizeArea)}}
+                              onKeyDown={(e) => {this.sendMessage(e, indexActuallyFriends , user)}}
+                              >
+                    </textarea>
+                    <button className="message-window-send-message">
+                        Wyślij
+                    </button>          
+                </div>
+            </div>
+        </div>
+        }
+        else {
+            styleRight = this.setPositionIconAlreadyChatWindow();
+            return <div className = "message-windows-hide-already-window-chat glyphicon glyphicon-comment"
+                        key={index}
+                        style={styleRight}
+                        onClick={this.showAdditionalUserChat}
+            >
+            </div>
+        }
     }
 
 
@@ -95,6 +188,9 @@ export default class Message extends Component {
                 actuallyUserChat : actuallyUserChat,
                 vissibleWindowChat : true,
             });
+            if(!this.props.chatUsersWindow) {
+                this.props.sendNewUserToWindowChat(actuallyUserChat);
+            }
         }
         else {
             if(!this.state.actuallyUserChat.find((searchUser) => {
@@ -103,65 +199,26 @@ export default class Message extends Component {
                 actuallyUserChat = this.state.actuallyUserChat;
                 actuallyUserChat.push(user);
                 this.setState(actuallyUserChat);
+                this.props.sendNewUserToWindowChat(actuallyUserChat);
             }
         }
     }
 
-    renderWindowChat(user, index) {
-        let friendResizeArea = this.props.actuallyUser.friends.find((friend , index) => {
-            return friend.id === user.id;
-        })
-        let indexActuallyFriends = this.props.actuallyUser.friends.findIndex((friend , index) => {
-            return friend.id === user.id;
-        })
-        let styleRight = {right: '280px'};
-        if(index > 0) {
-            styleRight = this.setPostionWindow(index);
-        }
-        if(styleRight !== -1) {
-            return <div className="message-window-chat"
-            key={index}
-            style={styleRight}
-        >
-            <div className="message-window-chat-title"
-                 onClick={(e) => {this.closeOrHideWindowChatAnyUser(e, index)}}
-            >
-                <span className="message-window-chat-user">
-                    {user.name + ' ' + user.surname}
-                </span>
-                <span className="message-window-chat-close glyphicon glyphicon-remove" >
-                </span>
-                <div className="message-window-chat-contain">
-                   {friendResizeArea.message.map((contain , index) => {
-                       return this.renderMessage(contain, index)
-                   })}
-                </div>
-                <div className="message-window-chat-text">
-                    <textarea className="message-to-send" 
-                              name="message-to-send"  
-                              placeholder="Napisz nową wiadomość" 
-                              rows="1"
-                              onInput={(e) => {this.setHeightChat(e, friendResizeArea)}}
-                              onKeyDown={(e) => {this.sendMessage(e, indexActuallyFriends , user)}}
-                              >
-                    </textarea>
-                    <button className="message-window-send-message">
-                        Wyślij
-                    </button>          
-                </div>
-            </div>
-        </div>
+    deleteUserChat(index) {
+        let actuallyUserChat;
+        actuallyUserChat = this.state.actuallyUserChat;
+        actuallyUserChat.splice(index, 1);
+        if(actuallyUserChat.length < 1) {
+            this.setState({
+                vissibleWindowChat: false,
+                actuallyUserChat: null,
+            })
+            this.props.sendNewUserToWindowChat(null);
         }
         else {
-            styleRight = this.setPositionIconAlreadyChatWindow();
-            return <div className = "message-windows-hide-already-window-chat glyphicon glyphicon-comment"
-                        key={index}
-                        style={styleRight}
-                        onClick={this.showAdditionalUserChat}
-            >
-            </div>
+            this.setState({actuallyUserChat});
+            this.props.sendNewUserToWindowChat(actuallyUserChat);
         }
-       
     }
 
     renderMessage(contain, index) {
@@ -171,7 +228,7 @@ export default class Message extends Component {
                 border: '1px solid rgb(241, 240, 240)',
                 backgroundColor: 'rgb(241, 240, 240)',
                 color: 'black',
-                float: 'right',
+                float: 'left',
             }
         }
         else {
@@ -179,6 +236,7 @@ export default class Message extends Component {
                 border: '1px solid rgb(55, 57, 64)',
                 backgroundColor: 'rgb(55, 57, 64)',
                 color: 'white',
+                float: 'right',
             }
         }
         if(index === 0) {
@@ -237,7 +295,7 @@ export default class Message extends Component {
             return {right: '800px'};
         }
 
-        else if(window.innerWidth < 1450)  {
+        else if(window.innerWidth < 1450) {
             return {right: '1060px'};
         }
 
@@ -251,23 +309,8 @@ export default class Message extends Component {
         if(e.target.className === "message-window-chat-close glyphicon glyphicon-remove") {
             this.deleteUserChat(index);
         }
-        else if(e.target.className === "message-window-chat-title"){
+        else if(e.target.className === "message-window-chat-title") {
            this.hideUserChat(e, index);
-        }
-    }
-
-    deleteUserChat(index) {
-        let actuallyUserChat;
-        actuallyUserChat = this.state.actuallyUserChat;
-        actuallyUserChat.splice(index, 1);
-        if(actuallyUserChat.length < 1) {
-            this.setState({
-                vissibleWindowChat: false,
-                actuallyUserChat: null,
-            })
-        }
-        else {
-            this.setState({actuallyUserChat});
         }
     }
 
@@ -304,6 +347,7 @@ export default class Message extends Component {
             })
             setUserFriendsMessage.message.push(newMessage);
             this.props.databaseUsers.child(user.id).child('friends').child(indexFriend).child('message').set(setUserMessage.message);
+            this.props.databaseUsers.child(user.id).child('friends').child(indexFriend).child('newMessage').set(true);
             this.props.databaseUsers.child(this.props.actuallyUser.id).child('friends').child(index).child('message').set(setUserFriendsMessage.message);
             e.preventDefault();            
             e.target.rows = 1;
@@ -325,32 +369,6 @@ export default class Message extends Component {
             e.target.parentNode.previousSibling.style.height = (250 - 23 * e.target.rows) + 'px';
             e.target.rows += 1;    
         }
-    }
-
-
-    renderListFriendsChat(friend, index) {        
-        let user = this.props.usersData.find((user) => {
-                        return friend.id === user.id;
-                    })
-                                        
-        return  <div className="message-contact-filter-friends" 
-                     key={index}
-                     onClick={() => {
-                         this.addUserToChat(user, index);
-                     }}
-                >
-                    <img className="message-contact-filter-friends-image" 
-                         src={user.pictureUrl} 
-                         alt={index}
-                    />
-                    <p className="message-contact-filter-friends-user">
-                        {user.name + ' ' + user.surname}
-                    </p>
-                    {user.status === 'online' ?
-                        <div className="message-contact-filter-friends-status"></div>
-                        :null}             
-                    <div className="message-contact-filter-friends-underline"></div>
-                </div>
     }
 
     renderAdditionalUser(user, index) {
@@ -376,7 +394,6 @@ export default class Message extends Component {
                 actuallyUserChat : actuallyUserChat,
                 showAddUserChat : false,
             });
-            console.log("jesr");
         let windowChatFirst = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.childNodes[4].firstChild;
         windowChatFirst.childNodes[2].style.height = "250px";
         windowChatFirst.childNodes[3].firstChild.value = '';
@@ -526,4 +543,3 @@ export default class Message extends Component {
                )
     }
 }
-

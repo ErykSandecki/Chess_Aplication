@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
 import NotificationsNewFriends from '../NotificationsNewFriend';
+import NotificationsNewMessage from '../NotificationsNewMessage';
 
 import emptyLogoUser from '../../Images/empty-logo-user.png';
 
@@ -42,12 +43,19 @@ export default class Navigation extends Component {
                             >
                                 Wyloguj
                             </p>
+                            <NotificationsNewMessage
+                                actuallyUser={this.props.actuallyUser}
+                                usersData={this.props.usersData}
+                                databaseUsers={this.props.databaseUsers}
+                                statusLogin = {this.props.statusLogin}
+                                sendNewUserToWindowChat = {this.props.sendNewUserToWindowChat}
+                                chatUsersWindow = {this.props.chatUsersWindow}/> 
                             <NotificationsNewFriends
                                 actuallyUser={this.props.actuallyUser}
                                 usersData={this.props.usersData}
                                 databaseUsers={this.props.databaseUsers}
                                 statusLogin = {this.props.statusLogin}
-                                setVisibleFriends = {this.props.setVisibleFriends}/>
+                                setVisibleFriends = {this.props.setVisibleFriends}/>   
                         </React.Fragment>
                         :<React.Fragment>
                             <img className="nav-users img-circle" 

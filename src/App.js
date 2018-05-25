@@ -31,7 +31,8 @@ class App extends Component {
         visibleBackGround: false,
         visibleRegister: false,
         visibleLogin: false,
-      }
+      },
+      chatUsersWindow: null,
     }
     this.refreshStatusCheck = null;
     this.refreshActiveUsers = null;
@@ -117,6 +118,8 @@ class App extends Component {
 
   setVisibleFriends = () => {this.setState({visibleFriends: !this.state.visibleFriends});};
 
+  sendNewUserToWindowChat = (chatUsersWindow) => {this.setState({chatUsersWindow})}; 
+
   render() {
     return (
             <div className = {this.state.visibleApp ?
@@ -159,7 +162,9 @@ class App extends Component {
                 <Message
                   usersData = {this.state.usersData}
                   actuallyUser = {this.state.actuallyUser}
-                  databaseUsers = {this.state.databaseUsers}/>
+                  databaseUsers = {this.state.databaseUsers}
+                  chatUsersWindow = {this.state.chatUsersWindow}
+                  sendNewUserToWindowChat = {this.sendNewUserToWindowChat}/>
                 :null
               } 
               <LoginRegister
@@ -193,7 +198,9 @@ class App extends Component {
                 actuallyUser = {this.state.actuallyUser}
                 databaseUsers = {this.state.databaseUsers}
                 refreshStatus = {this.refreshStatus}
-                setVisibleFriends = {this.setVisibleFriends}/>
+                setVisibleFriends = {this.setVisibleFriends}
+                chatUsersWindow = {this.state.chatUsersWindow}
+                sendNewUserToWindowChat = {this.sendNewUserToWindowChat}/>
               <Intro/>
               <div className = "picture-1">
                 <div className = "parallax-1"></div>

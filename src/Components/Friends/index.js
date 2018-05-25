@@ -266,6 +266,7 @@ export default class Friends extends Component {
                  contain: 'Jesteście znajomymi!',
              }],
              resizeArea: [0,0,0,0],
+             newMessage: false,
          }
          return newDataForFriends;
      }
