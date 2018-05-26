@@ -55,7 +55,10 @@ export default class Message extends Component {
                 })
                 if(checkUser.length !== this.state.actuallyUserChat.length) {
                     if(checkUser.length === 0) {
-                        this.setState({actuallyUserChat: null})
+                        this.setState({
+                                actuallyUserChat: null,
+                                vissibleWindowChat: false,
+                            })
                     }
                     else {
                         this.setState({actuallyUserChat: checkUser});
