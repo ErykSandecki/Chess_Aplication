@@ -6,10 +6,6 @@ footer {
     float: left;
 }
 
-footer:hover {
-    cursor: url(../../Images/cursor-move-white.png), auto;
-}
-
 .footer-menu-text {
     text-align: center;
     color: white;
@@ -21,6 +17,7 @@ footer:hover {
 
 .footer-menu-text:hover {
     opacity: 0.5;
+    cursor: pointer;
 }
 
 .icon {
@@ -41,6 +38,7 @@ footer:hover {
     text-decoration: unset;
     transition: 0.5s;
     color: white;
+    cursor: pointer;
 }
 
 .footer-down-text {

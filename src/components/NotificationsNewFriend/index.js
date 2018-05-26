@@ -272,7 +272,7 @@ export default class NotificationsNewFriends extends Component {
                     />        
                     <div className="notifications-friends-title">
                          POWIADOMIENIA
-                         <span className="glyphicon glyphicon-remove" 
+                         <span className="notifications-friends-title-exit glyphicon glyphicon-remove" 
                                onClick={this.setVisibleNotifications}
                          /></div>
                     <div className="notifications-friends-table">

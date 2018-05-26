@@ -1,3 +1,6 @@
+input:hover {
+    cursor: pointer;
+}
 
 .register-login {
     position: fixed;
@@ -15,7 +18,7 @@
 
 .register-login-table {
     position: fixed;
-    height: 825px;
+    height: 90vh;
     width: 90%;
     left: 5%;
     top: 5%;
@@ -28,8 +31,8 @@
 
 .register-login-image {
     margin-top: 20px;
-    height: 100px;
-    width: 100px;
+    height: 10vh;
+    width: 10vh;
 }
 
 .login-register-glyphicon-remove {
@@ -45,6 +48,10 @@
     margin-right: 5px;
 }
 
+.login-register-exit-menu:hover {
+    cursor: pointer;
+}
+
 .register-login-exit-validation {
     position: absolute;
     right: 2%;
@@ -58,6 +65,7 @@
 
 .register-login-exit-validation:hover {
     filter: drop-shadow(8px 8px 10px gray);
+    cursor: pointer;
 }
 
 .register-login-text {
@@ -69,7 +77,7 @@
 .register-login-form-register {
     width: 60%;
     margin-top: 50px;
-    height: 250px;
+    height: 25vh;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 20px;
@@ -88,8 +96,14 @@
     font-size: 20px;
 }
 
-.register-login-form-register-input:focus, .register-login-form-login-input:focus {
+.register-login-form-register-input:focus, 
+.register-login-form-login-input:focus {
     outline: unset;
+}
+
+.register-login-form-register-input:hover, 
+.register-login-form-login-input:hover {
+    cursor: pointer;
 }
 
 .register-login-form-register-underline {
@@ -128,7 +142,7 @@
 .register-login-button-login:hover,
 .register-login-button-register-login-next-step:hover,
 .register-login-button-register-login-last-step:hover {
-    cursor: unset;
+    cursor: pointer;
 }
 
 .register-login-button-login:focus,
@@ -163,6 +177,7 @@
 
 .register-login-form-register-already-account:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .register-login-register-complete {
@@ -218,6 +233,10 @@
     width: 250px;
 }
 
+.register-login-choose-file:hover {
+    cursor: pointer;
+}
+
 .register-login-text-register-add-picture {
     margin-bottom: 20px;
     font-weight: bold;
@@ -251,6 +270,7 @@
 
 .register-login-remember-password:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .register-login-form-login-already-account {
@@ -259,6 +279,7 @@
 
 .register-login-form-login-already-account:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .register-login-table-wrong-password-login {
@@ -296,6 +317,7 @@
 
 .register-login-regular:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 @media only screen and (min-width: 768px) {

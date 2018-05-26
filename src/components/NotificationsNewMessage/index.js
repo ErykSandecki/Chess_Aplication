@@ -154,7 +154,7 @@ export default class NotificationsNewMessage extends Component {
                     />        
                     <div className="notifications-message-title">
                          NOWE WIADOMOŚCI!
-                         <span className="glyphicon glyphicon-remove" 
+                         <span className="notifications-message-title-exit glyphicon glyphicon-remove" 
                                onClick={this.setVisibleNotifications}
                          /></div>
                     <div className="notifications-message-table">

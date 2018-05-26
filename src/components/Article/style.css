@@ -49,6 +49,7 @@
 
 .article-check-options:hover {
     opacity: 1;
+    cursor: pointer;
 }
 
 .article-text {

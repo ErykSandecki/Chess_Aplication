@@ -45,7 +45,8 @@
     opacity: 1;
 }
 
-.menu-drop-left-language-exit, .menu-drop-left-login-register {
+.menu-drop-left-language-exit, 
+.menu-drop-left-login-register {
     width: 100%;
     border-bottom: 1px solid #e6e6e6;
     height: 75px;
@@ -59,8 +60,10 @@
     text-decoration: underline;
 }
 
+.menu-drop-left-language:hover,
 .menu-drop-left-drop-login-register:hover {
     opacity: 0.3;
+    cursor: pointer;
 }
 
 .menu-drop-left-exit-drop-menu {
@@ -94,4 +97,5 @@
 .menu-drop-left-login-register-drop-text:hover,
 .menu-drop-left-friends-drop-text:hover {
     opacity: 0.3;
+    cursor: pointer;
 }

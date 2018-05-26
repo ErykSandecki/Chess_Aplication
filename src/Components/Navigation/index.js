@@ -8,6 +8,7 @@ import emptyLogoUser from '../../Images/empty-logo-user.png';
 import './style.css';
 
 export default class Navigation extends Component {
+
     render() {
         return (
             <div className="nav">
