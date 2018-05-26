@@ -1,3 +1,8 @@
+@keyframes opacity {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
 .message {
     position: fixed;
     right: 0px;
@@ -48,13 +53,13 @@
     max-height: 600px;
     overflow-x: hidden;
     overflow-y: hidden;
-    transition: 0.5s;
+    transition: 1s;
     background-color: white;
 }
 
 .message-contacts-filter:hover {
     overflow-y: auto;
-    transition: 0.5s;
+    transition: 1s;
 }
 
 .message-contacts-filter::-webkit-scrollbar {
@@ -70,6 +75,10 @@
     outline: 1px solid slategrey;
 }
 
+.message-contact-filter-friends {
+    position: relative;
+}
+
 .message-contact-filter-friends:hover {
     cursor: pointer;
 }
@@ -81,6 +90,15 @@
     margin-bottom: 5px;
     float: left;
     margin-left: 5px;
+}
+
+.message-contact-filter-friends-new-message {
+    color: black;
+    position: relative;
+    float: left;
+    font-size: 20px;
+    line-height: 70px;
+    animation: opacity 1s infinite;   
 }
 
 .message-contact-filter-friends-user {
@@ -292,3 +310,4 @@
     border-radius: 20px;
     margin-left: 5px;
 }
+

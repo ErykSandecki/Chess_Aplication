@@ -100,6 +100,10 @@ export default class Message extends Component {
                     <p className="message-contact-filter-friends-user">
                         {user.name + ' ' + user.surname}
                     </p>
+                    {friend.newMessage ?
+                        <span className="message-contact-filter-friends-new-message glyphicon glyphicon-envelope"></span>
+                        :null
+                    }
                     {user.status === 'online' ?
                         <div className="message-contact-filter-friends-status"></div>
                         :null}             
