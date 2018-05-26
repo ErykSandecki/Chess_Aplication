@@ -122,16 +122,20 @@ export default class Firebase extends Component {
                 let friendIsFriend = user.friends.filter((friend) => {
                         let friendSearch = allScore.findIndex((score) => {
                             return score.id === friend.id
-                    })  
-                    if(allScore[friendSearch].friends) {
-                       return allScore[friendSearch].friends.find((yourId) => {
-                            return user.id === yourId.id; 
-                        })
-                    }
-                    else{
-                        return false;
+                    }) 
+                    if(allScore[friendSearch]){
+                        if(allScore[friendSearch].friends) {
+                            return allScore[friendSearch].friends.find((yourId) => {
+                                 return user.id === yourId.id; 
+                             })
+                         }
+                         else{
+                             return false;
+                         } 
                     } 
-                        
+                    else {
+                        return false;
+                    }        
                 }).map((friend) => {
                     return friend;
                 })   

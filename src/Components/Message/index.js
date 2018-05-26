@@ -4,6 +4,7 @@ import FadeIn from 'react-fade-in';
 
 import './style.css';
 
+
 export default class Message extends Component {
     
     constructor(props) {
@@ -59,9 +60,11 @@ export default class Message extends Component {
                                 actuallyUserChat: null,
                                 vissibleWindowChat: false,
                             })
+                            this.props.sendNewUserToWindowChat(null);
                     }
                     else {
                         this.setState({actuallyUserChat: checkUser});
+                        this.props.sendNewUserToWindowChat(checkUser);
                     }
                 }
             }
@@ -445,6 +448,9 @@ export default class Message extends Component {
                                         return user.id === searchuser.id
                                     })
                                     if(this.props.actuallyUser.friends.find((friend)=>{
+                                        if(!refreshUser) {
+                                            return false;
+                                        }
                                         return friend.id === refreshUser.id;
                                     })){
                                         return this.renderWindowChat(refreshUser, index);

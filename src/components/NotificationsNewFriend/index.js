@@ -193,7 +193,8 @@ export default class NotificationsNewFriends extends Component {
         let user = this.props.usersData.find((user) => {
             return user.id === friend.id
         })
-        return <FadeIn key={index}>
+        if(user) {
+            return <FadeIn key={index}>
                     <div className="notifications-show-new">
                         <img className="notifications-show-new-image" 
                              src={user.pictureUrl}
@@ -206,14 +207,20 @@ export default class NotificationsNewFriends extends Component {
                         <p className="notifications-show-new-text">
                             {friend.direction === 'get' ? 
                                 "Zaprasza cię do znajomych!"
-                                :"Zaproszenie Przyjęte!"}
+                                :"Zaproszenie Przyjęte!"
+                            }
                         </p>
                         <span className="glyphicon glyphicon-remove notifications-show-new-exit"
                               onClick={this.hideDivNotificationsShow}  
                         >
                         </span>
                     </div>
-               </FadeIn>
+                </FadeIn>
+        }
+        else {
+            return null;
+        }
+       
     }
 
     hideDivNotificationsShow(e) {

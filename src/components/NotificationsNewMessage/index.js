@@ -57,7 +57,12 @@ export default class NotificationsNewMessage extends Component {
                     
             }    
             else if(this.state.userWrite.length !== userWrite.length) {
+                if(userWrite.length === 0) {
+                    this.setState({userWrite: null});   
+                }
+                else {
                     this.setState({userWrite});
+                }    
             }
         }
     }
