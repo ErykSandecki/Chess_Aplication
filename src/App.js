@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './App.css';
 
 import Firebase from './components/Firebase';
 import Intro from './components/Intro/index.js';
@@ -11,6 +10,9 @@ import Regulations from './components/Regulations'
 import LoginRegister from './components/LoginRegister';
 import Friends from './components/Friends';
 import Message from './components/Message';
+import Game from './components/Game';
+
+import './App.css';
 
 class App extends Component {
   constructor(props){
@@ -33,6 +35,7 @@ class App extends Component {
         visibleLogin: false,
       },
       chatUsersWindow: null,
+      visibleGame: false,
     }
     this.refreshStatusCheck = null;
     this.refreshActiveUsers = null;
@@ -87,12 +90,18 @@ class App extends Component {
         if(this.state.actuallyUser.nameUser === 'admin') {
           this.state.adminData.child('status').set('offline');
       } 
+      if(this.state.actuallyUser.nameUser !== 'admin') {
         setTimeout(() => {
           this.state.databaseUsers.child(this.state.actuallyUser.id).child('checkStatus').set(false);
           this.state.databaseUsers.child(this.state.actuallyUser.id).child('status').set('offline');
           this.setState({visibleFriends: false});
           this.setActullayUser(null);
         },100)
+      }
+      else {
+        this.setState({visibleFriends: false});
+          this.setActullayUser(null);
+      }
     }
   };
 
@@ -123,6 +132,8 @@ class App extends Component {
   setVisibleFriends = () => {this.setState({visibleFriends: !this.state.visibleFriends});};
 
   sendNewUserToWindowChat = (chatUsersWindow) => {this.setState({chatUsersWindow})}; 
+
+  setVisibleGame = () => {this.setState({visibleGame: !this.state.visibleGame});};
 
   render() {
     return (
@@ -192,7 +203,8 @@ class App extends Component {
                 setSectionRegisterLogin = {this.setSectionRegisterLogin}
                 statusLogin = {this.state.statusLogin}
                 setStatusLoginUser = {this.setStatusLoginUser}
-                setVisibleFriends = {this.setVisibleFriends}/>
+                setVisibleFriends = {this.setVisibleFriends}
+                setVisibleGame = {this.setVisibleGame}/>
               <Navigation
                 hideApp = {this.hideApp.bind(this)}
                 setSectionRegisterLogin = {this.setSectionRegisterLogin}
@@ -204,7 +216,15 @@ class App extends Component {
                 refreshStatus = {this.refreshStatus}
                 setVisibleFriends = {this.setVisibleFriends}
                 chatUsersWindow = {this.state.chatUsersWindow}
-                sendNewUserToWindowChat = {this.sendNewUserToWindowChat}/>
+                sendNewUserToWindowChat = {this.sendNewUserToWindowChat}
+                setVisibleGame = {this.setVisibleGame}
+                visibleGame = {this.state.visibleGame}/>
+              {this.state.statusLogin ? 
+                <Game
+                  setVisibleGame = {this.setVisibleGame}
+                  visibleGame = {this.state.visibleGame}/>
+                :null
+              }  
               <Intro/>
               <div className = "picture-1">
                 <div className = "parallax-1"></div>

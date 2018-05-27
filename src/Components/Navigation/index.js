@@ -11,7 +11,9 @@ export default class Navigation extends Component {
 
     render() {
         return (
-            <div className="nav">
+            <div className="nav"
+                
+            >
                 <div className="nav-drop-menu" 
                 onClick={this.props.hideApp}>
                 <div className="nav-button">
@@ -44,6 +46,10 @@ export default class Navigation extends Component {
                             >
                                 Wyloguj
                             </p>
+                            <span className="nav-gamepad fa fa-gamepad"
+                                  onClick={this.props.setVisibleGame}
+                            >
+                            </span>
                             <NotificationsNewMessage
                                 actuallyUser={this.props.actuallyUser}
                                 usersData={this.props.usersData}

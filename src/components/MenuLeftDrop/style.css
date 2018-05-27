@@ -80,12 +80,14 @@
 }
 
 .menu-drop-left-login-register-drop,
-.menu-drop-left-friends-drop {
+.menu-drop-left-friends-drop,
+.menu-drop-left-game-drop {
     border-bottom: 1px solid #e6e6e6;
 }
 
 .menu-drop-left-login-register-drop-text,
-.menu-drop-left-friends-drop-text {
+.menu-drop-left-friends-drop-text,
+.menu-drop-left-game-drop-text {
     text-align: center;
     margin: 0px;
     font-size: 15px;
@@ -95,7 +97,8 @@
 }
 
 .menu-drop-left-login-register-drop-text:hover,
-.menu-drop-left-friends-drop-text:hover {
+.menu-drop-left-friends-drop-text:hover,
+.menu-drop-left-game-drop-text:hover {
     opacity: 0.3;
     cursor: pointer;
 }

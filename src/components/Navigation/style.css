@@ -14,6 +14,18 @@
     padding: 26px;
 }
 
+.nav-gamepad {
+    float: left;
+    line-height: 75px;
+    margin-right: 15px;
+    opacity: 0.5;
+    font-size: 25px;
+}
+
+.nav-gamepad:hover {
+    opacity: 1;
+}
+
 .nav-button:hover {
     cursor: pointer;
 }
@@ -66,6 +78,8 @@
 .nav-drop-menu:hover .nav-text-button {
     opacity: 0.3 !important;
 }
+
+
 
 .nav-icon {
     float: left;
@@ -145,6 +159,8 @@
     opacity: 1;
     cursor: pointer;
 }
+
+
 
 /* Tablet */
 
