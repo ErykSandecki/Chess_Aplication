@@ -10,22 +10,28 @@ export default class Game extends Component {
         super(props)
         this.state = {
             visibleGameComponents: false,
+            showComponent: false,
         }
     }
 
     componentDidUpdate() {
-        if(this.props.visibleGame && !this.state.visibleGameComponents) {
-            setTimeout(() => {
-            this.setState({
-                visibleGameComponents: true,
-            });
-        },1000);
+        if(this.props.visibleGame) {
+            setTimeout(() =>{
+                this.setState({visibleGameComponents: true})
+            },1000)
         }
-        else if(!this.props.visibleGame && this.state.visibleGameComponents) {
-            this.setState({
-                visibleGameComponents: false,
-            });
+        setTimeout(() =>{
+        if(!this.state.showComponent && this.state.visibleGameComponents) {
+            this.setState({showComponent: true});
         }
+      },2000);
+
+      if(!this.props.visibleGame && this.state.visibleGameComponents) {
+         this.setState({
+            visibleGameComponents: false,
+            showComponent: false,
+        })
+      }
     }
 
     render() {
@@ -35,11 +41,14 @@ export default class Game extends Component {
                             :{height: '0px'}
                           }
                 >
-                    {this.props.visibleGame ?
+                    {this.state.visibleGameComponents ?
                         <React.Fragment>
                             <Board
-                                visibleGameComponents = {this.state.visibleGameComponents}/>
-                            <MenuGame/>
+                                showComponent = {this.state.showComponent}
+                                visibleGame = {this.props.visibleGame}/>
+                            <MenuGame
+                                showComponent = {this.state.showComponent}
+                                visibleGame = {this.props.visibleGame}/>
                         </React.Fragment>
                         :null
                     } 
