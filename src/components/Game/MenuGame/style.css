@@ -3,7 +3,7 @@
     background-color: rgba(0,10,10,0.3);
     position: relative;
     float: right;
-    transition: 2s;
+    transition: 1s;
     overflow-y: auto;
 }
 
@@ -22,7 +22,7 @@
 .menu-game-option {
     color: white;
     text-align: center;
-    height: 50px;
+    min-height: 50px;
     width: 100%;
     line-height: 50px;
     font-family: 'Roboto', sans-serif;
@@ -30,15 +30,12 @@
     font-size: 15px;
     border-bottom: 1px solid darkgray;
     transition: 0.5s;
-}
-
-.menu-game-option:nth-child(3){
-    border-top: 1px solid darkgray;
+    position: relative;
 }
 
 .menu-game-option:last-child {
     position: absolute;
-    top:750px;
+    top:740px;
     border-bottom: unset;
     border-top: 1px solid darkgray;
 }
@@ -53,19 +50,65 @@
     width: 100%;
     height: 50px;
     margin-top: 15px;
-    margin-bottom: 15px;
     font-family: 'Indie Flower', cursive;
     color: darkgray;
     font-size: 20px;
     line-height: 50px;
+    border-bottom: 1px solid darkgray;
 }
 
 .menu-game-image-right {
     float: left;
-    margin-left: 25px;
+    margin-left: 20px;
 }
 
 .menu-game-image-left {
     float: right;
-    margin-right: 25px;
+    margin-right: 20px;
+}
+
+.menu-game-arrow {
+    margin-left: 10px;
+    font-size: 10px;
+    opacity: 0;
+    transition: 0.5s;
+    position: absolute;
+    top: 20px;
+}
+
+.menu-game-option:hover .menu-game-arrow {
+    opacity: 1;
+}
+
+.menu-game-friends {
+    width: 100%;
+    transition: 0.5s;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.menu-game-friend {
+    height: 50px;
+    width: 100%;
+    position: relative;
+}
+
+.menu-game-friend-border {
+    float: left;
+    margin: 0px;
+    border-left: 2px dotted;
+    margin-left: 20px;
+}
+
+.menu-game-friend-dotted {
+    float: left;
+    margin: 0px;
+    padding-left: 5px;
+}
+
+.menu-game-friend-image {
+    width: 40px;
+    height: 40px;
+    margin-top: 5px;
+    margin-left: 5px;
 }

@@ -68,7 +68,7 @@ export default class MenuLeftDrop extends Component {
                      onClick={() =>{
                                         this.props.showApp();
                                         setTimeout(() =>{
-                                            this.props.setVisibleGame();
+                                            this.props.setVisibleGame(true);
                                         },500);
                                     }
                              }

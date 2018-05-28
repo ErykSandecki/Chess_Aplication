@@ -1,3 +1,8 @@
+@keyframes spin2 {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); }
+}
+
 .board {
     width: 600px;
     transition: 2s;
@@ -7,4 +12,67 @@
     margin-left: 50px;
     margin-top: 100px;
     border: 1px solid gray;
+}
+
+.board-picture {
+    transform: rotate(90deg);
+    transition: 2s;
+}
+
+.board-wait-game-1 {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    top: 75px;
+    left: 150px;
+    border: 12px solid #f3f3f3; /* Light grey */
+    border-top: 12px solid dimgray; /* Blue */
+    border-radius: 5%;
+    animation: spin2 15s linear infinite;
+}
+
+.board-wait-game-2 {
+    width: 250px;
+    height: 250px;
+    position: absolute;
+    top: 100px;
+    left: 175px;
+    border: 12px solid #f3f3f3; /* Light grey */
+    border-top: 12px solid dimgray; /* Blue */
+    border-radius: 10%;
+    animation: spin 10s linear infinite;
+}
+
+.board-wait-game-3 {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 125px;
+    left: 200px;
+    border: 12px solid #f3f3f3; /* Light grey */
+    border-top: 12px solid dimgray; /* Blue */
+    border-radius: 25%;
+    animation: spin2 5s linear infinite;
+}
+
+.bishop {
+    position: absolute;
+    top: 161px;
+    left: 236px;
+}
+
+.board-wait-text {
+    width: 95%;
+    height: 100px;
+    line-height: 100px;
+    border-radius: 25px;
+    top: 450px;
+    left: 2.5%;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 25px;
+    text-align: center;
+    position: absolute;
+    background-color: dimgray;
 }

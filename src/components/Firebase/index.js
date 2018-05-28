@@ -18,17 +18,21 @@ export default class Firebase extends Component {
 
         this.downloadDatabase = this.downloadDatabase.bind(this);
         this.downloadAdminBase = this.downloadAdminBase.bind(this);
+        this.downloadGameBase = this.downloadGameBase.bind(this);
     }
 
     componentDidMount() {
         let adminData = firebase.database().ref('admin');
         let databaseUsers = firebase.database().ref('users')
         let storageRef = firebase.storage();
+        let gameData = firebase.database().ref('game');
         this.props.setDataAdmin(adminData);
         this.props.getReferenceDataBase(databaseUsers);
         this.props.getReferenceStorage(storageRef);
+        this.props.getReferenceGameBase(gameData);
         adminData.on("value", this.downloadAdminBase, this.errData);
         databaseUsers.on("value", this.downloadDatabase, this.errData);
+        gameData.on("value", this.downloadGameBase, this.errData);
     };
 
     downloadDatabase(data) {
@@ -87,6 +91,25 @@ export default class Firebase extends Component {
                 this.props.setStatusLoginUser(false);
             }
         }  
+    }
+
+    downloadGameBase(data) {
+        let scores = data.val();
+        let keys = Object.keys(scores);
+        let allScoreGame = [];
+        for(let i = 0; i < keys.length; i++) {
+            if(this.props.statusLogin) {
+                if(scores[keys[i]].id === this.props.actuallyUser.id) {
+                    if(!scores[keys[i]].idGame) {
+                        scores[keys[i]].idGame = keys[i];
+                        firebase.database().ref('game').child(keys[i]).set(scores[keys[i]]);
+                    }
+                    this.props.setActullayGame(scores[keys[i]]);
+                }
+            }
+            allScoreGame.push(scores[keys[i]]);
+        }
+        this.props.updateGameData(allScoreGame);
     }
 
     setIdUser(allScore, keys) {

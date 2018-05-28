@@ -21,9 +21,12 @@ class App extends Component {
       adminBase: null,
       adminData: null,
       databaseUsers: null,
+      databaseGame: null,
       storage: null,
       usersData: null,
+      gameData: null,
       actuallyUser: null,
+      actuallyGame: null,
       visibleApp: true,
       statusLogin: false,
       visibleRegulation: false,
@@ -68,9 +71,15 @@ class App extends Component {
 
   getReferenceStorage = (storage) => {this.setState({storage});};
 
+  getReferenceGameBase= (databaseGame) => {this.setState({databaseGame});};
+
   updateUsers = (usersData) => {this.setState({usersData});}
 
   setActullayUser = (actuallyUser) => {this.setState({actuallyUser});};
+
+  setActullayGame = (actuallyGame) => {this.setState({actuallyGame});};
+
+  updateGameData = (gameData) => {this.setState({gameData});};
 
   setSectionRegisterLogin(visibleBackGround, visibleRegister, visibleLogin) {
     this.setState({
@@ -94,12 +103,17 @@ class App extends Component {
         setTimeout(() => {
           this.state.databaseUsers.child(this.state.actuallyUser.id).child('checkStatus').set(false);
           this.state.databaseUsers.child(this.state.actuallyUser.id).child('status').set('offline');
-          this.setState({visibleFriends: false});
+          this.setState({
+            visibleFriends: false,
+            visibleGame: false,
+          });
           this.setActullayUser(null);
         },100)
       }
       else {
-        this.setState({visibleFriends: false});
+        this.setState({
+          visibleFriends: false,
+        });
           this.setActullayUser(null);
       }
     }
@@ -119,6 +133,13 @@ class App extends Component {
               if(!user.checkStatus) {
                 user.status = 'offline'
                 this.state.databaseUsers.child(user.id).set(user);
+                let gameDataUser = this.state.gameData.find((userGame)=>{
+                  return userGame.id === user.id;
+                })
+                if(gameDataUser) {
+                  gameDataUser.statusGame = 'offline';
+                  this.state.databaseGame.child(gameDataUser.idGame).set(gameDataUser);
+                }
               }
             });
           },1000);
@@ -133,7 +154,7 @@ class App extends Component {
 
   sendNewUserToWindowChat = (chatUsersWindow) => {this.setState({chatUsersWindow})}; 
 
-  setVisibleGame = () => {this.setState({visibleGame: !this.state.visibleGame});};
+  setVisibleGame = (visibleGame) => {if(this.state.visibleGame !== visibleGame){this.setState({visibleGame});}};
 
   render() {
     return (
@@ -163,7 +184,10 @@ class App extends Component {
                 setStatusLoginUser = {this.setStatusLoginUser}
                 statusLogin = {this.state.statusLogin}
                 actuallyUser = {this.state.actuallyUser}
-                usersData = {this.state.usersData}/>
+                usersData = {this.state.usersData}
+                getReferenceGameBase = {this.getReferenceGameBase}
+                updateGameData = {this.updateGameData}
+                setActullayGame = {this.setActullayGame}/>
               {this.state.visibleFriends ?
                 <Friends
                   setVisibleFriends = {this.setVisibleFriends}
@@ -222,7 +246,13 @@ class App extends Component {
               {this.state.statusLogin ? 
                 <Game
                   setVisibleGame = {this.setVisibleGame}
-                  visibleGame = {this.state.visibleGame}/>
+                  visibleGame = {this.state.visibleGame}
+                  databaseGame = {this.state.databaseGame}
+                  actuallyUser = {this.state.actuallyUser}
+                  gameData = {this.state.gameData}
+                  actuallyGame = {this.state.actuallyGame}
+                  setActullayGame = {this.setActullayGame}
+                  usersData = {this.state.usersData}/>
                 :null
               }  
               <Intro/>

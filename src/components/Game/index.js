@@ -11,27 +11,73 @@ export default class Game extends Component {
         this.state = {
             visibleGameComponents: false,
             showComponent: false,
+            dataGame: false,
+            showExitButton: false,
+        }
+
+        this.exitGame = this.exitGame.bind(this);
+    }
+
+    addUserToDataBaseGame() {
+        let actuallyUser = this.props.actuallyUser;
+        if(!this.props.gameData.find((user)=> {
+            return  actuallyUser.id === user.id;
+        })) {
+            let dataUser = {
+                id: actuallyUser.id,
+                inviteToGame: false,
+                idGame: false,
+                statusGame: 'online',
+                name: actuallyUser.name,
+                surname: actuallyUser.surname,
+                busy: false,
+            }
+            this.props.databaseGame.push(dataUser);
+            this.props.setActullayGame(dataUser);
+        }
+        else {
+            let gameUserData = this.props.gameData.find((user)=> {
+                return actuallyUser.id === user.id;
+            });
+            gameUserData.statusGame = 'online';
+            this.props.databaseGame.child(gameUserData.idGame).set(gameUserData);
+            this.props.setActullayGame(gameUserData);
         }
     }
 
     componentDidUpdate() {
-        if(this.props.visibleGame) {
+        if(this.props.visibleGame && !this.state.dataGame) {
+            this.setState({dataGame: true});
+            this.addUserToDataBaseGame();
+        }
+        if(this.props.visibleGame && !this.state.visibleGameComponents) {
             setTimeout(() =>{
                 this.setState({visibleGameComponents: true})
             },1000)
         }
-        setTimeout(() =>{
         if(!this.state.showComponent && this.state.visibleGameComponents) {
-            this.setState({showComponent: true});
+            setTimeout(() =>{
+                this.setState({showComponent: true});
+            },2000);
         }
-      },2000);
+    }
 
-      if(!this.props.visibleGame && this.state.visibleGameComponents) {
-         this.setState({
-            visibleGameComponents: false,
+    showTableExitGame = (showExitButton) => {if(this.state.showExitButton !== showExitButton){this.setState({showExitButton})}};
+
+    exitGame() {
+        this.props.setVisibleGame(false);
+        this.setState({
             showComponent: false,
+            visibleGameComponents: false,
+            showExitButton: false,
+            dataGame: false,
         })
-      }
+        let actuallyUser = this.props.actuallyUser;
+        let gameUserData = this.props.gameData.find((user)=> {
+            return actuallyUser.id === user.id;
+        });
+        gameUserData.statusGame = 'offline';
+        this.props.databaseGame.child(gameUserData.idGame).set(gameUserData);
     }
 
     render() {
@@ -45,13 +91,34 @@ export default class Game extends Component {
                         <React.Fragment>
                             <Board
                                 showComponent = {this.state.showComponent}
-                                visibleGame = {this.props.visibleGame}/>
+                                visibleGame = {this.props.visibleGame}
+                                actuallyGame = {this.props.actuallyGame}/>
                             <MenuGame
                                 showComponent = {this.state.showComponent}
-                                visibleGame = {this.props.visibleGame}/>
+                                visibleGame = {this.props.visibleGame}
+                                showTableExitGame = {this.showTableExitGame}
+                                gameData = {this.props.gameData}
+                                actuallyUser = {this.props.actuallyUser}
+                                usersData = {this.props.usersData}/>
                         </React.Fragment>
                         :null
-                    } 
+                    }
+                {this.state.showExitButton && this.props.visibleGame ?
+                    <div className="game-exit-buttons">
+                        <p className="game-exit-title">Czy chcesz napewno chcesz wyjść z gry ?</p>
+                        <button className="game-exit-button-exit"
+                                onClick={this.exitGame}
+                        >
+                            Wyjdź
+                        </button>
+                        <button className="game-exit-button-stay" 
+                                onClick={() =>{this.showTableExitGame(false)}}
+                        >
+                            Zostań
+                        </button>
+                    </div>
+                    :null
+                }     
                </div>
     }
 }
