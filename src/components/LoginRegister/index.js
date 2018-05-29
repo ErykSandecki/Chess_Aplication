@@ -90,9 +90,16 @@ export default class LoginRegister extends Component {
                             if(this.props.adminBase.status === 'online') {
                                 if(actuallyUser.status === 'offline') {
                                     actuallyUser.status = 'online';
-                                    this.props.databaseUsers.child(actuallyUser.id).set(actuallyUser);   
+                                    this.props.databaseUsers.child(actuallyUser.id).set(actuallyUser);  
                                 }
-                                this.setAfterLogin(actuallyUser); 
+                                this.setAfterLogin(actuallyUser);
+                                let gameUser = this.props.gameData.find((user) =>{
+                                    return user.id === actuallyUser.id;
+                                })
+                                if(gameUser) {
+                                    gameUser.statusGame = 'offline';
+                                    this.props.databaseGame.child(gameUser.idGame).set(gameUser); 
+                                }
                             }               
                             else {
                                 this.setState({

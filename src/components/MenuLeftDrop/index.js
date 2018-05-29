@@ -64,19 +64,28 @@ export default class MenuLeftDrop extends Component {
                         ZNAJOMI
                     </p>
                 </div>
-                <div className="menu-drop-left-game-drop"
-                     onClick={() =>{
+                    <div className="menu-drop-left-game-drop"
+                         onClick={this.props.statusLogin ?
+                                   this.props.actuallyUser.nameUser !== 'admin' ?
+                                    () =>{
                                         this.props.showApp();
                                         setTimeout(() =>{
                                             this.props.setVisibleGame(true);
                                         },500);
                                     }
-                             }
-                >
-                    <p className="menu-drop-left-game-drop-text">
-                        GRAJ ZE ZNAJOMYMI
-                    </p>
-                </div>    
+                                    :this.props.showApp
+                                :() =>{
+                                        this.props.showApp();
+                                        setTimeout(() => {
+                                            this.props.setSectionRegisterLogin(true, true, false);
+                                        },500);
+                                    }
+                                }
+                    >
+                        <p className="menu-drop-left-game-drop-text">
+                            GRAJ ZE ZNAJOMYMI
+                        </p>
+                    </div>  
             </div>
                 )
     }

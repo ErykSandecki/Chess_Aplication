@@ -46,10 +46,13 @@ export default class Navigation extends Component {
                             >
                                 Wyloguj
                             </p>
-                            <span className="nav-gamepad fa fa-gamepad"
-                                  onClick={() =>{this.props.setVisibleGame(true)}}
-                            >
-                            </span>
+                            {this.props.actuallyUser.nameUser !== 'admin' ?
+                                <span className="nav-gamepad fa fa-gamepad"
+                                      onClick={() =>{this.props.setVisibleGame(true)}}
+                                >
+                                </span>
+                                :null
+                            }
                             <NotificationsNewMessage
                                 actuallyUser={this.props.actuallyUser}
                                 usersData={this.props.usersData}

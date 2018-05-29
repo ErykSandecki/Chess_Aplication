@@ -93,6 +93,10 @@
     position: relative;
 }
 
+.menu-game-friend:hover {
+    cursor: default;
+}
+
 .menu-game-friend-border {
     float: left;
     margin: 0px;
@@ -111,4 +115,79 @@
     height: 40px;
     margin-top: 5px;
     margin-left: 5px;
+    float: left;
+}
+
+.menu-game-friend-name {
+    width: 100px;
+    margin: 0px;
+    margin-left: 10px;
+    text-align: left;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    float: left;
+}
+
+.menu-game-friend-send-invite {
+    margin-left: 10px;
+    background-color: rgb(40, 167, 69);
+    border: 1px solid rgb(40, 167, 69);
+    width: 20px;
+    height: 20px;
+    float: left;
+    line-height: 20px;
+    text-align: center;
+    margin-top: 15px;
+    border-radius: 5px;
+    transition: 0.5s;
+}
+
+.menu-game-friend-delete-invite {
+    margin-left: 10px;
+    background-color: rgb(255, 193, 7);
+    border: 1px solid rgb(255, 193, 7);
+    width: 20px;
+    height: 20px;
+    float: left;
+    line-height: 20px;
+    text-align: center;
+    margin-top: 15px;
+    border-radius: 5px;
+    transition: 0.5s;
+    color: black;
+}
+
+.menu-game-friend-accepted-invite {
+    margin-left: 5px;
+    background-color: rgb(40, 167, 69);
+    border: 1px solid rgb(40, 167, 69);
+    width: 20px;
+    height: 20px;
+    float: left;
+    line-height: 20px;
+    text-align: center;
+    margin-top: 15px;
+    border-radius: 5px;
+    transition: 0.5s;
+}
+
+.menu-game-friend-delete-get-invite {
+    margin-left: 5px;
+    background-color: rgb(255, 193, 7);
+    border: 1px solid rgb(255, 193, 7);
+    width: 20px;
+    height: 20px;
+    float: left;
+    line-height: 20px;
+    text-align: center;
+    margin-top: 15px;
+    border-radius: 5px;
+    transition: 0.5s;
+    color: black;
+}
+
+.menu-game-friend-send-invite:hover,
+.menu-game-friend-delete-invite {
+    cursor: pointer;
 }

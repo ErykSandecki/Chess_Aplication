@@ -30,7 +30,6 @@ export default class Game extends Component {
                 statusGame: 'online',
                 name: actuallyUser.name,
                 surname: actuallyUser.surname,
-                busy: false,
             }
             this.props.databaseGame.push(dataUser);
             this.props.setActullayGame(dataUser);
@@ -99,7 +98,9 @@ export default class Game extends Component {
                                 showTableExitGame = {this.showTableExitGame}
                                 gameData = {this.props.gameData}
                                 actuallyUser = {this.props.actuallyUser}
-                                usersData = {this.props.usersData}/>
+                                actuallyGame = {this.props.actuallyGame}
+                                usersData = {this.props.usersData}
+                                databaseGame = {this.props.databaseGame}/>
                         </React.Fragment>
                         :null
                     }

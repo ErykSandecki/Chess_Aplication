@@ -103,6 +103,7 @@ class App extends Component {
         setTimeout(() => {
           this.state.databaseUsers.child(this.state.actuallyUser.id).child('checkStatus').set(false);
           this.state.databaseUsers.child(this.state.actuallyUser.id).child('status').set('offline');
+          this.state.databaseGame.child(this.state.actuallyGame.idGame).child('statusGame').set('offline');
           this.setState({
             visibleFriends: false,
             visibleGame: false,
@@ -143,6 +144,7 @@ class App extends Component {
               }
             });
           },1000);
+          
         },60000);
       }       
     else {
@@ -219,7 +221,9 @@ class App extends Component {
                 storage = {this.state.storage}
                 setStatusRegisterNewUser = {this.setStatusRegisterNewUser}
                 actuallyUser = {this.actuallyUser}
-                refreshStatus = {this.refreshStatus}/>
+                refreshStatus = {this.refreshStatus}
+                gameData = {this.state.gameData}
+                databaseGame = {this.state.databaseGame}/>
               <MenuLeftDrop
                 refreshStatus = {this.refreshStatus}
                 visibleMenuDropLeft = {this.state.visibleApp}
@@ -228,7 +232,8 @@ class App extends Component {
                 statusLogin = {this.state.statusLogin}
                 setStatusLoginUser = {this.setStatusLoginUser}
                 setVisibleFriends = {this.setVisibleFriends}
-                setVisibleGame = {this.setVisibleGame}/>
+                setVisibleGame = {this.setVisibleGame}
+                actuallyUser = {this.state.actuallyUser}/>
               <Navigation
                 hideApp = {this.hideApp.bind(this)}
                 setSectionRegisterLogin = {this.setSectionRegisterLogin}
