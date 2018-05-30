@@ -24,6 +24,11 @@ export default class MenuGame extends Component {
     }
 
     componentDidUpdate() {
+        if(this.props.clearAnimationSetBackgroundColor) {
+            if(this.setColorBackground) {
+                clearInterval(this.setColorBackground);
+            }
+        }
         if(this.props.actuallyGame.gameInvite) {
             let gameUsers = this.props.gameData.filter((userGame) => {
                 return this.props.actuallyGame.gameInvite.find((friendGame) => {
@@ -35,31 +40,51 @@ export default class MenuGame extends Component {
                     this.deleInviteToUserGame(usersGame);
                 }
             })
+            
+            if(this.props.actuallyGame.gameInvite.find((gameUser) => {
+                return gameUser.direction === 'get' && !gameUser.statusGame;
+            })) {
+                if(!this.setColorBackground){
+                    this.setColorBackground = setInterval(() => {
+                        if(this.refNewInvite.style.backgroundColor === "black"){
+                            this.refNewInvite.style.backgroundColor ="rgba(89,92,92)";
+                        }
+                        else {
+                            this.refNewInvite.style.backgroundColor = "black";
+                        } 
+                    },500);
+                }  
+            }
+            else{
+                this.clearNewInviteNotifications();
+            }
+
+            if(this.props.actuallyGame.gameInvite.find((gameUser) => {
+                return gameUser.statusGame;
+            })) {
+                
+                if(!this.props.actuallyGame.gameInvite.find((gameUser) => {
+                    return gameUser.thisGame;
+                })) {
+                    this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(0).child('thisGame').set(true);
+                }
+            }
         }
 
-        if(this.props.actuallyGame.gameInvite && this.props.actuallyGame.inviteToGame) {
-            if(!this.setColorBackground){
-                this.setColorBackground = setInterval(()=>{
-                    if(this.refNewInvite.style.backgroundColor === "black"){
-                        this.refNewInvite.style.backgroundColor ="rgba(89,92,92)";
-                    }
-                    else {
-                        this.refNewInvite.style.backgroundColor = "black";
-                    } 
-                },500);
-            }  
-        }
         else if(!this.props.actuallyGame.gameInvite) {
-            clearInterval(this.setColorBackground);
-            if(this.setColorBackground){
-                this.setColorBackground = null;
-                this.props.databaseGame.child(this.props.actuallyGame.idGame).child('inviteToGame').set(false);
-                if(this.state.visibleInvites) {
-                    this.refNewInvite.style.backgroundColor = "darkgray"
-                }
-                else {
-                    this.refNewInvite.style.backgroundColor = "rgba(89,92,92)";
-                }
+           this.clearNewInviteNotifications();
+        }
+    }
+
+    clearNewInviteNotifications() {
+        clearInterval(this.setColorBackground);
+        if(this.setColorBackground){
+            this.setColorBackground = null;
+            if(this.state.visibleInvites) {
+                this.refNewInvite.style.backgroundColor = "darkgray"
+            }
+            else {
+                this.refNewInvite.style.backgroundColor = "rgba(89,92,92)";
             }
         }
     }
@@ -140,20 +165,8 @@ export default class MenuGame extends Component {
         })
         let actuallyUserGame = this.props.gameData.find((userSearch)=>{
             return userSearch.id === this.props.actuallyUser.id;
-        })
-       
-            if(actuallyUserGame.gameInvite) {
-                if(actuallyUserGame.gameInvite.find((actuallyUser)=>{
-                    return actuallyUser.idGame === user.idGame && actuallyUser.direction === 'get'})) {
-                        return null;
-                    }
-                else {
-                    return this.renderListFriend(user, index, arr, userData, actuallyUserGame);
-                }    
-            }
-            else {
-                return this.renderListFriend(user, index, arr, userData, actuallyUserGame);
-            } 
+        }) 
+        return this.renderListFriend(user, index, arr, userData, actuallyUserGame);
        
     }
 
@@ -221,7 +234,7 @@ export default class MenuGame extends Component {
                     />
                     <p className="menu-game-friend-name">{user.name + ' ' + user.surname}</p>
                     <div className="menu-game-friend-accepted-invite"
-                         onClick={()=>{this.sendInviteToUserGame(userGame)}}
+                         onClick={()=>{this.acceptedInviteToGame(userGame)}}
                     >
                         +
                     </div> 
@@ -230,6 +243,62 @@ export default class MenuGame extends Component {
                     >
                         -
                     </div>
+                </div>
+    }
+
+    renderListActuallyGameUsers(userGameid, index) {
+        let userGame = this.props.gameData.find((userSearch)=>{
+            return userSearch.idGame === userGameid.idGame;
+        })
+        let user = this.props.usersData.find((userSearch) => {
+            return userSearch.id === userGame.id;
+        })
+
+        return  <div className="menu-game-friend-status"
+                     key={index} 
+                >  
+                    <img className="menu-game-friend-status-image" 
+                         src={user.pictureUrl}
+                         alt={"friendGame" + index}
+                    />
+                    <p className="menu-game-friend-status-name">{user.name + ' ' + user.surname}</p>
+                    {!userGameid.thisGame ?
+                        <button className="menu-game-friend-set-game"
+                                onClick={()=>{this.setUserActuallyGame(userGame)}}
+                        >
+                            PRZEŁĄCZ GRACZA
+                        </button> 
+                        :null
+                    }
+                    <button className="menu-game-friend-delete-player"
+                         onClick={()=>{this.deleInviteToUserGame(userGame)}}
+                    >
+                        USUŃ GRACZA
+                    </button>
+                </div>
+    }
+
+    renderStatusGame(userGameid, index) {
+        let userGame = this.props.gameData.find((userSearch)=>{
+            return userSearch.idGame === userGameid.idGame;
+        })
+        let user = this.props.usersData.find((userSearch) => {
+            return userSearch.id === userGame.id;
+        })
+
+        return  <div className="menu-game-friend-actually"
+                     key={index} 
+                >  
+                    <img className="menu-game-friend-actually-image" 
+                         src={user.pictureUrl}
+                         alt={"friendGame" + index}
+                    />
+                    <p className="menu-game-friend-actually-name">{user.name + ' ' + user.surname}</p>
+                    <button className="menu-game-friend-delete-player"
+                            onClick={()=>{this.deleInviteToUserGame(userGame)}}
+                    >
+                        ZAKOŃCZ GRĘ
+                    </button>
                 </div>
     }
 
@@ -265,11 +334,62 @@ export default class MenuGame extends Component {
       this.changeGameBase(actuallyUser, user);
     }
 
+    acceptedInviteToGame(user) {
+        let userSet = user.gameInvite.find((actuallyGame)=>{
+            return actuallyGame.idGame === this.props.actuallyGame.idGame;
+        });
+        let actuallyUserSet = this.props.actuallyGame.gameInvite.find((actuallyGame)=>{
+            return actuallyGame.idGame === user.idGame;
+        });
+        userSet.statusGame = true;
+        actuallyUserSet.statusGame = true;
+        let indexUserSet = user.gameInvite.findIndex((actuallyGame)=>{
+            return actuallyGame.idGame === this.props.actuallyGame.idGame;
+        });
+        let indexActuallyUserSet = this.props.actuallyGame.gameInvite.findIndex((actuallyGame)=>{
+            return actuallyGame.idGame === user.idGame;
+        });
+        if(!user.gameInvite.find((userGame) => {
+            return userGame.thisGame;
+        })) {
+            userSet.thisGame = true;
+        }
+        if(!this.props.actuallyGame.gameInvite.find((userGame) => {
+            return userGame.thisGame;
+        })) {
+            actuallyUserSet.thisGame = true;
+        }
+        if(Math.round(Math.random()) === 1) {
+            userSet.colorFigure = 'white';
+            actuallyUserSet.colorFigure = 'black';
+        }
+        else {
+            userSet.colorFigure = 'black';
+            actuallyUserSet.colorFigure = 'white';
+        }
+        this.props.databaseGame.child(user.idGame).child('gameInvite').child(indexUserSet).set(userSet);
+        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexActuallyUserSet).set(actuallyUserSet);
+    }
+
+    setUserActuallyGame(user) {
+        let actuallyGame = this.props.actuallyGame;
+        let indexActiveGame = actuallyGame.gameInvite.findIndex((userGame) => {
+            return userGame.thisGame;
+        })
+        let indexUnActiveGame = actuallyGame.gameInvite.findIndex((userGame) => {
+            return user.idGame === userGame.idGame;
+        })
+        this.props.databaseGame.child(actuallyGame.idGame).child('gameInvite').child(indexUnActiveGame).child('thisGame').set(true);
+        this.props.databaseGame.child(actuallyGame.idGame).child('gameInvite').child(indexActiveGame).child('thisGame').set(false);
+    }
+
     createFriendGame(user, direction) {
         let newDataForFriends = {
             idGame:  user.idGame,
             direction: direction,
             statusGame: false,
+            colorFigure: 'check',
+            thisGame: false,
         }
         return newDataForFriends;
     }
@@ -279,10 +399,6 @@ export default class MenuGame extends Component {
         let refFriend = this.props.databaseGame.child(user.idGame).child('gameInvite');
         refYourUser.set(actuallyUser.gameInvite);
         refFriend.set(user.gameInvite);
-       setTimeout(()=>{
-        user.inviteToGame = true;
-        this.props.databaseGame.child(user.idGame).set(user);
-       },1000);
     }
 
     render() {
@@ -318,7 +434,21 @@ export default class MenuGame extends Component {
                     >
                         Status Rozgrywki
                         {this.state.visibleStatusGame ?
-                            <span className="menu-game-arrow glyphicon glyphicon-chevron-up"/>
+                            <React.Fragment>
+                                <span className="menu-game-arrow glyphicon glyphicon-chevron-up"/>
+                                <FadeIn>
+                                    <div className="menu-game-friends">
+                                        {this.props.actuallyGame.gameInvite ?
+                                            this.props.actuallyGame.gameInvite.filter((gameUser) => {
+                                                return gameUser.thisGame;
+                                            }).map((gameUser, index) => {
+                                                return this.renderStatusGame(gameUser, index)
+                                            })
+                                            :null
+                                            }
+                                    </div>
+                                </FadeIn>
+                            </React.Fragment>
                             :null
                         }
                     </div>
@@ -340,6 +470,15 @@ export default class MenuGame extends Component {
                                     <div className="menu-game-friends">
                                         {this.props.actuallyUser.friends ?
                                             this.props.gameData.filter((user)=>{
+                                            if(this.props.actuallyGame.gameInvite) {
+                                                if(this.props.actuallyGame.gameInvite.find((actuallyUser)=>{
+                                                    return (actuallyUser.idGame === user.idGame && 
+                                                    actuallyUser.direction === 'get') ||
+                                                    (actuallyUser.idGame === user.idGame && 
+                                                    actuallyUser.statusGame)})) {
+                                                            return null;
+                                                        }               
+                                            }
                                             return user.id !== this.props.actuallyUser.id &&
                                                    this.props.actuallyUser.friends.find((friend)=>{
                                                        return friend.id === user.id && friend.isFriends
@@ -375,7 +514,7 @@ export default class MenuGame extends Component {
                                     <div className="menu-game-friends">
                                         {this.props.actuallyGame.gameInvite ?
                                             this.props.actuallyGame.gameInvite.filter((friendGame)=>{
-                                                return friendGame.direction === 'get';
+                                                return friendGame.direction === 'get' && !friendGame.statusGame;
                                             }).map((user, index, arr) => {
                                                 return this.renderListInvite(user, index, arr);
                                             })
@@ -399,8 +538,22 @@ export default class MenuGame extends Component {
                     >
                         Obecne Rozgrywki
                         {this.state.visibleActuallyGame ?
-                            <span className="menu-game-arrow glyphicon glyphicon-chevron-up"/>
-                            :null
+                            <React.Fragment>
+                                <span className="menu-game-arrow glyphicon glyphicon-chevron-up"/>
+                                <FadeIn>
+                                    <div className="menu-game-friends">
+                                        {this.props.actuallyGame.gameInvite ?
+                                            this.props.actuallyGame.gameInvite.filter((friendGame)=>{
+                                                return friendGame.statusGame;
+                                            }).map((user, index, arr) => {
+                                                return this.renderListActuallyGameUsers(user, index, arr);
+                                            })
+                                            :null
+                                            }
+                                    </div>
+                                </FadeIn>
+                            </React.Fragment>
+                            :null 
                         }
                     </div>
                     <div className="menu-game-option"

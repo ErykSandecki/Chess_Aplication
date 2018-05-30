@@ -13,6 +13,7 @@ export default class Game extends Component {
             showComponent: false,
             dataGame: false,
             showExitButton: false,
+            clearAnimationSetBackgroundColor: false,
         }
 
         this.exitGame = this.exitGame.bind(this);
@@ -25,7 +26,6 @@ export default class Game extends Component {
         })) {
             let dataUser = {
                 id: actuallyUser.id,
-                inviteToGame: false,
                 idGame: false,
                 statusGame: 'online',
                 name: actuallyUser.name,
@@ -64,19 +64,23 @@ export default class Game extends Component {
     showTableExitGame = (showExitButton) => {if(this.state.showExitButton !== showExitButton){this.setState({showExitButton})}};
 
     exitGame() {
-        this.props.setVisibleGame(false);
-        this.setState({
-            showComponent: false,
-            visibleGameComponents: false,
-            showExitButton: false,
-            dataGame: false,
-        })
-        let actuallyUser = this.props.actuallyUser;
-        let gameUserData = this.props.gameData.find((user)=> {
-            return actuallyUser.id === user.id;
-        });
-        gameUserData.statusGame = 'offline';
-        this.props.databaseGame.child(gameUserData.idGame).set(gameUserData);
+        this.setState({clearAnimationSetBackgroundColor: true});
+        setTimeout(()=>{
+            this.props.setVisibleGame(false);
+            this.setState({
+                showComponent: false,
+                visibleGameComponents: false,
+                showExitButton: false,
+                dataGame: false,
+                clearAnimationSetBackgroundColor: false,
+            })
+            let actuallyUser = this.props.actuallyUser;
+            let gameUserData = this.props.gameData.find((user)=> {
+                return actuallyUser.id === user.id;
+            });
+            gameUserData.statusGame = 'offline';
+            this.props.databaseGame.child(gameUserData.idGame).set(gameUserData);
+        },100);
     }
 
     render() {
@@ -91,7 +95,9 @@ export default class Game extends Component {
                             <Board
                                 showComponent = {this.state.showComponent}
                                 visibleGame = {this.props.visibleGame}
-                                actuallyGame = {this.props.actuallyGame}/>
+                                actuallyGame = {this.props.actuallyGame}
+                                databaseGame = {this.props.databaseGame}
+                                gameData = {this.props.gameData}/>
                             <MenuGame
                                 showComponent = {this.state.showComponent}
                                 visibleGame = {this.props.visibleGame}
@@ -100,7 +106,8 @@ export default class Game extends Component {
                                 actuallyUser = {this.props.actuallyUser}
                                 actuallyGame = {this.props.actuallyGame}
                                 usersData = {this.props.usersData}
-                                databaseGame = {this.props.databaseGame}/>
+                                databaseGame = {this.props.databaseGame}
+                                clearAnimationSetBackgroundColor = {this.state.clearAnimationSetBackgroundColor}/>
                         </React.Fragment>
                         :null
                     }

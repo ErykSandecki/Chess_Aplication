@@ -6,6 +6,25 @@ import './style.css';
 
 export default class Board extends Component {
 
+    WhenNotPlayerInGame(text, nameClass) {
+        return <p className={nameClass}>{text}</p>
+    }
+
+    WhenCheckDecisionPlayers() {
+        return <React.Fragment>
+                    {this.spinerAnimation()}
+                    {this.WhenNotPlayerInGame('Oczekuje na Akceptacje', 'board-wait-decision-text')}
+                </React.Fragment>
+    }
+
+    spinerAnimation() {
+       return <div className="spinner">
+                <div className="bounce1"></div>
+                <div className="bounce2"></div>
+                <div className="bounce3"></div>
+              </div>
+    }
+
     render() {
         return <div className="board"
                     style={this.props.showComponent && this.props.visibleGame ?
@@ -19,11 +38,13 @@ export default class Board extends Component {
                                 src={chessBoard}
                                 alt={"board"}
                             />
-                            {!this.props.actuallyGame.busy ?
-                                <React.Fragment>
-                                    <p className="board-wait-text">Zaproś Znajomego Aby Zagrać!</p>
-                                </React.Fragment>
-                                :null
+                            {!this.props.actuallyGame.gameInvite ?
+                                this.WhenNotPlayerInGame('Zaproś Znajomego Aby Zagrać!', 'board-wait-text')
+                                :this.props.actuallyGame.gameInvite.find((userGame) =>{
+                                    return userGame.statusGame
+                                })?
+                                    <div></div>
+                                    :this.WhenCheckDecisionPlayers()
                             }
                         </React.Fragment>
                         :null
@@ -31,3 +52,4 @@ export default class Board extends Component {
                 </div>
     }
 }
+

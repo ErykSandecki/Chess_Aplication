@@ -4,6 +4,10 @@
     position: relative;
     float: right;
     transition: 1s;
+    overflow-y: hidden;
+}
+
+.menu-game:hover {
     overflow-y: auto;
 }
 
@@ -31,13 +35,6 @@
     border-bottom: 1px solid darkgray;
     transition: 0.5s;
     position: relative;
-}
-
-.menu-game-option:last-child {
-    position: absolute;
-    top:740px;
-    border-bottom: unset;
-    border-top: 1px solid darkgray;
 }
 
 .menu-game-option:hover {
@@ -85,6 +82,33 @@
     transition: 0.5s;
     text-align: left;
     margin-bottom: 10px;
+    max-height: 200px;
+    overflow-y: hidden;
+}
+
+.menu-game-friends:hover {
+    overflow-y: auto;
+    cursor: default;
+}
+
+.menu-game-friends::-webkit-scrollbar,
+.menu-game::-webkit-scrollbar {
+    width: 8px;
+}
+
+.menu-game-friends::-webkit-scrollbar-track,
+.menu-game::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+.menu-game-friends::-webkit-scrollbar-thumb,
+ {
+    background-color: dimgray;
+    outline: 1px solid black;
+}
+
+.menu-game::-webkit-scrollbar-thumb {
+    background-color: rgb(218, 216, 216);
 }
 
 .menu-game-friend {
@@ -190,4 +214,56 @@
 .menu-game-friend-send-invite:hover,
 .menu-game-friend-delete-invite {
     cursor: pointer;
+}
+
+.menu-game-friend-status {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid dimgray;
+}
+
+.menu-game-friend-status-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-top: 5px;
+}
+
+.menu-game-friend-status-name {
+    margin: 0px;
+    height: 25px;
+    line-height: 25px;
+}
+
+.menu-game-friend-set-game,
+.menu-game-friend-delete-player {
+    width: 80%;
+    height: 30px;
+    line-height: 0px;
+    border: unset;
+    border-radius: 5px;
+}
+
+.menu-game-friend-set-game {
+    background-color: rgb(52, 58, 64);
+}
+.menu-game-friend-delete-player {
+    background-color: rgb(220, 53, 69);
+    margin-bottom: 20px;
+}
+
+.menu-game-friend-actually {
+    width: 100%;
+    text-align: center;
+}
+
+.menu-game-friend-actually-image {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    text-align: center;
 }
