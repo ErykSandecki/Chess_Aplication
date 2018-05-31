@@ -14,6 +14,7 @@ export default class Game extends Component {
             dataGame: false,
             showExitButton: false,
             clearAnimationSetBackgroundColor: false,
+            clickFigure: false,
         }
 
         this.exitGame = this.exitGame.bind(this);
@@ -63,6 +64,8 @@ export default class Game extends Component {
 
     showTableExitGame = (showExitButton) => {if(this.state.showExitButton !== showExitButton){this.setState({showExitButton})}};
 
+    setClickFigure = (clickFigure) => {if(this.state.clickFigure !== clickFigure){this.setState({clickFigure})}}
+
     exitGame() {
         this.setState({clearAnimationSetBackgroundColor: true});
         setTimeout(()=>{
@@ -97,7 +100,10 @@ export default class Game extends Component {
                                 visibleGame = {this.props.visibleGame}
                                 actuallyGame = {this.props.actuallyGame}
                                 databaseGame = {this.props.databaseGame}
-                                gameData = {this.props.gameData}/>
+                                gameData = {this.props.gameData}
+                                usersData = {this.props.usersData}
+                                clickFigure = {this.state.clickFigure}
+                                setClickFigure = {this.setClickFigure}/>
                             <MenuGame
                                 showComponent = {this.state.showComponent}
                                 visibleGame = {this.props.visibleGame}
@@ -107,7 +113,8 @@ export default class Game extends Component {
                                 actuallyGame = {this.props.actuallyGame}
                                 usersData = {this.props.usersData}
                                 databaseGame = {this.props.databaseGame}
-                                clearAnimationSetBackgroundColor = {this.state.clearAnimationSetBackgroundColor}/>
+                                clearAnimationSetBackgroundColor = {this.state.clearAnimationSetBackgroundColor}
+                                setClickFigure = {this.setClickFigure}/>
                         </React.Fragment>
                         :null
                     }

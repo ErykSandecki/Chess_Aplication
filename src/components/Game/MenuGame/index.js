@@ -367,8 +367,156 @@ export default class MenuGame extends Component {
             userSet.colorFigure = 'black';
             actuallyUserSet.colorFigure = 'white';
         }
+
+        if(actuallyUserSet.colorFigure === 'white') {
+            actuallyUserSet.figures = this.createFigureAndSetPosition('white', 0, -1);
+            actuallyUserSet.figuresEnemy = this.createFigureAndSetPosition('black', 525, 1);
+            actuallyUserSet.yourMove = true;
+            userSet.figures = this.createFigureAndSetPosition('black', 0 , -1);
+            userSet.figuresEnemy = this.createFigureAndSetPosition('white', 525, 1);
+            userSet.yourMove = false;
+        }
+
+        else {
+            actuallyUserSet.figures = this.createFigureAndSetPosition('black', 0, -1);
+            actuallyUserSet.figuresEnemy = this.createFigureAndSetPosition('white', 525, 1);
+            actuallyUserSet.yourMove = false;
+            userSet.figures = this.createFigureAndSetPosition('white', 0, -1);
+            userSet.figuresEnemy = this.createFigureAndSetPosition('black', 525, 1);
+            userSet.yourMove = true;
+        }
+
         this.props.databaseGame.child(user.idGame).child('gameInvite').child(indexUserSet).set(userSet);
         this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexActuallyUserSet).set(actuallyUserSet);
+    }
+
+    createFigureAndSetPosition(color, value, setValue) {
+        let kingValue = color === 'white' ? 225 : 300;
+        let hetmanValue = color === 'white' ? 300 : 225;
+        let figures = [
+            {
+                nameFigure: 'pawn_1',
+                srcImage: 'chess-pawn-'+ color,
+                x: value  - 0,
+                y: (value  - 75) * (setValue),
+                firstMove: false,
+                status: true,
+            },
+            {
+                nameFigure: 'pawn_2',
+                srcImage: 'chess-pawn-'+ color,
+                x: (value  - 75) * (setValue),
+                y: (value  - 75) * (setValue),
+                firstMove: false,
+                status: true,
+            },
+            {
+                nameFigure: 'pawn_3',
+                srcImage: 'chess-pawn-'+ color,
+                x: (value  - 150) * (setValue),
+                y: (value  - 75) * (setValue),
+                firstMove: false,
+                status: true,
+            },
+            {
+                nameFigure: 'pawn_4',
+                srcImage: 'chess-pawn-'+ color,
+                x: (value  - 225) * (setValue),
+                y: (value  - 75) * (setValue),
+                firstMove: false,
+                status: true,
+            },
+            {
+                nameFigure: 'pawn_5',
+                srcImage: 'chess-pawn-'+ color,
+                x: (value  - 300) * (setValue),
+                y: (value  - 75) * (setValue),
+                firstMove: false,
+                status: true,
+            },
+            {
+                nameFigure: 'pawn_6',
+                srcImage: 'chess-pawn-'+ color,
+                x: (value  - 375) * (setValue),
+                y: (value  - 75) * (setValue),
+                firstMove: false,
+                status: true,
+            },
+            {
+                nameFigure: 'pawn_7',
+                srcImage: 'chess-pawn-'+ color,
+                x: (value  - 450) * (setValue),
+                y: (value  - 75) * (setValue),
+                firstMove: false,
+                status: true,
+            },
+            {
+                nameFigure: 'pawn_8',
+                srcImage: 'chess-pawn-'+ color,
+                x: (value  - 525) * (setValue),
+                y: (value  - 75) * (setValue),
+                firstMove: false,
+                status: true,
+            },
+            {
+                nameFigure: 'tower_1',
+                srcImage: 'chess-tower-'+ color,
+                x: value  - 0,
+                y: value  - 0,
+                status: true,
+            },
+            {
+                nameFigure: 'tower_2',
+                srcImage: 'chess-tower-'+ color,
+                x: (value  - 525) * (setValue),
+                y: value  - 0,
+                status: true,
+            },
+            {
+                nameFigure: 'horse_1',
+                srcImage: 'chess-horse-'+ color,
+                x: (value  - 75) * (setValue),
+                y: value  - 0,
+                status: true,
+            },
+            {
+                nameFigure: 'horse_2',
+                srcImage: 'chess-horse-'+ color,
+                x: (value  - 450) * (setValue),
+                y: value  - 0,
+                status: true,
+            },
+            {
+                nameFigure: 'bishop_1',
+                srcImage: 'chess-bishop-'+ color,
+                x: (value  - 150) * (setValue),
+                y: value  - 0,
+                status: true,
+            },
+            {
+                nameFigure: 'bishop_2',
+                srcImage: 'chess-bishop-'+ color,
+                x: (value  - 375) * (setValue),
+                y: value  - 0,
+                status: true,
+            },
+            {
+                nameFigure: 'king',
+                srcImage: 'chess-king-'+ color,
+                x: (value  - kingValue) * (setValue),
+                y: value  - 0,
+                firstMove: false,
+                status: true,
+            },
+            {
+                nameFigure: 'hetman',
+                srcImage: 'chess-hetman-'+ color,
+                x: (value  - hetmanValue) * (setValue),
+                y: value - 0,
+                status: true,
+            },
+        ]
+        return figures;
     }
 
     setUserActuallyGame(user) {
@@ -379,6 +527,7 @@ export default class MenuGame extends Component {
         let indexUnActiveGame = actuallyGame.gameInvite.findIndex((userGame) => {
             return user.idGame === userGame.idGame;
         })
+        this.props.setClickFigure(false);
         this.props.databaseGame.child(actuallyGame.idGame).child('gameInvite').child(indexUnActiveGame).child('thisGame').set(true);
         this.props.databaseGame.child(actuallyGame.idGame).child('gameInvite').child(indexActiveGame).child('thisGame').set(false);
     }

@@ -13,6 +13,25 @@
     }
   }
 
+  @-webkit-keyframes sk-scaleout {
+    0% { -webkit-transform: scale(0) }
+    100% {
+      -webkit-transform: scale(1.0);
+      opacity: 0.5;
+    }
+  }
+  
+  @keyframes sk-scaleout {
+    0% { 
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    } 100% {
+      -webkit-transform: scale(1.0);
+      transform: scale(1.0);
+      opacity: 0.5;
+    }
+  }
+
 .board {
     width: 600px;
     transition: 2s;
@@ -22,11 +41,6 @@
     margin-left: 50px;
     margin-top: 100px;
     border: 1px solid gray;
-}
-
-.board-picture {
-    transform: rotate(90deg);
-    transition: 2s;
 }
 
 .board-wait-text {
@@ -90,3 +104,122 @@
     -webkit-animation-delay: -0.16s;
     animation-delay: -0.16s;
   }
+
+  .board-scale {
+    height: 75px;
+    width: 75px;
+    line-height: 75px;
+    color: white;
+    text-align: center;
+    position: relative;
+    border: 1px dotted white;
+    position: absolute;
+  }
+
+  .board-figures {
+    position: absolute;
+    width: 75px;
+    height: 75px;
+    text-align: center;
+    line-height: 75px;
+    transition: 1s;
+  }
+
+  .board-figures:hover {
+    cursor: pointer;
+  }
+
+  .board-check-your-move {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: -100px;
+    left: 250px;
+    text-align: center;
+    background-color: rgb(169, 169, 169);
+    border-radius: 10px;
+  }
+
+  .board-check-your-move-loader {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid dimgray; /* Blue */
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    margin-left: 11.25px;
+    margin-top: 11.25px;
+    animation: spin 1s linear infinite;
+  }
+
+  .board-check-your-move-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    position: absolute;
+    top: 25px;
+    left: 25px;
+  }
+
+  .spinner-figure {
+    width: 75px;
+    height: 75px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: wheat;
+    border-radius: 100%;  
+    -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+    animation: sk-scaleout 1.0s infinite ease-in-out;
+  }
+  
+  .board-next-position {
+    position: absolute;
+    border: 5px solid wheat;
+    width: 75px;
+    height: 75px;
+    z-index: 2;
+  }
+
+  .board-next-position-point {
+    width: 30px;
+    position: relative;
+    height: 30px;
+    background-color: wheat;
+    border-radius: 50%;
+    margin-left: 17.5px;
+    margin-top: 17.5px;
+    -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+    animation: sk-scaleout 1.0s infinite ease-in-out;
+    z-index: 2;
+  }
+
+  .board-window-set-figures {
+    position: absolute;
+    width: 400px;
+    height: 100px;
+    top: -100px;
+    border-radius: 20px;
+    background-color: white;
+    left: 100px;
+  }
+
+  .board-window-figure {
+    float: left;
+    width: 80px;
+    height: 80px;
+    background-color: dimgray;
+    border-radius: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    text-align: center;
+    line-height: 80px;
+    filter: brightness(70%);
+    transition: 0.5s;
+  }
+
+  .board-window-figure:hover {
+    cursor: pointer;
+    filter: brightness(100%);
+  }
+ 
