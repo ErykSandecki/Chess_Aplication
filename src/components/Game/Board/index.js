@@ -144,7 +144,9 @@ export default class Board extends Component {
         else if(figure.nameFigure.substr(0,5) === 'horse') {
             return this.checkNextPositionHorse(figure, userGame);
         }
-
+        else if(figure.nameFigure.substr(0,6) === 'bishop') {
+            return this.checkNextPositionBishop(figure, userGame);
+        }
     }
 
     checkNextPositionTower(figure, userGame) {
@@ -162,9 +164,9 @@ export default class Board extends Component {
         while(true) {  
             if(checkNextPositionPositiveY &&
                 figure.y + positionPositiveY <= 525 && 
-                !userGame.figures.find((figures)=>{  
-                   return figure.y + positionPositiveY === figures.y &&
-                          figure.x === figures.x;  
+                !userGame.figures.find((figures) => {  
+                   return figure.x === figures.x &&
+                          figure.y + positionPositiveY === figures.y;  
                })) {
                 positionNext.push({
                     right: 0,
@@ -178,8 +180,8 @@ export default class Board extends Component {
             if(checkNextPositionNegativeY &&
                figure.y + positionNegativeY >= 0 &&
                !userGame.figures.find((figures)=>{
-                    return figure.y + positionNegativeY === figures.y &&
-                           figure.x === figures.x;  
+                    return figure.x === figures.x &&
+                           figure.y + positionNegativeY === figures.y;  
                 })) {
                     positionNext.push({
                     right: 0,
@@ -194,8 +196,8 @@ export default class Board extends Component {
             if(checkNextPositionPositiveX &&
                figure.x + positionPositiveX <= 525 &&
                !userGame.figures.find((figures)=>{
-                    return figure.y === figures.y &&
-                           figure.x + positionPositiveX === figures.x;  
+                    return figure.x + positionPositiveX === figures.x &&
+                           figure.y === figures.y;  
                 })) {
                     positionNext.push({
                     right: positionPositiveX,
@@ -210,8 +212,8 @@ export default class Board extends Component {
             if(checkNextPositionNegativeX &&
                figure.x + positionNegativeX >= 0 &&
                !userGame.figures.find((figures)=>{
-                    return figure.y === figures.y &&
-                           figure.x + positionNegativeX === figures.x;  
+                    return figure.x + positionNegativeX === figures.x &&
+                           figure.y === figures.y;  
                 })) {
                     positionNext.push({
                     right: positionNegativeX,
@@ -260,8 +262,8 @@ export default class Board extends Component {
                figure.y + horsePos.y <= 525 &&
                figure.y + horsePos.y >= 0 &&
                !userGame.figures.find((figures)=>{
-                return figure.y + horsePos.y === figures.y &&
-                       figure.x + horsePos.x === figures.x;  
+                return figure.x + horsePos.x === figures.x &&
+                       figure.y + horsePos.y === figures.y;  
                 })) {
                    positionNext.push({
                        right: horsePos.x,
@@ -274,6 +276,145 @@ export default class Board extends Component {
             return positionNext.map((position, index)=> {
                 return <div className="board-next-position"
                             style={position}
+                            key={index}
+                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                        >
+                            <div className="board-next-position-point"></div> 
+                       </div>
+                    })
+            }
+            else {
+                return null;
+            }  
+    }
+
+    checkNextPositionBishop(figure, userGame) {
+        let positionNext = [];
+        let diffrent = 0;
+        let newLengthArray = 0;
+        let positionNegativeXPositiveY = {
+            x: -75,
+            y: 75,
+        };
+        let positionPositiveXPositiveY = {
+            x: 75,
+            y: 75,
+        };
+        let positionNegativeXNegativeY = {
+            x: -75,
+            y: -75,
+        };
+        let positionPositiveXNegativeY = {
+            x: 75,
+            y: -75,
+        };
+        let checkNextPositionNegativeXPositiveY = true;
+        let checkNextPositionPositiveXPositiveY = true;
+        let checkNextPositionNegativeXNegativeY = true;
+        let checkNextPositionPositiveXNegativeY = true;
+        let x =1;
+        while(true) {  
+            if(checkNextPositionNegativeXPositiveY &&
+               figure.x + positionNegativeXPositiveY.x >= 0 &&
+               figure.y + positionNegativeXPositiveY.y <= 525 &&
+               !userGame.figures.find((figures)=>{
+                return figure.x + positionNegativeXPositiveY.x === figures.x &&
+                       figure.y + positionNegativeXPositiveY.y === figures.y;   
+                })) {
+                   positionNext.push({
+                       right: positionNegativeXPositiveY.x,
+                       bottom: positionNegativeXPositiveY.y,
+                   })
+                   checkNextPositionNegativeXPositiveY = this.checkEnemyCordinates(figure.x + positionNegativeXPositiveY.x, figure.y + positionNegativeXPositiveY.y, userGame);
+            }
+
+            else {
+                checkNextPositionNegativeXPositiveY = false;
+            }
+
+            if(checkNextPositionPositiveXPositiveY &&
+               figure.x + positionPositiveXPositiveY.x <= 525 &&
+               figure.y + positionPositiveXPositiveY.y <= 525 &&
+               !userGame.figures.find((figures)=>{
+                return figure.x + positionPositiveXPositiveY.x === figures.x &&
+                       figure.y + positionPositiveXPositiveY.y === figures.y;   
+                })) {
+                   positionNext.push({
+                       right: positionPositiveXPositiveY.x,
+                       bottom: positionPositiveXPositiveY.y,
+                   })
+                   checkNextPositionPositiveXPositiveY = this.checkEnemyCordinates(figure.x + positionPositiveXPositiveY.x, figure.y + positionPositiveXPositiveY.y, userGame);
+            }
+
+            else {
+                checkNextPositionPositiveXPositiveY = false;
+            }
+
+            if(checkNextPositionNegativeXNegativeY &&
+               figure.x + positionNegativeXNegativeY.x >= 0 &&
+               figure.y + positionNegativeXNegativeY.y >= 0 &&
+               !userGame.figures.find((figures)=>{
+                    return figure.x + positionNegativeXNegativeY.x === figures.x &&
+                           figure.y + positionNegativeXNegativeY.y === figures.y;   
+                    })) {
+                    positionNext.push({
+                        right: positionNegativeXNegativeY.x,
+                        bottom: positionNegativeXNegativeY.y,
+                    })
+                    checkNextPositionNegativeXNegativeY = this.checkEnemyCordinates(figure.x + positionNegativeXNegativeY.x, figure.y + positionNegativeXNegativeY.y, userGame);
+             }
+
+             else {
+                checkNextPositionNegativeXNegativeY = false;
+             }
+            
+            if(checkNextPositionPositiveXNegativeY &&
+               figure.x + positionPositiveXNegativeY.x <= 525 &&
+               figure.y + positionPositiveXNegativeY.y >= 0 && 
+               !userGame.figures.find((figures)=>{
+                    return figure.x + positionPositiveXNegativeY.x === figures.x &&
+                           figure.y + positionPositiveXNegativeY.y === figures.y;   
+                    })) {
+                    positionNext.push({
+                        right: positionPositiveXNegativeY.x,
+                        bottom: positionPositiveXNegativeY.y,
+                    })
+                    checkNextPositionPositiveXNegativeY = this.checkEnemyCordinates(figure.x + positionPositiveXNegativeY.x, figure.y + positionPositiveXNegativeY.y, userGame);
+            }
+
+            else {
+                checkNextPositionPositiveXNegativeY = false;
+            }
+
+            newLengthArray = positionNext.length;
+            
+            if(newLengthArray === diffrent) {
+                break;
+            }
+            else {
+                diffrent = newLengthArray;
+                positionNegativeXPositiveY.x -= 75;
+                positionNegativeXPositiveY.y += 75;
+                positionPositiveXPositiveY.x += 75;
+                positionPositiveXPositiveY.y += 75;
+                positionNegativeXNegativeY.x -= 75;
+                positionNegativeXNegativeY.y -= 75;
+                positionPositiveXNegativeY.x += 75;
+                positionPositiveXNegativeY.y -= 75;
+            }
+            x++;
+            if(x===28) {
+                break;
+            }
+        }
+
+        if(positionNext.length !== 0) {
+            return positionNext.map((position, index)=> {
+                return <div className="board-next-position"
+                            style={{
+                                right: position.right - 2,
+                                bottom: position.bottom,
+                            }}
                             key={index}
                             onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
                         >
