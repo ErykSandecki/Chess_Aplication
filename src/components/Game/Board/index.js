@@ -139,17 +139,20 @@ export default class Board extends Component {
            return this.checkNextPositionPawn(figure, userGame);
         }
         else if(figure.nameFigure.substr(0,5) === 'tower') {
-           return this.checkNextPositionTower(figure, userGame);
+           return this.checkNextPositionVerticalAndHorizon(figure, userGame);
         }
         else if(figure.nameFigure.substr(0,5) === 'horse') {
             return this.checkNextPositionHorse(figure, userGame);
         }
         else if(figure.nameFigure.substr(0,6) === 'bishop') {
-            return this.checkNextPositionBishop(figure, userGame);
+            return this.checkNextPositionCross(figure, userGame);
+        }
+        else if(figure.nameFigure.substr(0,6) === 'hetman') {
+            return this.checkNextPositionHetman(figure, userGame);
         }
     }
 
-    checkNextPositionTower(figure, userGame) {
+    checkNextPositionVerticalAndHorizon(figure, userGame) {
         let positionNext = [];
         let diffrent = 0;
         let newLengthArray = 0;
@@ -237,21 +240,26 @@ export default class Board extends Component {
                 positionNegativeY -= 75;
             }
         }
-
-       if(positionNext.length !== 0) {
-        return positionNext.map((position, index)=> {
-            return <div className="board-next-position"
-                        style={position}
-                        key={index}
-                        onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
-                    >
-                        <div className="board-next-position-point"></div> 
-                   </div>
-                })
-        }
-        else {
-            return null;
-        }  
+       if(figure.nameFigure.substr(0, 6) !== 'hetman') {
+        if(positionNext.length !== 0) {
+            return positionNext.map((position, index)=> {
+                return <div className="board-next-position"
+                            style={position}
+                            key={index}
+                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                        >
+                            <div className="board-next-position-point"></div> 
+                       </div>
+                    })
+            }
+            else {
+                return null;
+            }  
+       } 
+       else {
+           return positionNext;
+       }
+      
     }
 
     checkNextPositionHorse(figure, userGame) {
@@ -288,7 +296,7 @@ export default class Board extends Component {
             }  
     }
 
-    checkNextPositionBishop(figure, userGame) {
+    checkNextPositionCross(figure, userGame) {
         let positionNext = [];
         let diffrent = 0;
         let newLengthArray = 0;
@@ -312,7 +320,6 @@ export default class Board extends Component {
         let checkNextPositionPositiveXPositiveY = true;
         let checkNextPositionNegativeXNegativeY = true;
         let checkNextPositionPositiveXNegativeY = true;
-        let x =1;
         while(true) {  
             if(checkNextPositionNegativeXPositiveY &&
                figure.x + positionNegativeXPositiveY.x >= 0 &&
@@ -402,19 +409,49 @@ export default class Board extends Component {
                 positionPositiveXNegativeY.x += 75;
                 positionPositiveXNegativeY.y -= 75;
             }
-            x++;
-            if(x===28) {
-                break;
-            }
         }
+        if(figure.nameFigure.substr(0,6) !== 'hetman' ) {
+            if(positionNext.length !== 0) {
+                return positionNext.map((position, index)=> {
+                    return <div className="board-next-position"
+                                style={{
+                                    right: position.right - 2,
+                                    bottom: position.bottom,
+                                }}
+                                key={index}
+                                onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                            >
+                                <div className="board-next-position-point"></div> 
+                           </div>
+                        })
+                }
+                else {
+                    return null;
+                }  
+        }
+        else {
+            return positionNext;
+        }
+    }
 
+    checkNextPositionHetman(figure, userGame) {
+        let moveOnCross = this.checkNextPositionCross(figure, userGame);
+        let moveVerticalAndHorizon = this.checkNextPositionVerticalAndHorizon(figure, userGame);
+        let positionNext = [...moveOnCross, ...moveVerticalAndHorizon];
+        console.log(positionNext);
         if(positionNext.length !== 0) {
             return positionNext.map((position, index)=> {
                 return <div className="board-next-position"
-                            style={{
-                                right: position.right - 2,
-                                bottom: position.bottom,
-                            }}
+                            style={position.right === 0 || position.bottom === 0 ? 
+                                 {
+                                    right: position.right - 2,
+                                    bottom: position.bottom,
+                                 }
+                                :{
+                                    right: position.right - 2,
+                                    bottom: position.bottom,
+                                 }
+                            }
                             key={index}
                             onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
                         >
@@ -425,7 +462,6 @@ export default class Board extends Component {
             else {
                 return null;
             }  
-
     }
 
     checkEnemyCordinates(x, y, userGame) {
