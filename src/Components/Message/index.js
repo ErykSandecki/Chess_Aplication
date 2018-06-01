@@ -29,6 +29,10 @@ export default class Message extends Component {
         window.addEventListener('resize', this.refreshOnResize)
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.refreshOnResize);
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if(this.state.showAddUserChat && this.state.actuallyUserChat) {
             if(window.innerWidth < 860 && this.state.actuallyUserChat.length < 2) {

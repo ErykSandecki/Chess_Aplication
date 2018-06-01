@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 
 import chessBoard from '../../../Images/chess-board-game.png';
@@ -104,6 +105,8 @@ export default class Board extends Component {
                          src={userData.pictureUrl}
                          alt={'user-picture' + index}  
                     />
+                    <p className="board-text-wait">Aktualnie wykonuje ruch:</p>
+                    <p className="board-text-wait-user">{userData.name + ' ' + userData.surname}</p>
                </div>
     }
 
@@ -134,6 +137,224 @@ export default class Board extends Component {
     renderNewPossiblePosition(figure, userGame) {
         if(figure.nameFigure.substr(0,4) === 'pawn') {
            return this.checkNextPositionPawn(figure, userGame);
+        }
+        else if(figure.nameFigure.substr(0,5) === 'tower') {
+           return this.checkNextPositionTower(figure, userGame);
+        }
+        else if(figure.nameFigure.substr(0,5) === 'horse') {
+            return this.checkNextPositionHorse(figure, userGame);
+        }
+
+    }
+
+    checkNextPositionTower(figure, userGame) {
+        let positionNext = [];
+        let diffrent = 0;
+        let newLengthArray = 0;
+        let positionPositiveX = 75;
+        let positionPositiveY = 75;
+        let positionNegativeX = -75;
+        let positionNegativeY = -75;
+        let checkNextPositionPositiveY = true;
+        let checkNextPositionNegativeY = true;
+        let checkNextPositionPositiveX = true;
+        let checkNextPositionNegativeX = true; 
+        while(true) {  
+            if(checkNextPositionPositiveY &&
+                figure.y + positionPositiveY <= 525 && 
+                !userGame.figures.find((figures)=>{  
+                   return figure.y + positionPositiveY === figures.y &&
+                          figure.x === figures.x;  
+               })) {
+                positionNext.push({
+                    right: 0,
+                    bottom: positionPositiveY,
+                })
+                checkNextPositionPositiveY = this.checkEnemyCordinates(figure.x, figure.y + positionPositiveY, userGame);
+            }
+            else {
+                checkNextPositionPositiveY = false;
+            }
+            if(checkNextPositionNegativeY &&
+               figure.y + positionNegativeY >= 0 &&
+               !userGame.figures.find((figures)=>{
+                    return figure.y + positionNegativeY === figures.y &&
+                           figure.x === figures.x;  
+                })) {
+                    positionNext.push({
+                    right: 0,
+                    bottom: positionNegativeY,
+                })
+                checkNextPositionNegativeY = this.checkEnemyCordinates(figure.x, figure.y + positionNegativeY, userGame);
+            }
+            else {
+                checkNextPositionNegativeY = false;
+            }
+
+            if(checkNextPositionPositiveX &&
+               figure.x + positionPositiveX <= 525 &&
+               !userGame.figures.find((figures)=>{
+                    return figure.y === figures.y &&
+                           figure.x + positionPositiveX === figures.x;  
+                })) {
+                    positionNext.push({
+                    right: positionPositiveX,
+                    bottom: 0,
+                })
+                checkNextPositionPositiveX = this.checkEnemyCordinates(figure.x + positionPositiveX, figure.y, userGame);
+            }
+
+            else {
+                checkNextPositionPositiveX = false;
+            }
+            if(checkNextPositionNegativeX &&
+               figure.x + positionNegativeX >= 0 &&
+               !userGame.figures.find((figures)=>{
+                    return figure.y === figures.y &&
+                           figure.x + positionNegativeX === figures.x;  
+                })) {
+                    positionNext.push({
+                    right: positionNegativeX,
+                    bottom: 0,
+                })
+                checkNextPositionNegativeX = this.checkEnemyCordinates(figure.x + positionNegativeX, figure.y, userGame);  
+            }
+            else {
+                checkNextPositionNegativeX = false;
+            }
+            newLengthArray = positionNext.length;
+            
+            if(newLengthArray === diffrent) {
+                break;
+            }
+            else {
+                diffrent = newLengthArray;
+                positionPositiveX += 75;
+                positionPositiveY += 75;
+                positionNegativeX -= 75;
+                positionNegativeY -= 75;
+            }
+        }
+
+       if(positionNext.length !== 0) {
+        return positionNext.map((position, index)=> {
+            return <div className="board-next-position"
+                        style={position}
+                        key={index}
+                        onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                    >
+                        <div className="board-next-position-point"></div> 
+                   </div>
+                })
+        }
+        else {
+            return null;
+        }  
+    }
+
+    checkNextPositionHorse(figure, userGame) {
+        let positionNext = [];
+        POSITION_HORSE.forEach((horsePos) => {
+            if(figure.x + horsePos.x <= 525 &&
+               figure.x + horsePos.x >= 0 &&
+               figure.y + horsePos.y <= 525 &&
+               figure.y + horsePos.y >= 0 &&
+               !userGame.figures.find((figures)=>{
+                return figure.y + horsePos.y === figures.y &&
+                       figure.x + horsePos.x === figures.x;  
+                })) {
+                   positionNext.push({
+                       right: horsePos.x,
+                       bottom: horsePos.y,
+                    });
+               }
+        })
+
+        if(positionNext.length !== 0) {
+            return positionNext.map((position, index)=> {
+                return <div className="board-next-position"
+                            style={position}
+                            key={index}
+                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                        >
+                            <div className="board-next-position-point"></div> 
+                       </div>
+                    })
+            }
+            else {
+                return null;
+            }  
+
+    }
+
+    checkEnemyCordinates(x, y, userGame) {
+        if(userGame.figuresEnemy.find((figures) => {
+            return  y === figures.y && x === figures.x;  
+        })) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    setPositionFigures(figure, userGame, position) {
+        let setFigure = {
+            nameFigure: figure.nameFigure,
+            srcImage: figure.srcImage,
+            x:  figure.x + position.right,
+            y:  figure.y + position.bottom,
+            status: true,
+        }
+
+        let setFigureForUser = {
+            nameFigure: figure.nameFigure,
+            srcImage: figure.srcImage,
+            x: 525 - (figure.x + position.right),
+            y:  525 - (figure.y + position.bottom),
+            status: true,
+        }
+
+        let indexFigure = userGame.figures.findIndex((figures) => {
+            return figure.nameFigure === figures.nameFigure; 
+        })
+
+        let indexUserGameInvite = this.props.actuallyGame.gameInvite.findIndex((userSearch) => {
+            return userGame.idGame === userSearch.idGame;
+        })
+    
+        let userSet = this.props.gameData.find((user) => {
+            return user.idGame === userGame.idGame;
+        })
+
+        let indexActuallyUser = userSet.gameInvite.findIndex((userSearch) => {
+            return userSearch.idGame === this.props.actuallyGame.idGame;
+        })
+
+        let figuresDelete = userGame.figuresEnemy.find((figuresEnemy) => {
+            return figuresEnemy.x === setFigure.x && figuresEnemy.y === setFigure.y
+        })
+        
+        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figures').child(indexFigure).set(setFigure);
+        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figuresEnemy').child(indexFigure).set(setFigureForUser);
+        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('yourMove').set(false);
+        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('yourMove').set(true);
+        
+        if(figuresDelete) {
+            let indexGameData = this.props.gameData.findIndex((userSearch)=> {
+                return userGame.idGame === userSearch.idGame;
+            })
+            let thisFigureDelete = this.props.gameData[indexGameData].gameInvite[indexActuallyUser].figures.find((figures) => {
+                return figures.nameFigure === figuresDelete.nameFigure;
+            })
+            let indexthisFigureDelete = this.props.gameData[indexGameData].gameInvite[indexActuallyUser].figures.findIndex((figures)=> {
+                return figures.nameFigure === figuresDelete.nameFigure;
+            })
+            thisFigureDelete.x = 1000;
+            thisFigureDelete.y = 1000;
+            thisFigureDelete.status = false;
+            this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figures').child(indexthisFigureDelete).set(thisFigureDelete);
+            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figuresEnemy').child(indexthisFigureDelete).set(thisFigureDelete);
         }
     }
 
@@ -241,13 +462,13 @@ export default class Board extends Component {
         this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('yourMove').set(false);
         if(figure.y + position.bottom === 525) {
             this.setFigure = {
-                            setPawn,
-                            indexPawn,
-                            indexUserGameInvite,
-                            userGame,
-                            indexActuallyUser,
-                            setPawnForUser,
-                        };
+                    setPawn,
+                    indexPawn,
+                    indexUserGameInvite,
+                    userGame,
+                    indexActuallyUser,
+                    setPawnForUser,
+            };
             this.setState({windowSetFigure: true});                    
         }
         else {
@@ -420,3 +641,38 @@ const NUMBER_SCALE = [
     1, 2, 3, 4, 5, 6, 7, 8
 ]
 
+const POSITION_HORSE = [
+    {
+        x: -150,
+        y: 75,
+    },
+    {
+        x: -150,
+        y: -75,
+    },
+    {
+        x: 150,
+        y: 75,
+    },
+    {
+        x: 150,
+        y: -75,
+    },
+    {
+        x: -75,
+        y: 150,
+    },
+    {
+        x: 75,
+        y: 150,
+    },
+    {
+        x: -75,
+        y: -150,
+    },
+    {
+        x: 75,
+        y: -150,
+    },
+    
+]

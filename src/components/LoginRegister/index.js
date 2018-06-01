@@ -100,6 +100,7 @@ export default class LoginRegister extends Component {
                                     gameUser.statusGame = 'offline';
                                     this.props.databaseGame.child(gameUser.idGame).set(gameUser); 
                                 }
+                                this.props.setActullayGame(gameUser);
                             }               
                             else {
                                 this.setState({
@@ -124,8 +125,8 @@ export default class LoginRegister extends Component {
         }    
     }
 
-    setAfterLogin(user) {
-        this.props.setActullayUser(user);
+    setAfterLogin(actuallyUser) {
+        this.props.setActullayUser(actuallyUser);
         this.props.setStatusLoginUser(true);
         this.resetSectionRegisterLogin();
         this.props.setSectionRegisterLogin(false, false, false);

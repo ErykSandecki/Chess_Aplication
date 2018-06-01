@@ -131,10 +131,10 @@
 
   .board-check-your-move {
     position: absolute;
-    width: 100px;
-    height: 100px;
-    top: -100px;
-    left: 250px;
+    width: 400px;
+    height: 90px;
+    top: -95px;
+    left: 100px;
     text-align: center;
     background-color: rgb(169, 169, 169);
     border-radius: 10px;
@@ -147,7 +147,7 @@
     width: 80px;
     height: 80px;
     margin-left: 11.25px;
-    margin-top: 11.25px;
+    margin-top: 5px;
     animation: spin 1s linear infinite;
   }
 
@@ -156,7 +156,7 @@
     width: 50px;
     border-radius: 50%;
     position: absolute;
-    top: 25px;
+    top: 20px;
     left: 25px;
   }
 
@@ -221,5 +221,21 @@
   .board-window-figure:hover {
     cursor: pointer;
     filter: brightness(100%);
+  }
+
+  .board-text-wait {
+    position: absolute;
+    top: 10px;
+    left: 130px;
+    font-size: 20px;
+    color: white;
+    font-weight: 600;
+  }
+
+  .board-text-wait-user {
+    position: absolute;
+    top: 40px;
+    left: 130px;
+    font-size: 20px;
   }
  

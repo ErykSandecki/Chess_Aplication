@@ -2,8 +2,10 @@
   "name": "chess-book",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://ErykSandecki.github.io/Chess_Aplication/",
   "dependencies": {
     "firebase": "^4.13.1",
+    "gh-pages": "^1.2.0",
     "npm": "^6.0.1",
     "react": "^16.3.2",
     "react-addons-css-transition-group": "^15.6.2",
@@ -18,6 +20,8 @@
     "three": "^0.92.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

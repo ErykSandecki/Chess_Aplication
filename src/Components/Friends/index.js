@@ -300,8 +300,8 @@ export default class Friends extends Component {
     changeDataBase(actuallyUser, user) {
         let refYourUser = this.props.databaseUsers.child(actuallyUser.id).child('friends');
         let refFriend = this.props.databaseUsers.child(user.id).child('friends');
-        refYourUser.set(actuallyUser.friends);
         refFriend.set(user.friends);
+        refYourUser.set(actuallyUser.friends);
     }
 
     checkThatIsFriend(user, checkNumberFilter) {

@@ -103,7 +103,9 @@ class App extends Component {
         setTimeout(() => {
           this.state.databaseUsers.child(this.state.actuallyUser.id).child('checkStatus').set(false);
           this.state.databaseUsers.child(this.state.actuallyUser.id).child('status').set('offline');
-          this.state.databaseGame.child(this.state.actuallyGame.idGame).child('statusGame').set('offline');
+          if(this.state.actuallyGame){
+            this.state.databaseGame.child(this.state.actuallyGame.idGame).child('statusGame').set('offline');
+          }
           this.setState({
             visibleFriends: false,
             visibleGame: false,
@@ -223,7 +225,8 @@ class App extends Component {
                 actuallyUser = {this.actuallyUser}
                 refreshStatus = {this.refreshStatus}
                 gameData = {this.state.gameData}
-                databaseGame = {this.state.databaseGame}/>
+                databaseGame = {this.state.databaseGame}
+                setActullayGame = {this.setActullayGame}/>
               <MenuLeftDrop
                 refreshStatus = {this.refreshStatus}
                 visibleMenuDropLeft = {this.state.visibleApp}
