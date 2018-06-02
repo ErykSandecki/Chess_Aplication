@@ -16,17 +16,23 @@ export default class Board extends Component {
         this.state = {
             actuallyClassFigure: '',
             windowSetFigure: false,
+            endangeredKing: false,
         }
         this.setFigure = null;
+        this.collisionEnemyWithKin = null;
 
         this.chooseFigure = this.chooseFigure.bind(this);
         this.setPositionFigurePawn = this.setPositionFigurePawn.bind(this);
         this.setFigureActually = this.setFigureActually.bind(this);
+        this.setPositionFigures = this.setPositionFigures.bind(this);
     }
 
     componentDidUpdate() {
         if(!this.props.clickFigure && this.state.actuallyClassFigure !== '') {
             this.setState({actuallyClassFigure: ''}); 
+        }
+        if(!this.state.endangeredKing) {
+            this.checkStatusKing();
         }
     }
 
@@ -80,12 +86,22 @@ export default class Board extends Component {
                        alt={'figure' + index}
                   /> 
                   {
-                    classChoose === classActuallyChoose ?
-                    <React.Fragment>
-                        <div className="spinner-figure"></div>
-                        {this.renderNewPossiblePosition(figure, userGame)}
-                    </React.Fragment>
-                    :null
+                    classChoose === classActuallyChoose || figure.nameFigure.substr(0,4) === 'king' ?
+                        this.state.endangeredKing && figure.nameFigure.substr(0,4) === 'king' && enemy === '' ?
+                            <React.Fragment>
+                                <div className="spinner-figure-dangerous"></div>
+                                {classChoose === classActuallyChoose ?
+                                    this.renderNewPossiblePosition(figure, userGame)
+                                    :null
+                                }
+                            </React.Fragment>
+                        :classChoose === classActuallyChoose ?
+                                <React.Fragment>
+                                    <div className="spinner-figure"></div>
+                                    {this.renderNewPossiblePosition(figure, userGame)}
+                                </React.Fragment>
+                                :null
+                            :null
                   }   
                </div>
     }
@@ -111,27 +127,29 @@ export default class Board extends Component {
     }
 
     chooseFigure(e, userGame) {
-        if(!userGame.yourMove) {
-            return;
-        }
-        let classFigureName;
-        if(e.target.className === 'board-figure-image' || e.target.className === 'spinner-figure') {
-            classFigureName = e.target.parentNode.className;
-        }
-        else {
-            classFigureName = e.target.className;
-        }
-        
-        if(classFigureName.substr(-5) === 'enemy') {
-            return;
-        }
-        if(classFigureName === this.state.actuallyClassFigure) {
-            this.props.setClickFigure(false);
-        }
-        else {
-            this.props.setClickFigure(true);
-            this.setState({actuallyClassFigure: classFigureName})
-        }
+       
+            if(!userGame.yourMove) {
+                return;
+            }
+            let classFigureName;
+            if(e.target.className === 'board-figure-image' || e.target.className === 'spinner-figure' || e.target.className === 'spinner-figure-dangerous') {
+                classFigureName = e.target.parentNode.className;
+            }
+            else {
+                classFigureName = e.target.className;
+            }
+            
+            if(classFigureName.substr(-5) === 'enemy') {
+                return;
+            }
+            if(classFigureName === this.state.actuallyClassFigure) {
+                this.props.setClickFigure(false);
+            }
+            else {
+                this.props.setClickFigure(true);
+                this.setState({actuallyClassFigure: classFigureName})
+            }
+       
     }
 
     renderNewPossiblePosition(figure, userGame) {
@@ -151,7 +169,7 @@ export default class Board extends Component {
             return this.checkNextPositionHetman(figure, userGame);
         }
         else if(figure.nameFigure.substr(0,4) === 'king') {
-            return this.checkNextPositionKing(figure, userGame);
+            return this.checkNextPositionKing(figure, userGame, 'set');
         }
     }
 
@@ -243,7 +261,7 @@ export default class Board extends Component {
                 positionNegativeY -= 75;
             }
         }
-       if(figure.nameFigure.substr(0, 6) !== 'hetman') {
+       if(figure.nameFigure.substr(0, 6) !== 'hetman' || figure.nameFigure.substr(0,4) !== 'king') {
         if(positionNext.length !== 0) {
             return positionNext.map((position, index)=> {
                 return <div className="board-next-position"
@@ -261,8 +279,7 @@ export default class Board extends Component {
        } 
        else {
            return positionNext;
-       }
-      
+       }   
     }
 
     checkNextPositionHorse(figure, userGame) {
@@ -413,7 +430,7 @@ export default class Board extends Component {
                 positionPositiveXNegativeY.y -= 75;
             }
         }
-        if(figure.nameFigure.substr(0,6) !== 'hetman' ) {
+        if(figure.nameFigure.substr(0,6) !== 'hetman' || figure.nameFigure.substr(0,4) !== 'king') {
             if(positionNext.length !== 0) {
                 return positionNext.map((position, index)=> {
                     return <div className="board-next-position"
@@ -440,7 +457,7 @@ export default class Board extends Component {
     checkNextPositionHetman(figure, userGame) {
         let moveOnCross = this.checkNextPositionCross(figure, userGame);
         let moveVerticalAndHorizon = this.checkNextPositionVerticalAndHorizon(figure, userGame);
-        let positionNext = [...moveOnCross, ...moveVerticalAndHorizon];
+        let positionNext = [...moveOnCross || [], ...moveVerticalAndHorizon || []];
         if(positionNext.length !== 0) {
             return positionNext.map((position, index)=> {
                 return <div className="board-next-position"
@@ -460,7 +477,7 @@ export default class Board extends Component {
             }  
     }
 
-    checkNextPositionKing(figure, userGame) {
+    checkNextPositionKing(figure, userGame, status) {
         let positionNext = [];
         POSITION_KING.forEach((kingPos) => {
             if(figure.x + kingPos.x <= 525 &&
@@ -477,21 +494,26 @@ export default class Board extends Component {
                    })
                }
         })
-
-        if(positionNext.length !== 0) {
-            return positionNext.map((position, index)=> {
-                return <div className="board-next-position"
-                            style={position}
-                            key={index}
-                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
-                        >
-                            <div className="board-next-position-point"></div> 
-                       </div>
-                    })
-            }
+        if(status === 'set') {
+            if(positionNext.length !== 0) {
+                return positionNext.map((position, index)=> {
+                    return <div className="board-next-position"
+                                style={position}
+                                key={index}
+                                onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                            >
+                                <div className="board-next-position-point"></div> 
+                            </div>
+                        })
+                }
             else {
-                return null;
+                    return null;
             }  
+        }
+        else {
+            return positionNext;
+        }
+        
     }
 
     checkEnemyCordinates(x, y, userGame) {
@@ -562,6 +584,13 @@ export default class Board extends Component {
             thisFigureDelete.status = false;
             this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figures').child(indexthisFigureDelete).set(thisFigureDelete);
             this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figuresEnemy').child(indexthisFigureDelete).set(thisFigureDelete);
+        }
+        if(figure.nameFigure.substr(0,4) === 'king') {
+            this.props.setClickFigure(false);
+            this.setState({
+                actuallyClassFigure: '',
+                endangeredKing: false,
+            });
         }
     }
 
@@ -719,6 +748,41 @@ export default class Board extends Component {
         this.props.databaseGame.child(this.setFigure.userGame.idGame).child('gameInvite').child(this.setFigure.indexActuallyUser).child('yourMove').set(true);
         this.setState({windowSetFigure: false})
         this.setFigure = null;
+    }
+
+    checkStatusKing() {
+        if(this.props.actuallyGame.gameInvite) {
+            let userGame = this.props.actuallyGame.gameInvite.find((user) => {
+                return user.thisGame;
+            })
+            if(userGame) {
+               let kingFigure = userGame.figures.find((figure) => {
+                   return figure.nameFigure.substr(0,4) === 'king';
+               })
+               this.checkStatusKingWithHetman(kingFigure, userGame);            
+            }
+            else {
+               return;
+            }
+        }
+    }
+
+    checkStatusKingWithHetman(position, userGame) {
+        let hetman = [];
+        userGame.figuresEnemy.filter((figure) => {
+            if(figure.nameFigure.substr(0,6) === 'hetman') {
+                hetman.push(figure);
+            }
+       })
+       console.log(hetman);
+    }
+
+    checkStatusKingWithBishop() {
+        
+    }
+
+    checkStatusKingWithHorse() {
+
     }
 
     render() {
