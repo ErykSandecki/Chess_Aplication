@@ -19,7 +19,7 @@ export default class Board extends Component {
             endangeredKing: false,
         }
         this.setFigure = null;
-        this.collisionEnemyWithKin = null;
+        this.collisionEnemyWithKing = null;
 
         this.chooseFigure = this.chooseFigure.bind(this);
         this.setPositionFigurePawn = this.setPositionFigurePawn.bind(this);
@@ -261,7 +261,7 @@ export default class Board extends Component {
                 positionNegativeY -= 75;
             }
         }
-       if(figure.nameFigure.substr(0, 6) !== 'hetman' || figure.nameFigure.substr(0,4) !== 'king') {
+       if(figure.nameFigure.substr(0, 6) !== 'hetman') {
         if(positionNext.length !== 0) {
             return positionNext.map((position, index)=> {
                 return <div className="board-next-position"
@@ -430,7 +430,7 @@ export default class Board extends Component {
                 positionPositiveXNegativeY.y -= 75;
             }
         }
-        if(figure.nameFigure.substr(0,6) !== 'hetman' || figure.nameFigure.substr(0,4) !== 'king') {
+        if(figure.nameFigure.substr(0,6) !== 'hetman') {
             if(positionNext.length !== 0) {
                 return positionNext.map((position, index)=> {
                     return <div className="board-next-position"
@@ -751,6 +751,7 @@ export default class Board extends Component {
     }
 
     checkStatusKing() {
+        this.collisionEnemyWithKing = [];
         if(this.props.actuallyGame.gameInvite) {
             let userGame = this.props.actuallyGame.gameInvite.find((user) => {
                 return user.thisGame;
@@ -759,7 +760,7 @@ export default class Board extends Component {
                let kingFigure = userGame.figures.find((figure) => {
                    return figure.nameFigure.substr(0,4) === 'king';
                })
-               this.checkStatusKingWithHetman(kingFigure, userGame);            
+               this.checkStatusKingWithFigure(kingFigure, userGame);            
             }
             else {
                return;
@@ -767,14 +768,12 @@ export default class Board extends Component {
         }
     }
 
-    checkStatusKingWithHetman(position, userGame) {
-        let hetman = [];
-        userGame.figuresEnemy.filter((figure) => {
-            if(figure.nameFigure.substr(0,6) === 'hetman') {
-                hetman.push(figure);
-            }
-       })
-       console.log(hetman);
+    checkStatusKingWithFigure(kingFigure, userGame) {
+        this.checkStatusKingWithHetman(kingFigure, userGame);
+    }
+
+    checkStatusKingWithHetman(kingFigure, userGame) {
+        this.checkStatusCross(kingFigure, userGame, 'hetman')
     }
 
     checkStatusKingWithBishop() {
@@ -784,6 +783,162 @@ export default class Board extends Component {
     checkStatusKingWithHorse() {
 
     }
+
+    checkStatusCross(kingFigure, userGame, figureEnemy) {
+        let positionNegativeXPositiveY = {
+            x: -75,
+            y: 75,
+        };
+        let positionPositiveXPositiveY = {
+            x: 75,
+            y: 75,
+        };
+        let positionNegativeXNegativeY = {
+            x: -75,
+            y: -75,
+        };
+        let positionPositiveXNegativeY = {
+            x: 75,
+            y: -75,
+        };
+        let checkNextPositionNegativeXPositiveY = true;
+        let checkNextPositionPositiveXPositiveY = true;
+        let checkNextPositionNegativeXNegativeY = true;
+        let checkNextPositionPositiveXNegativeY = true;
+        let SearchfigureEnemy;
+        while(true) {  
+            if(checkNextPositionNegativeXPositiveY &&
+               kingFigure.x + positionNegativeXPositiveY.x >= 0 &&
+               kingFigure.y + positionNegativeXPositiveY.y <= 525 &&
+               !userGame.figures.find((figures)=>{
+                return kingFigure.x + positionNegativeXPositiveY.x === figures.x &&
+                       kingFigure.y + positionNegativeXPositiveY.y === figures.y;   
+                })) {
+                    SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
+                    return kingFigure.x + positionNegativeXPositiveY.x === figureEnemy.x &&
+                           kingFigure.y + positionNegativeXPositiveY.y === figureEnemy.y   
+                    })
+                    if(SearchfigureEnemy) {
+                        if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy) {
+                            checkNextPositionNegativeXPositiveY = false;
+                        }
+                        else {
+                                this.collisionEnemyWithKing.push({
+                                    right: -75,
+                                    bottom: 75,
+                        })
+                        checkNextPositionNegativeXPositiveY = false;
+                    }
+               }     
+            }
+            else {
+                checkNextPositionNegativeXPositiveY = false;
+            }
+
+            if(checkNextPositionPositiveXPositiveY &&
+               kingFigure.x + positionPositiveXPositiveY.x <= 525 &&
+               kingFigure.y + positionPositiveXPositiveY.y <= 525 &&
+               !userGame.figures.find((figures)=>{
+                 return kingFigure.x + positionPositiveXPositiveY.x === figures.x &&
+                        kingFigure.y + positionPositiveXPositiveY.y === figures.y;   
+                 })) {
+                     SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
+                     return kingFigure.x + positionPositiveXPositiveY.x === figureEnemy.x &&
+                            kingFigure.y + positionPositiveXPositiveY.y === figureEnemy.y   
+                     })
+                     if(SearchfigureEnemy) {
+                         if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy) {
+                            checkNextPositionPositiveXPositiveY = false;
+                         }
+                         else {
+                                 this.collisionEnemyWithKing.push({
+                                     right: 75,
+                                     bottom: 75,
+                         })
+                         checkNextPositionPositiveXPositiveY = false;
+                     }
+                }     
+             }
+             else {
+                checkNextPositionPositiveXPositiveY = false;
+             }
+
+             if(checkNextPositionNegativeXNegativeY &&
+                kingFigure.x + positionNegativeXNegativeY.x >= 0 &&
+                kingFigure.y + positionNegativeXNegativeY.y >= 0 &&
+                !userGame.figures.find((figures)=>{
+                  return kingFigure.x + positionNegativeXNegativeY.x === figures.x &&
+                         kingFigure.y + positionNegativeXNegativeY.y === figures.y;   
+                  })) {
+                      SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
+                      return kingFigure.x + positionNegativeXNegativeY.x === figureEnemy.x &&
+                             kingFigure.y + positionNegativeXNegativeY.y === figureEnemy.y   
+                      })
+                      if(SearchfigureEnemy) {
+                          if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy) {
+                            checkNextPositionNegativeXNegativeY = false;
+                          }
+                          else {
+                                  this.collisionEnemyWithKing.push({
+                                      right: -75,
+                                      bottom: -75,
+                          })
+                          checkNextPositionNegativeXNegativeY = false;
+                      }
+                 }     
+              }
+            else {
+                checkNextPositionNegativeXNegativeY = false;
+            }
+
+            if(checkNextPositionPositiveXNegativeY &&
+                kingFigure.x + positionPositiveXNegativeY.x <= 525 &&
+                kingFigure.y + positionPositiveXNegativeY.y >= 0 &&
+                !userGame.figures.find((figures)=>{
+                  return kingFigure.x + positionPositiveXNegativeY.x === figures.x &&
+                         kingFigure.y + positionPositiveXNegativeY.y === figures.y;   
+                  })) {
+                      SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
+                      return kingFigure.x + positionPositiveXNegativeY.x === figureEnemy.x &&
+                             kingFigure.y + positionPositiveXNegativeY.y === figureEnemy.y   
+                      })
+                      if(SearchfigureEnemy) {
+                          if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy) {
+                            checkNextPositionPositiveXNegativeY = false;
+                          }
+                          else {
+                                  this.collisionEnemyWithKing.push({
+                                      right: -75,
+                                      bottom: -75,
+                          })
+                          checkNextPositionPositiveXNegativeY = false;
+                      }
+                 }     
+              }
+            else {
+                checkNextPositionPositiveXNegativeY = false;
+              }
+            
+            if(!checkNextPositionNegativeXPositiveY &&
+               !checkNextPositionPositiveXPositiveY &&
+               !checkNextPositionNegativeXNegativeY &&
+               !checkNextPositionPositiveXNegativeY) {
+                break;
+            }
+            else {
+                positionNegativeXPositiveY.x -= 75;
+                positionNegativeXPositiveY.y += 75;
+                positionPositiveXPositiveY.x += 75;
+                positionPositiveXPositiveY.y += 75;
+                positionNegativeXNegativeY.x -= 75;
+                positionNegativeXNegativeY.y -= 75;
+                positionPositiveXNegativeY.x += 75;
+                positionPositiveXNegativeY.y -= 75;
+            }
+        }
+        console.log(this.collisionEnemyWithKing)
+    }
+
 
     render() {
         return <div className="board">
