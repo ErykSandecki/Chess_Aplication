@@ -15,6 +15,7 @@ export default class Game extends Component {
             showExitButton: false,
             clearAnimationSetBackgroundColor: false,
             clickFigure: false,
+            enemy: false,
         }
 
         this.exitGame = this.exitGame.bind(this);
@@ -66,6 +67,8 @@ export default class Game extends Component {
 
     setClickFigure = (clickFigure) => {if(this.state.clickFigure !== clickFigure){this.setState({clickFigure})}}
 
+    setEnemy = (enemy) => {if(this.state.enemy !== enemy){this.setState({enemy})}};
+
     exitGame() {
         this.setState({clearAnimationSetBackgroundColor: true});
         setTimeout(()=>{
@@ -103,7 +106,9 @@ export default class Game extends Component {
                                 gameData = {this.props.gameData}
                                 usersData = {this.props.usersData}
                                 clickFigure = {this.state.clickFigure}
-                                setClickFigure = {this.setClickFigure}/>
+                                setClickFigure = {this.setClickFigure}
+                                enemy = {this.state.enemy}
+                                setEnemy = {this.setEnemy}/>
                             <MenuGame
                                 showComponent = {this.state.showComponent}
                                 visibleGame = {this.props.visibleGame}
@@ -114,7 +119,8 @@ export default class Game extends Component {
                                 usersData = {this.props.usersData}
                                 databaseGame = {this.props.databaseGame}
                                 clearAnimationSetBackgroundColor = {this.state.clearAnimationSetBackgroundColor}
-                                setClickFigure = {this.setClickFigure}/>
+                                setClickFigure = {this.setClickFigure}
+                                setEnemy = {this.setEnemy}/>
                         </React.Fragment>
                         :null
                     }

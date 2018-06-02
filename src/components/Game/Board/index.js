@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 import React, { Component } from 'react';
 
 import chessBoard from '../../../Images/chess-board-game.png';
@@ -20,7 +20,7 @@ export default class Board extends Component {
         }
         this.setFigure = null;
         this.collisionEnemyWithKing = null;
-
+        
         this.chooseFigure = this.chooseFigure.bind(this);
         this.setPositionFigurePawn = this.setPositionFigurePawn.bind(this);
         this.setFigureActually = this.setFigureActually.bind(this);
@@ -28,9 +28,12 @@ export default class Board extends Component {
         this.checkStatusKingWithFigure = this.checkStatusKingWithFigure.bind(this);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if(!this.props.clickFigure && this.state.actuallyClassFigure !== '') {
-            this.setState({actuallyClassFigure: ''}); 
+            this.setState({
+                actuallyClassFigure: '',
+            }); 
+            this.collisionEnemyWithKing = null;
         }
         if(!this.state.endangeredKing) {
             if(this.props.actuallyGame.gameInvite) {
@@ -43,6 +46,14 @@ export default class Board extends Component {
                     }
                 } 
             }
+        }
+        if(this.state.endangeredKing && !this.props.actuallyGame.gameInvite) {
+            this.setState({endangeredKing: false});
+        }
+        if(this.props.enemy) {
+            this.props.setEnemy(false);
+            this.setState({endangeredKing : false});
+            this.collisionEnemyWithKing = null;
         }
     }
 
@@ -178,7 +189,7 @@ export default class Board extends Component {
             return this.checkNextPositionHetman(figure, userGame);
         }
         else if(figure.nameFigure.substr(0,4) === 'king') {
-            return this.checkNextPositionKing(figure, userGame, 'set');
+            return this.checkNextPositionKing(figure, userGame);
         }
     }
 
@@ -486,7 +497,7 @@ export default class Board extends Component {
             }  
     }
 
-    checkNextPositionKing(figure, userGame, status) {
+    checkNextPositionKing(figure, userGame) {
         let positionNext = [];
         POSITION_KING.forEach((kingPos) => {
             if(figure.x + kingPos.x <= 525 &&
@@ -503,8 +514,7 @@ export default class Board extends Component {
                    })
                }
         })
-        if(status === 'set') {
-            if(positionNext.length !== 0) {
+        if(positionNext.length !== 0) {
                 return positionNext.map((position, index)=> {
                     return <div className="board-next-position"
                                 style={position}
@@ -515,14 +525,9 @@ export default class Board extends Component {
                             </div>
                         })
                 }
-            else {
-                    return null;
-            }  
-        }
         else {
-            return positionNext;
-        }
-        
+            return null;
+        }  
     }
 
     checkEnemyCordinates(x, y, userGame) {
@@ -778,24 +783,107 @@ export default class Board extends Component {
 
     checkStatusKingWithFigure(kingFigure, userGame) {
         this.checkStatusKingWithHetman(kingFigure, userGame);
+        this.checkStatusKingWithBishop(kingFigure, userGame);
+        this.checkStatusKingWithTower(kingFigure, userGame);
+        this.checkStatusKingWithPawn(kingFigure, userGame);
+        this.checkStatusKingWithHorse(kingFigure, userGame);
         if(this.collisionEnemyWithKing.length !== 0) {
             this.setState({endangeredKing: true});
         }
     }
 
     checkStatusKingWithHetman(kingFigure, userGame) {
-        this.checkStatusCross(kingFigure, userGame, 'hetman')
-    }
-
-    checkStatusKingWithBishop() {
-        
-    }
-
-    checkStatusKingWithHorse() {
+        this.checkStatusCross(kingFigure, userGame, 'hetman', 'set');
+        this.checkStatusVertcialAndHorizont(kingFigure, userGame, 'hetman', 'set');
 
     }
 
-    checkStatusCross(kingFigure, userGame, figureEnemy) {
+    checkStatusKingWithBishop(kingFigure, userGame) {
+        this.checkStatusCross(kingFigure, userGame, 'bishop', 'set');
+    }
+
+    checkStatusKingWithTower(kingFigure, userGame) {
+        this.checkStatusVertcialAndHorizont(kingFigure, userGame, 'tower', 'set');
+    }
+
+    checkStatusKingWithPawn(kingFigure, userGame) {
+        if(kingFigure.y < 525) {
+            if(kingFigure.x < 525) {
+               if(userGame.figuresEnemy.find((enemy) => {
+                    return kingFigure.x + 75 === enemy.x &&
+                           kingFigure.y + 75 ===enemy.y &&
+                           enemy.nameFigure.substr(0,4) === 'pawn' 
+               })){
+                if(this.collisionEnemyWithKing.length !== 0) {
+                    if(!this.collisionEnemyWithKing.find((position) => {
+                         return position.right === 75 &&
+                                position.bottom === 75
+                    })){
+                        this.collisionEnemyWithKing.push({
+                            right: 75,
+                            bottom: 75,
+                        })
+                    }   
+                }
+                else {
+                    this.collisionEnemyWithKing.push({
+                        right: 75,
+                        bottom: 75,
+                    })
+                }
+               }     
+            }
+            if(kingFigure.x > 0) {
+                if(userGame.figuresEnemy.find((enemy) => {
+                    return kingFigure.x - 75 === enemy.x &&
+                           kingFigure.y + 75 ===enemy.y &&
+                           enemy.nameFigure.substr(0,4) === 'pawn' 
+               })){
+                if(this.collisionEnemyWithKing.length !== 0) {
+                    if(!this.collisionEnemyWithKing.find((position) => {
+                         return position.right === -75 &&
+                                position.bottom === 75
+                    })){
+                        this.collisionEnemyWithKing.push({
+                            right: -75,
+                            bottom: 75,
+                        })
+                    }   
+                }
+                else {
+                    this.collisionEnemyWithKing.push({
+                        right: -75,
+                        bottom: 75,
+                    })
+                }
+               }  
+            }
+        }
+    }
+
+    checkStatusKingWithHorse(kingFigure, userGame) {
+        POSITION_HORSE.forEach((positionHorse) => {
+            if(kingFigure.x + positionHorse.x >= 0 &&
+               kingFigure.x + positionHorse.x <= 525 &&
+               kingFigure.y + positionHorse.y <= 525 &&
+               kingFigure.y + positionHorse.y >=0 &&
+               userGame.figuresEnemy.find((enemy) => {
+                   return kingFigure.x + positionHorse.x === enemy.x &&
+                          kingFigure.y + positionHorse.y === enemy.y &&
+                          enemy.nameFigure.substr(0, 5) === 'horse';
+               })) {
+                   this.collisionEnemyWithKing.push({
+                       right: positionHorse.x,
+                       bottom: positionHorse.y,
+                   })
+               }
+        })
+      
+    }
+
+    checkStatusCross(checkFigure, userGame, figureEnemy, status) {
+        let positionGet = [];
+
         let positionNegativeXPositiveY = {
             x: -75,
             y: 75,
@@ -819,25 +907,45 @@ export default class Board extends Component {
         let SearchfigureEnemy;
         while(true) {  
             if(checkNextPositionNegativeXPositiveY &&
-               kingFigure.x + positionNegativeXPositiveY.x >= 0 &&
-               kingFigure.y + positionNegativeXPositiveY.y <= 525 &&
+                checkFigure.x + positionNegativeXPositiveY.x >= 0 &&
+                checkFigure.y + positionNegativeXPositiveY.y <= 525 &&
                !userGame.figures.find((figures)=>{
-                return kingFigure.x + positionNegativeXPositiveY.x === figures.x &&
-                       kingFigure.y + positionNegativeXPositiveY.y === figures.y;   
+                return checkFigure.x + positionNegativeXPositiveY.x === figures.x &&
+                       checkFigure.y + positionNegativeXPositiveY.y === figures.y;   
                 })) {
                     SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
-                    return kingFigure.x + positionNegativeXPositiveY.x === figureEnemy.x &&
-                           kingFigure.y + positionNegativeXPositiveY.y === figureEnemy.y   
+                    return checkFigure.x + positionNegativeXPositiveY.x === figureEnemy.x &&
+                           checkFigure.y + positionNegativeXPositiveY.y === figureEnemy.y   
                     })
                     if(SearchfigureEnemy) {
                         if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy) {
                             checkNextPositionNegativeXPositiveY = false;
                         }
                         else {
-                                this.collisionEnemyWithKing.push({
-                                    right: -75,
-                                    bottom: 75,
-                        })
+                            if(status === 'set') {
+                                if(this.collisionEnemyWithKing.length !== 0) {
+                                    if(!this.collisionEnemyWithKing.find((position) => {
+                                         return position.right === -75 &&
+                                                position.bottom === 75
+                                    })){
+                                        this.collisionEnemyWithKing.push({
+                                            right: -75,
+                                            bottom: 75,
+                                        })
+                                    }   
+                                }
+                                else {
+                                    this.collisionEnemyWithKing.push({
+                                        right: -75,
+                                        bottom: 75,
+                                    })
+                                }
+                                
+                            }
+                            else {
+                                positionGet.push(true)
+                            }
+                                
                         checkNextPositionNegativeXPositiveY = false;
                     }
                }     
@@ -847,25 +955,43 @@ export default class Board extends Component {
             }
 
             if(checkNextPositionPositiveXPositiveY &&
-               kingFigure.x + positionPositiveXPositiveY.x <= 525 &&
-               kingFigure.y + positionPositiveXPositiveY.y <= 525 &&
+                checkFigure.x + positionPositiveXPositiveY.x <= 525 &&
+                checkFigure.y + positionPositiveXPositiveY.y <= 525 &&
                !userGame.figures.find((figures)=>{
-                 return kingFigure.x + positionPositiveXPositiveY.x === figures.x &&
-                        kingFigure.y + positionPositiveXPositiveY.y === figures.y;   
+                 return checkFigure.x + positionPositiveXPositiveY.x === figures.x &&
+                        checkFigure.y + positionPositiveXPositiveY.y === figures.y;   
                  })) {
                      SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
-                     return kingFigure.x + positionPositiveXPositiveY.x === figureEnemy.x &&
-                            kingFigure.y + positionPositiveXPositiveY.y === figureEnemy.y   
+                     return checkFigure.x + positionPositiveXPositiveY.x === figureEnemy.x &&
+                            checkFigure.y + positionPositiveXPositiveY.y === figureEnemy.y   
                      })
                      if(SearchfigureEnemy) {
                          if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy) {
                             checkNextPositionPositiveXPositiveY = false;
                          }
                          else {
-                                 this.collisionEnemyWithKing.push({
-                                     right: 75,
-                                     bottom: 75,
-                         })
+                            if(status === 'set') {
+                                if(this.collisionEnemyWithKing.length !== 0) {
+                                    if(!this.collisionEnemyWithKing.find((position) => {
+                                         return position.right === 75 &&
+                                                position.bottom === 75
+                                    })){
+                                        this.collisionEnemyWithKing.push({
+                                            right: 75,
+                                            bottom: 75,
+                                        })
+                                    }
+                                }
+                                else {
+                                    this.collisionEnemyWithKing.push({
+                                        right: 75,
+                                        bottom: 75,
+                                    })
+                                }   
+                            }
+                            else {
+                                positionGet.push(true)
+                            }
                          checkNextPositionPositiveXPositiveY = false;
                      }
                 }     
@@ -875,25 +1001,43 @@ export default class Board extends Component {
              }
 
              if(checkNextPositionNegativeXNegativeY &&
-                kingFigure.x + positionNegativeXNegativeY.x >= 0 &&
-                kingFigure.y + positionNegativeXNegativeY.y >= 0 &&
+                checkFigure.x + positionNegativeXNegativeY.x >= 0 &&
+                checkFigure.y + positionNegativeXNegativeY.y >= 0 &&
                 !userGame.figures.find((figures)=>{
-                  return kingFigure.x + positionNegativeXNegativeY.x === figures.x &&
-                         kingFigure.y + positionNegativeXNegativeY.y === figures.y;   
+                  return checkFigure.x + positionNegativeXNegativeY.x === figures.x &&
+                         checkFigure.y + positionNegativeXNegativeY.y === figures.y;   
                   })) {
                       SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
-                      return kingFigure.x + positionNegativeXNegativeY.x === figureEnemy.x &&
-                             kingFigure.y + positionNegativeXNegativeY.y === figureEnemy.y   
+                      return checkFigure.x + positionNegativeXNegativeY.x === figureEnemy.x &&
+                             checkFigure.y + positionNegativeXNegativeY.y === figureEnemy.y   
                       })
                       if(SearchfigureEnemy) {
                           if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy) {
                             checkNextPositionNegativeXNegativeY = false;
                           }
                           else {
-                                  this.collisionEnemyWithKing.push({
-                                      right: -75,
-                                      bottom: -75,
-                          })
+                                if(status === 'set') {
+                                    if(this.collisionEnemyWithKing.length !== 0) {
+                                        if(!this.collisionEnemyWithKing.find((position) => {
+                                             return position.right === -75 &&
+                                                    position.bottom === -75
+                                        })){
+                                            this.collisionEnemyWithKing.push({
+                                                right: -75,
+                                                bottom: -75,
+                                            })
+                                        }
+                                    }
+                                    else {
+                                        this.collisionEnemyWithKing.push({
+                                            right: -75,
+                                            bottom: -75,
+                                        })
+                                    }   
+                                }
+                                else {
+                                    positionGet.push(true)
+                                }
                           checkNextPositionNegativeXNegativeY = false;
                       }
                  }     
@@ -903,25 +1047,43 @@ export default class Board extends Component {
             }
 
             if(checkNextPositionPositiveXNegativeY &&
-                kingFigure.x + positionPositiveXNegativeY.x <= 525 &&
-                kingFigure.y + positionPositiveXNegativeY.y >= 0 &&
+                checkFigure.x + positionPositiveXNegativeY.x <= 525 &&
+                checkFigure.y + positionPositiveXNegativeY.y >= 0 &&
                 !userGame.figures.find((figures)=>{
-                  return kingFigure.x + positionPositiveXNegativeY.x === figures.x &&
-                         kingFigure.y + positionPositiveXNegativeY.y === figures.y;   
+                  return checkFigure.x + positionPositiveXNegativeY.x === figures.x &&
+                         checkFigure.y + positionPositiveXNegativeY.y === figures.y;   
                   })) {
                       SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
-                      return kingFigure.x + positionPositiveXNegativeY.x === figureEnemy.x &&
-                             kingFigure.y + positionPositiveXNegativeY.y === figureEnemy.y   
+                      return checkFigure.x + positionPositiveXNegativeY.x === figureEnemy.x &&
+                             checkFigure.y + positionPositiveXNegativeY.y === figureEnemy.y   
                       })
                       if(SearchfigureEnemy) {
                           if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy) {
                             checkNextPositionPositiveXNegativeY = false;
                           }
                           else {
-                                  this.collisionEnemyWithKing.push({
-                                      right: -75,
-                                      bottom: -75,
-                          })
+                                if(status === 'set') {
+                                    if(this.collisionEnemyWithKing.length !== 0) {
+                                        if(!this.collisionEnemyWithKing.find((position) => {
+                                             return position.right === 75 &&
+                                                    position.bottom === -75
+                                        })){
+                                            this.collisionEnemyWithKing.push({
+                                                right: 75,
+                                                bottom: -75,
+                                            })
+                                        }
+                                    }
+                                    else {
+                                        this.collisionEnemyWithKing.push({
+                                            right: 75,
+                                            bottom: -75,
+                                        })
+                                    }   
+                                }   
+                                else {
+                                    positionGet.push(true)
+                                }
                           checkNextPositionPositiveXNegativeY = false;
                       }
                  }     
@@ -948,6 +1110,219 @@ export default class Board extends Component {
             }
         }
         
+    }
+
+    checkStatusVertcialAndHorizont(checkFigure, userGame, figureEnemy, status) {
+        let positionGet = [];
+
+        let positionPositiveX = 75;
+        let positionPositiveY = 75;
+        let positionNegativeX = -75;
+        let positionNegativeY = -75;
+        let checkNextPositionPositiveY = true;
+        let checkNextPositionNegativeY = true;
+        let checkNextPositionPositiveX = true;
+        let checkNextPositionNegativeX = true;
+        let SearchfigureEnemy;
+        while(true) { 
+            if(checkNextPositionPositiveY &&
+               checkFigure.y + positionPositiveY <= 525 &&
+               !userGame.figures.find((figures)=>{
+                    return checkFigure.x === figures.x &&
+                           checkFigure.y + positionPositiveY === figures.y;   
+                })) {
+                    SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
+                        return checkFigure.x === figureEnemy.x &&
+                               checkFigure.y + positionPositiveY === figureEnemy.y   
+                    })
+                    if(SearchfigureEnemy) {
+                        if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy &&
+                           SearchfigureEnemy.nameFigure.substr(0,5) !== figureEnemy) {
+                                checkNextPositionPositiveY = false;
+                        }
+                        else {
+                                if(status === 'set') {
+                                    if(this.collisionEnemyWithKing.length !== 0) {
+                                        if(!this.collisionEnemyWithKing.find((position) => {
+                                             return position.right === 0 &&
+                                                    position.bottom === 75
+                                        })){
+                                            this.collisionEnemyWithKing.push({
+                                                right: 0,
+                                                bottom: 75,
+                                            })
+                                        }
+                                    }
+                                    else {
+                                        this.collisionEnemyWithKing.push({
+                                            right: 0,
+                                            bottom: 75,
+                                        })
+                                    }   
+                                }
+                                else {
+                                    positionGet.push(true);
+                                }
+                               
+                        checkNextPositionPositiveY = false;
+                        }
+                    }
+            }
+            else {
+                checkNextPositionPositiveY = false;
+            }
+
+            if(checkNextPositionNegativeY &&
+                checkFigure.y + positionNegativeY >= 0 &&
+                !userGame.figures.find((figures)=>{
+                     return checkFigure.x === figures.x &&
+                            checkFigure.y + positionNegativeY === figures.y;   
+                 })) {
+                     SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
+                         return checkFigure.x === figureEnemy.x &&
+                                checkFigure.y + positionNegativeY === figureEnemy.y   
+                     })
+                     if(SearchfigureEnemy) {
+                         if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy &&
+                            SearchfigureEnemy.nameFigure.substr(0,5) !== figureEnemy) {
+                                checkNextPositionNegativeY = false;
+                         }
+                         else {
+                                 if(status === 'set') {
+                                    if(this.collisionEnemyWithKing.length !== 0) {
+                                        if(!this.collisionEnemyWithKing.find((position) => {
+                                             return position.right === 0 &&
+                                                    position.bottom === -75
+                                        })){
+                                            this.collisionEnemyWithKing.push({
+                                                right: 0,
+                                                bottom: -75,
+                                            })
+                                        }
+                                    }
+                                    else {
+                                        this.collisionEnemyWithKing.push({
+                                            right: 0,
+                                            bottom: -75,
+                                        })
+                                    }   
+                                }
+                                else {
+                                    positionGet.push(true);
+                                }
+                         checkNextPositionNegativeY = false;
+                         }
+                     }
+             }
+             else {
+                checkNextPositionNegativeY = false;
+             }
+
+             if(checkNextPositionPositiveX &&
+                checkFigure.x + positionPositiveX <= 525 &&
+                !userGame.figures.find((figures)=>{
+                     return checkFigure.x + positionPositiveX === figures.x &&
+                            checkFigure.y === figures.y;   
+                 })) {
+                     SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
+                         return checkFigure.x + positionPositiveX === figureEnemy.x &&
+                                checkFigure.y === figureEnemy.y   
+                     })
+                     if(SearchfigureEnemy) {
+                         if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy &&
+                            SearchfigureEnemy.nameFigure.substr(0,5) !== figureEnemy) {
+                                checkNextPositionPositiveX = false;
+                         }
+                         else {
+                            if(status === 'set') {
+                                if(this.collisionEnemyWithKing.length !== 0) {
+                                    if(!this.collisionEnemyWithKing.find((position) => {
+                                         return position.right === 75 &&
+                                                position.bottom === 0
+                                    })){
+                                        this.collisionEnemyWithKing.push({
+                                            right: 75,
+                                            bottom: 0,
+                                        })
+                                    }
+                                }
+                                else {
+                                    this.collisionEnemyWithKing.push({
+                                        right: 75,
+                                        bottom: 0,
+                                    })
+                                }   
+                            }
+                            else {
+                                positionGet.push(true);
+                            }
+                         checkNextPositionPositiveX = false;
+                         }
+                     }
+             }
+             else {
+                checkNextPositionPositiveX = false;
+             }
+
+             if(checkNextPositionNegativeX &&
+                checkFigure.x + positionNegativeX >= 0 &&
+                !userGame.figures.find((figures)=>{
+                     return checkFigure.x + positionNegativeX === figures.x &&
+                            checkFigure.y === figures.y;   
+                 })) {
+                     SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
+                         return checkFigure.x + positionNegativeX === figureEnemy.x &&
+                                checkFigure.y === figureEnemy.y   
+                     })
+                     if(SearchfigureEnemy) {
+                         if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy &&
+                            SearchfigureEnemy.nameFigure.substr(0,5) !== figureEnemy) {
+                                checkNextPositionNegativeX = false;
+                         }
+                         else {
+                            if(status === 'set') {
+                                if(this.collisionEnemyWithKing.length !== 0) {
+                                    if(!this.collisionEnemyWithKing.find((position) => {
+                                         return position.right === -75 &&
+                                                position.bottom === 0
+                                    })){
+                                        this.collisionEnemyWithKing.push({
+                                            right: -75,
+                                            bottom: 0,
+                                        })
+                                    }
+                                }
+                                else {
+                                    this.collisionEnemyWithKing.push({
+                                        right: -75,
+                                        bottom: 0,
+                                    })
+                                }   
+                            }
+                            else {
+                                positionGet.push(true);
+                            }
+                         checkNextPositionNegativeX = false;
+                         }
+                     }
+             }
+             else {
+                checkNextPositionNegativeX = false;
+             }
+
+            if(!checkNextPositionPositiveY &&
+               !checkNextPositionPositiveY &&
+               !checkNextPositionPositiveX &&
+               !checkNextPositionNegativeX) {
+                break;
+            }
+            else {
+                positionPositiveX += 75;
+                positionPositiveY += 75;
+                positionNegativeX -= 75;
+                positionNegativeY -= 75;
+            }
+        }
     }
 
     render() {

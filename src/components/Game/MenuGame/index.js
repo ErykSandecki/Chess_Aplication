@@ -528,6 +528,7 @@ export default class MenuGame extends Component {
             return user.idGame === userGame.idGame;
         })
         this.props.setClickFigure(false);
+        this.props.setEnemy(true);
         this.props.databaseGame.child(actuallyGame.idGame).child('gameInvite').child(indexUnActiveGame).child('thisGame').set(true);
         this.props.databaseGame.child(actuallyGame.idGame).child('gameInvite').child(indexActiveGame).child('thisGame').set(false);
     }
