@@ -25,6 +25,7 @@ export default class Board extends Component {
         this.setPositionFigurePawn = this.setPositionFigurePawn.bind(this);
         this.setFigureActually = this.setFigureActually.bind(this);
         this.setPositionFigures = this.setPositionFigures.bind(this);
+        this.checkStatusKingWithFigure = this.checkStatusKingWithFigure.bind(this);
     }
 
     componentDidUpdate() {
@@ -32,7 +33,16 @@ export default class Board extends Component {
             this.setState({actuallyClassFigure: ''}); 
         }
         if(!this.state.endangeredKing) {
-            this.checkStatusKing();
+            if(this.props.actuallyGame.gameInvite) {
+                let checkMove = this.props.actuallyGame.gameInvite.find((gameUser) => {
+                    return gameUser.thisGame;
+                })
+                if(checkMove) {
+                    if(checkMove.yourMove) {
+                        this.checkStatusKing();
+                    }
+                } 
+            }
         }
     }
 
@@ -127,7 +137,6 @@ export default class Board extends Component {
     }
 
     chooseFigure(e, userGame) {
-       
             if(!userGame.yourMove) {
                 return;
             }
@@ -585,12 +594,8 @@ export default class Board extends Component {
             this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figures').child(indexthisFigureDelete).set(thisFigureDelete);
             this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figuresEnemy').child(indexthisFigureDelete).set(thisFigureDelete);
         }
-        if(figure.nameFigure.substr(0,4) === 'king') {
-            this.props.setClickFigure(false);
-            this.setState({
-                actuallyClassFigure: '',
-                endangeredKing: false,
-            });
+        if(this.state.endangeredKing) {
+            this.setState({endangeredKing: false});
         }
     }
 
@@ -726,6 +731,10 @@ export default class Board extends Component {
             this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figures').child(indexthisFigureDelete).set(thisFigureDelete);
             this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figuresEnemy').child(indexthisFigureDelete).set(thisFigureDelete);
         }
+        if(this.state.endangeredKing) {
+            this.setState({endangeredKing: false});
+        }
+        
     }
 
     setFigureActually(newFigure) {
@@ -740,7 +749,6 @@ export default class Board extends Component {
             this.setFigure.setPawn.srcImage = 'chess-' + newFigure +  this.setFigure.setPawn.srcImage.substr(-6);
             this.setFigure.setPawnForUser.nameFigure =  this.setFigure.setPawn.nameFigure;
             this.setFigure.setPawnForUser.srcImage = this.setFigure.setPawn.srcImage;
-
         }
 
         this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(this.setFigure.indexUserGameInvite).child('figures').child(this.setFigure.indexPawn).set(this.setFigure.setPawn);
@@ -770,6 +778,9 @@ export default class Board extends Component {
 
     checkStatusKingWithFigure(kingFigure, userGame) {
         this.checkStatusKingWithHetman(kingFigure, userGame);
+        if(this.collisionEnemyWithKing.length !== 0) {
+            this.setState({endangeredKing: true});
+        }
     }
 
     checkStatusKingWithHetman(kingFigure, userGame) {
@@ -936,9 +947,8 @@ export default class Board extends Component {
                 positionPositiveXNegativeY.y -= 75;
             }
         }
-        console.log(this.collisionEnemyWithKing)
+        
     }
-
 
     render() {
         return <div className="board">
