@@ -150,6 +150,9 @@ export default class Board extends Component {
         else if(figure.nameFigure.substr(0,6) === 'hetman') {
             return this.checkNextPositionHetman(figure, userGame);
         }
+        else if(figure.nameFigure.substr(0,4) === 'king') {
+            return this.checkNextPositionKing(figure, userGame);
+        }
     }
 
     checkNextPositionVerticalAndHorizon(figure, userGame) {
@@ -438,20 +441,47 @@ export default class Board extends Component {
         let moveOnCross = this.checkNextPositionCross(figure, userGame);
         let moveVerticalAndHorizon = this.checkNextPositionVerticalAndHorizon(figure, userGame);
         let positionNext = [...moveOnCross, ...moveVerticalAndHorizon];
-        console.log(positionNext);
         if(positionNext.length !== 0) {
             return positionNext.map((position, index)=> {
                 return <div className="board-next-position"
-                            style={position.right === 0 || position.bottom === 0 ? 
-                                 {
+                            style={{
                                     right: position.right - 2,
                                     bottom: position.bottom,
-                                 }
-                                :{
-                                    right: position.right - 2,
-                                    bottom: position.bottom,
-                                 }
-                            }
+                                 }}
+                            key={index}
+                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                        >
+                            <div className="board-next-position-point"></div> 
+                       </div>
+                    })
+            }
+            else {
+                return null;
+            }  
+    }
+
+    checkNextPositionKing(figure, userGame) {
+        let positionNext = [];
+        POSITION_KING.forEach((kingPos) => {
+            if(figure.x + kingPos.x <= 525 &&
+               figure.x + kingPos.x >= 0 &&
+               figure.y + kingPos.y <= 525 &&
+               figure.y + kingPos.y >= 0 &&
+               !userGame.figures.find((figures)=>{
+                return figure.x + kingPos.x === figures.x &&
+                       figure.y + kingPos.y === figures.y;  
+                })) {
+                   positionNext.push({
+                       right: kingPos.x,
+                       bottom: kingPos.y,
+                   })
+               }
+        })
+
+        if(positionNext.length !== 0) {
+            return positionNext.map((position, index)=> {
+                return <div className="board-next-position"
+                            style={position}
                             key={index}
                             onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
                         >
@@ -852,4 +882,39 @@ const POSITION_HORSE = [
         y: -150,
     },
     
+]
+
+const POSITION_KING = [
+    {
+        x: 0,
+        y: 75,
+    },
+    {
+        x: 75,
+        y: 75,
+    },
+    {
+        x: -75,
+        y: 75,
+    },
+    {
+        x: -75,
+        y: 0,
+    },
+    {
+        x: 75,
+        y: 0,
+    },
+    {
+        x: 0,
+        y: -75,
+    },
+    {
+        x: 75,
+        y: -75,
+    },
+    {
+        x: -75,
+        y: -75,
+    },
 ]
