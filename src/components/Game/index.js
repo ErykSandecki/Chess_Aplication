@@ -108,7 +108,8 @@ export default class Game extends Component {
                                 clickFigure = {this.state.clickFigure}
                                 setClickFigure = {this.setClickFigure}
                                 enemy = {this.state.enemy}
-                                setEnemy = {this.setEnemy}/>
+                                setEnemy = {this.setEnemy}
+                                actuallyUser = {this.props.actuallyUser}/>
                             <MenuGame
                                 showComponent = {this.state.showComponent}
                                 visibleGame = {this.props.visibleGame}

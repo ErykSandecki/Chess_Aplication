@@ -1,13 +1,13 @@
+import './style.css';
 
 import React, { Component } from 'react';
 
 import chessBoard from '../../../Images/chess-board-game.png';
+import bishop from '../../../Images/chess-figures/chess-bishop-white.png';
 import hetman from '../../../Images/chess-figures/chess-hetman-white.png';
 import horse from '../../../Images/chess-figures/chess-horse-white.png';
 import tower from '../../../Images/chess-figures/chess-tower-white.png';
-import bishop from '../../../Images/chess-figures/chess-bishop-white.png';
 
-import './style.css';
 
 export default class Board extends Component {
 
@@ -17,6 +17,7 @@ export default class Board extends Component {
             actuallyClassFigure: '',
             windowSetFigure: false,
             endangeredKing: false,
+            statusGame: true,
         }
         this.setFigure = null;
         this.collisionEnemyWithKing = null;
@@ -27,6 +28,7 @@ export default class Board extends Component {
         this.setPositionFigures = this.setPositionFigures.bind(this);
         this.checkStatusKingWithFigure = this.checkStatusKingWithFigure.bind(this);
         this.castling = this.castling.bind(this);
+        this.endGame = this.endGame.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -58,6 +60,55 @@ export default class Board extends Component {
             this.setState({endangeredKing: false});
             this.collisionEnemyWithKing = null;
         }
+        if(this.props.actuallyGame.gameInvite) {
+            let thisGame = this.props.actuallyGame.gameInvite.find((game)=> {
+                return game.thisGame;
+            })
+            if(thisGame) {
+                if(thisGame.figures.find((figure)=> {
+                    return figure.nameFigure.substr(0,4) === 'king' &&
+                           !figure.status;
+                })){
+                    if(!this.state.statusGame) {
+                        this.setState({
+                            statusGame: true,
+                        })
+                    }  
+                }
+                else if(thisGame.figuresEnemy.find((enemy)=>{
+                    return enemy.nameFigure.substr(0,4) === 'king' &&
+                           !enemy.status;
+                })){
+                    if(!this.state.statusGame) {
+                        this.setState({
+                            statusGame: true,
+                        })
+                    } 
+                }
+                else {
+                    if(this.state.statusGame) {
+                        this.setState({
+                            statusGame: false,
+                        })
+                    }
+                }
+            }
+            else {
+                if(this.state.statusGame) {
+                    this.setState({
+                        statusGame: false,
+                    })
+                }
+            }
+        }
+        else {
+            if(this.state.statusGame) {
+                this.setState({
+                    statusGame: false,
+                })
+            }
+        }
+
         if(this.props.enemy) {
             this.props.setEnemy(false);
             this.setState({endangeredKing : false});
@@ -1571,6 +1622,87 @@ export default class Board extends Component {
         }
     }
 
+    endGame() {
+        let textEndWin;
+        let textEndLost;
+        let text;
+        if(this.props.actuallyGame.gameInvite) {
+            let checkKing = this.props.actuallyGame.gameInvite.find((game) =>{
+                return game.thisGame;
+            })
+            if(checkKing) {
+                textEndLost = checkKing.figures.find((figure) => {
+                    return figure.nameFigure.substr(0,4) === 'king' &&
+                    !figure.status;    
+                 })
+                textEndWin = checkKing.figuresEnemy.find((figure) => {
+                       return figure.nameFigure.substr(0,4) === 'king' &&
+                        !figure.status;    
+                     })
+                if(textEndWin) {
+                    text = "Wygrałes Gratulacje Zagraj Ponownie!"
+                } 
+                if(textEndLost) {
+                    text = "Przegrałeś Zagraj Ponownie!"
+                }
+                 
+                return  <div className="board-end-game">
+                            <img className="board-picture-profile" src={this.props.actuallyUser.pictureUrl}/>
+                            <div className="board-text-game-end">
+                                {text}
+                            </div>
+                            {!checkKing.endGame ?
+                                <button className="board-exit-game-actually"
+                                    onClick={()=>{this.endingGame(checkKing)}}
+                                >
+                                    Zakończ Grę
+                                </button>
+                                :null
+                            }
+                        </div>
+            }
+            else {
+                return null;
+            }
+             
+        } 
+        else {
+            return null;
+        }
+    }
+
+    endingGame(userGame) {
+        userGame.endGame = true;
+        let indexUserGame = this.props.actuallyGame.gameInvite.findIndex((gameUser) =>{
+            return gameUser.idGame === userGame.idGame
+        })
+        let enemy = this.props.gameData.find((user) => {
+            return userGame.idGame === user.idGame;
+        })
+        enemy = enemy.gameInvite.find((user) => {
+            return user.idGame === this.props.actuallyGame.idGame;
+        })
+        if(enemy.endGame) {
+            let newInviteGame = [];
+            newInviteGame = this.props.actuallyGame.gameInvite.filter((game)=>{
+                return userGame.idGame !== game.idGame
+            })
+            let newInviteGameUser = [];
+            let userDeleteInvite = this.props.gameData.find((user) => {
+                return userGame.idGame === user.idGame;
+            });
+            newInviteGameUser = userDeleteInvite.gameInvite.filter((user) =>{
+                return user.idGame !== this.props.actuallyGame.idGame;
+            })
+            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').set(newInviteGame);
+            this.props.databaseGame.child(userGame.idGame).child('gameInvite').set(newInviteGameUser);
+        }
+        else {
+            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGame).child('endGame').set(true);
+        }
+      
+    }
+
     render() {
         return <div className="board">
                     {this.props.showComponent && this.props.visibleGame ?
@@ -1693,6 +1825,12 @@ export default class Board extends Component {
                                         })
                                         :null
                                        }
+                                       
+                                        {this.state.statusGame ?
+                                            this.endGame()
+                                            :null
+                                        }
+                                       
                                     </React.Fragment>
                                     :this.WhenCheckDecisionPlayers()
                             }

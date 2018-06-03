@@ -547,6 +547,7 @@ export default class MenuGame extends Component {
             statusGame: false,
             colorFigure: 'check',
             thisGame: false,
+            endGame: false,
         }
         return newDataForFriends;
     }
