@@ -210,7 +210,8 @@ export default class LoginRegister extends Component {
             city: this.state.valueStep3.valueFisrt,
             region: this.state.valueStep3.valueSecond,
             phone: this.state.valueStep3.valueThird,
-            ranking: 0,
+            ranking: 1,
+            exp: 0,
             pictureUrl: '',
             status: 'online',
         }

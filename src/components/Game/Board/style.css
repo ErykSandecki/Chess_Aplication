@@ -201,6 +201,18 @@
     z-index: 2;
   }
 
+  .spinner-figure-dangerous {
+        width: 75px;
+        height: 75px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background-color: rgb(220, 53, 69);
+        border-radius: 100%;  
+        -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+        animation: sk-scaleout 1.0s infinite ease-in-out;
+  }
+
   .board-next-position-point-alert {
     width: 30px;
     position: relative;

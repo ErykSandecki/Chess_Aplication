@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 import React, { Component } from 'react';
 
 import chessBoard from '../../../Images/chess-board-game.png';
@@ -26,6 +26,7 @@ export default class Board extends Component {
         this.setFigureActually = this.setFigureActually.bind(this);
         this.setPositionFigures = this.setPositionFigures.bind(this);
         this.checkStatusKingWithFigure = this.checkStatusKingWithFigure.bind(this);
+        this.castling = this.castling.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -47,8 +48,15 @@ export default class Board extends Component {
                 } 
             }
         }
+        if(!this.props.actuallyGame.gameInvite && this.state.actuallyClassFigure !== '') {
+            this.setState({
+                actuallyClassFigure: '',
+            })
+            this.props.setClickFigure(false);
+        }
         if(this.state.endangeredKing && !this.props.actuallyGame.gameInvite) {
             this.setState({endangeredKing: false});
+            this.collisionEnemyWithKing = null;
         }
         if(this.props.enemy) {
             this.props.setEnemy(false);
@@ -148,20 +156,102 @@ export default class Board extends Component {
     }
 
     chooseFigure(e, userGame) {
+            let classFigureName;
+
             if(!userGame.yourMove) {
                 return;
             }
-            let classFigureName;
-            if(e.target.className === 'board-figure-image' || e.target.className === 'spinner-figure' || e.target.className === 'spinner-figure-dangerous') {
-                classFigureName = e.target.parentNode.className;
+            
+            if(e.target.className === 'board-figure-image' || 
+               e.target.className === 'spinner-figure' || 
+               e.target.className === 'spinner-figure-dangerous') {
+                    classFigureName = e.target.parentNode.className;
             }
             else {
                 classFigureName = e.target.className;
             }
-            
+
             if(classFigureName.substr(-5) === 'enemy') {
                 return;
             }
+            if(!this.state.endangeredKing) {
+                if(userGame.colorFigure === 'white' && 
+                   classFigureName === 'board-figures tower_1' &&
+                   this.state.actuallyClassFigure === 'board-figures king') {
+                 
+                 let king = userGame.figures.find((figure) => {
+                     return figure.nameFigure.substr(0,4) === 'king';
+                 });
+                 
+                 let tower_1 = userGame.figures.find((figure) => {
+                     return figure.nameFigure.substr(0,7) === 'tower_1';
+                 });
+                 if(!king.firstMove && !tower_1.firstMove) {
+                    if(!userGame.figures.find((figure) => {
+                        return figure.x === king.x - 75 &&
+                               figure.y === king.y; 
+                    })){
+                        if(!userGame.figures.find((figure) => {
+                            return figure.x === king.x - 150 &&
+                                   figure.y === king.y; 
+                        })){
+                            if(!userGame.figuresEnemy.find((figure) => {
+                                return figure.x === king.x - 75 &&
+                                       figure.y === king.y; 
+                            })){
+                                if(!userGame.figuresEnemy.find((figure) => {
+                                    return figure.x === king.x - 150 &&
+                                           figure.y === king.y; 
+                                })){
+                                    let towerCopy = Object.assign({},tower_1);
+                                    towerCopy.x += 75; 
+                                    this.castling(king, towerCopy, userGame, tower_1);
+                                }
+                            }
+                        }
+                    }
+                 } 
+                }
+                else if(userGame.colorFigure === 'black' && 
+                     classFigureName === 'board-figures tower_2' &&
+                     this.state.actuallyClassFigure === 'board-figures king') {
+                        
+                        let king = userGame.figures.find((figure) => {
+                            return figure.nameFigure.substr(0,4) === 'king';
+                        });
+                        
+                        let tower_2 = userGame.figures.find((figure) => {
+                            return figure.nameFigure.substr(0,7) === 'tower_2';
+                        });
+                 
+                        if(!king.firstMove && !tower_2.firstMove) {
+                            if(!userGame.figures.find((figure) => {
+                                return figure.x === king.x + 75 &&
+                                       figure.y === king.y; 
+                            })){
+                                if(!userGame.figures.find((figure) => {
+                                    return figure.x === king.x + 150 &&
+                                           figure.y === king.y; 
+                                })){
+                                    if(!userGame.figuresEnemy.find((figure) => {
+                                        return figure.x === king.x + 75 &&
+                                               figure.y === king.y; 
+                                    })){
+                                        if(!userGame.figuresEnemy.find((figure) => {
+                                            return figure.x === king.x + 150 &&
+                                                   figure.y === king.y; 
+                                        })){
+                                            let towerCopy = Object.assign({},tower_2);
+                                            towerCopy.x = 75; 
+                                            this.castling(king, towerCopy, userGame, tower_2);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
             if(classFigureName === this.state.actuallyClassFigure) {
                 this.props.setClickFigure(false);
             }
@@ -170,6 +260,62 @@ export default class Board extends Component {
                 this.setState({actuallyClassFigure: classFigureName})
             }
        
+    }
+
+    castling(king, towerCopy, userGame, tower) {
+        if(this.checkStatusNextPositionWithKing(towerCopy, userGame)) {
+            if(userGame.colorFigure === 'white'){
+                let positionKing = {
+                    right: -150,
+                    bottom: 0,
+                }
+                let positionTower = {
+                    right: 150,
+                    bottom: 0,
+                }
+                this.setPositionFigures(king, userGame,positionKing);
+                this.setPositionFigures(tower, userGame, positionTower);
+            }
+            else {
+                let positionKing = {
+                    right: 150,
+                    bottom: 0,
+                }
+                let positionTower = {
+                    right: -150,
+                    bottom: 0,
+                }
+                this.setPositionFigures(king, userGame, positionKing);
+                this.setPositionFigures(tower, userGame, positionTower);
+               }
+               this.props.setClickFigure(false);   
+            }
+    }
+   
+
+    checkStatusNextPositionWithKing(nextPosKingFigure, userGame) {
+        let positionGet = [];
+        positionGet = this.checkStatusKingWithHetman(nextPosKingFigure, userGame , 'get');
+        if(positionGet) {
+            return false;
+        }
+        positionGet = this.checkStatusKingWithBishop(nextPosKingFigure, userGame, 'get');
+        if(positionGet) {
+            return false;
+        }
+        positionGet = this.checkStatusKingWithTower(nextPosKingFigure, userGame, 'get');
+        if(positionGet) {
+            return false;
+        }
+        positionGet = this.checkStatusKingWithPawn(nextPosKingFigure, userGame, 'get');
+        if(positionGet) {
+            return false;
+        }
+        positionGet = this.checkStatusKingWithHorse(nextPosKingFigure, userGame, 'get');
+        if(positionGet) {
+            return false;
+        }
+        return true;
     }
 
     renderNewPossiblePosition(figure, userGame) {
@@ -548,6 +694,7 @@ export default class Board extends Component {
             x:  figure.x + position.right,
             y:  figure.y + position.bottom,
             status: true,
+            firstMove: true,
         }
 
         let setFigureForUser = {
@@ -556,6 +703,7 @@ export default class Board extends Component {
             x: 525 - (figure.x + position.right),
             y:  525 - (figure.y + position.bottom),
             status: true,
+            firstMove: true,
         }
 
         let indexFigure = userGame.figures.findIndex((figures) => {
@@ -602,6 +750,7 @@ export default class Board extends Component {
         if(this.state.endangeredKing) {
             this.setState({endangeredKing: false});
         }
+        this.collisionEnemyWithKing = null;
     }
 
     checkNextPositionPawn(figure, userGame) {
@@ -739,7 +888,7 @@ export default class Board extends Component {
         if(this.state.endangeredKing) {
             this.setState({endangeredKing: false});
         }
-        
+        this.collisionEnemyWithKing = null;
     }
 
     setFigureActually(newFigure) {
@@ -782,102 +931,163 @@ export default class Board extends Component {
     }
 
     checkStatusKingWithFigure(kingFigure, userGame) {
-        this.checkStatusKingWithHetman(kingFigure, userGame);
-        this.checkStatusKingWithBishop(kingFigure, userGame);
-        this.checkStatusKingWithTower(kingFigure, userGame);
-        this.checkStatusKingWithPawn(kingFigure, userGame);
-        this.checkStatusKingWithHorse(kingFigure, userGame);
+        this.checkStatusKingWithHetman(kingFigure, userGame, 'set');
+        this.checkStatusKingWithBishop(kingFigure, userGame, 'set');
+        this.checkStatusKingWithTower(kingFigure, userGame, 'set');
+        this.checkStatusKingWithPawn(kingFigure, userGame, 'set');
+        this.checkStatusKingWithHorse(kingFigure, userGame, 'set');
         if(this.collisionEnemyWithKing.length !== 0) {
             this.setState({endangeredKing: true});
         }
     }
 
-    checkStatusKingWithHetman(kingFigure, userGame) {
-        this.checkStatusCross(kingFigure, userGame, 'hetman', 'set');
-        this.checkStatusVertcialAndHorizont(kingFigure, userGame, 'hetman', 'set');
-
+    checkStatusKingWithHetman(kingFigure, userGame, status) {
+        if(status === 'set') {
+            this.checkStatusCross(kingFigure, userGame, 'hetman', status);
+            this.checkStatusVertcialAndHorizont(kingFigure, userGame, 'hetman', status);
+        }
+        else {
+            let positionGet = this.checkStatusCross(kingFigure, userGame, 'hetman', status);
+            if(positionGet) {
+                return positionGet;
+            }
+            positionGet = this.checkStatusVertcialAndHorizont(kingFigure, userGame, 'hetman', status);
+            return positionGet;
+        }
     }
 
-    checkStatusKingWithBishop(kingFigure, userGame) {
-        this.checkStatusCross(kingFigure, userGame, 'bishop', 'set');
+    checkStatusKingWithBishop(kingFigure, userGame, status) {
+        if(status === 'set') {
+            this.checkStatusCross(kingFigure, userGame, 'bishop', status);
+        }
+        else {
+            let positionGet;
+            positionGet = this.checkStatusCross(kingFigure, userGame, 'bishop', status);
+            return positionGet;
+        }
     }
 
-    checkStatusKingWithTower(kingFigure, userGame) {
-        this.checkStatusVertcialAndHorizont(kingFigure, userGame, 'tower', 'set');
+    checkStatusKingWithTower(kingFigure, userGame, status) {
+        if(status === 'set') {
+            this.checkStatusVertcialAndHorizont(kingFigure, userGame, 'tower', status);
+        }
+        else {
+            let positionGet = this.checkStatusVertcialAndHorizont(kingFigure, userGame, 'tower', status);
+            return positionGet;
+        }
     }
 
-    checkStatusKingWithPawn(kingFigure, userGame) {
+    checkStatusKingWithPawn(kingFigure, userGame, status) {
+        let positionGet = [];
+        let enemyPos;
         if(kingFigure.y < 525) {
             if(kingFigure.x < 525) {
                if(userGame.figuresEnemy.find((enemy) => {
+                    enemyPos = enemy;    
                     return kingFigure.x + 75 === enemy.x &&
                            kingFigure.y + 75 ===enemy.y &&
                            enemy.nameFigure.substr(0,4) === 'pawn' 
                })){
-                if(this.collisionEnemyWithKing.length !== 0) {
-                    if(!this.collisionEnemyWithKing.find((position) => {
-                         return position.right === 75 &&
-                                position.bottom === 75
-                    })){
+                if(status === 'set') {
+                    if(this.collisionEnemyWithKing.length !== 0) {
+                        if(!this.collisionEnemyWithKing.find((position) => {
+                             return position.right === 75 &&
+                                    position.bottom === 75
+                        })){
+                            this.collisionEnemyWithKing.push({
+                                right: 75,
+                                bottom: 75,
+                                rightEnemy: enemyPos.x,
+                                bottomEnemy: enemyPos.y,
+                            })
+                        }   
+                    }
+                    else {
                         this.collisionEnemyWithKing.push({
                             right: 75,
                             bottom: 75,
+                            rightEnemy: enemyPos.x,
+                            bottomEnemy: enemyPos.y,
                         })
-                    }   
+                    }
                 }
                 else {
-                    this.collisionEnemyWithKing.push({
-                        right: 75,
-                        bottom: 75,
-                    })
-                }
+                    positionGet.push(true);
+                }   
                }     
             }
             if(kingFigure.x > 0) {
                 if(userGame.figuresEnemy.find((enemy) => {
+                     enemyPos = enemy;
                     return kingFigure.x - 75 === enemy.x &&
                            kingFigure.y + 75 ===enemy.y &&
                            enemy.nameFigure.substr(0,4) === 'pawn' 
                })){
-                if(this.collisionEnemyWithKing.length !== 0) {
-                    if(!this.collisionEnemyWithKing.find((position) => {
-                         return position.right === -75 &&
-                                position.bottom === 75
-                    })){
+                if(status === 'set') {   
+                    if(this.collisionEnemyWithKing.length !== 0) {
+                        if(!this.collisionEnemyWithKing.find((position) => {
+                             return position.right === -75 &&
+                                    position.bottom === 75
+                        })){
+                            this.collisionEnemyWithKing.push({
+                                right: -75,
+                                bottom: 75,
+                                rightEnemy: enemyPos.x,
+                                bottomEnemy: enemyPos.y,
+                            })
+                        }   
+                    }
+                    else {
                         this.collisionEnemyWithKing.push({
                             right: -75,
                             bottom: 75,
+                            rightEnemy: enemyPos.x,
+                            bottomEnemy: enemyPos.y,
                         })
-                    }   
+                    }
                 }
                 else {
-                    this.collisionEnemyWithKing.push({
-                        right: -75,
-                        bottom: 75,
-                    })
+                    positionGet.push(true);
                 }
                }  
             }
         }
+        if(status === 'get' && positionGet.length !== 0) {
+            return positionGet;
+        }
     }
 
-    checkStatusKingWithHorse(kingFigure, userGame) {
+    checkStatusKingWithHorse(kingFigure, userGame, status) {
+        let positionGet = [];
+        let enemyPos;
         POSITION_HORSE.forEach((positionHorse) => {
             if(kingFigure.x + positionHorse.x >= 0 &&
                kingFigure.x + positionHorse.x <= 525 &&
                kingFigure.y + positionHorse.y <= 525 &&
                kingFigure.y + positionHorse.y >=0 &&
                userGame.figuresEnemy.find((enemy) => {
-                   return kingFigure.x + positionHorse.x === enemy.x &&
+                    enemyPos = enemy;
+                    return kingFigure.x + positionHorse.x === enemy.x &&
                           kingFigure.y + positionHorse.y === enemy.y &&
                           enemy.nameFigure.substr(0, 5) === 'horse';
                })) {
-                   this.collisionEnemyWithKing.push({
-                       right: positionHorse.x,
-                       bottom: positionHorse.y,
-                   })
+                   if(status === 'set'){
+                    this.collisionEnemyWithKing.push({
+                        right: positionHorse.x,
+                        bottom: positionHorse.y,
+                        rightEnemy: enemyPos.x,
+                        bottomEnemy: enemyPos.y, 
+                    })
+                   }
+                   else {
+                    positionGet.push(true)
+                   }
+                   
                }
         })
+        if(status === 'get' && positionGet.length !== 0) {
+            return positionGet;
+        }
       
     }
 
@@ -931,6 +1141,8 @@ export default class Board extends Component {
                                         this.collisionEnemyWithKing.push({
                                             right: -75,
                                             bottom: 75,
+                                            rightEnemy: SearchfigureEnemy.x,
+                                            bottomEnemy: SearchfigureEnemy.y,
                                         })
                                     }   
                                 }
@@ -938,6 +1150,8 @@ export default class Board extends Component {
                                     this.collisionEnemyWithKing.push({
                                         right: -75,
                                         bottom: 75,
+                                        rightEnemy: SearchfigureEnemy.x,
+                                        bottomEnemy: SearchfigureEnemy.y,
                                     })
                                 }
                                 
@@ -979,6 +1193,8 @@ export default class Board extends Component {
                                         this.collisionEnemyWithKing.push({
                                             right: 75,
                                             bottom: 75,
+                                            rightEnemy: SearchfigureEnemy.x,
+                                            bottomEnemy: SearchfigureEnemy.y,
                                         })
                                     }
                                 }
@@ -986,6 +1202,8 @@ export default class Board extends Component {
                                     this.collisionEnemyWithKing.push({
                                         right: 75,
                                         bottom: 75,
+                                        rightEnemy: SearchfigureEnemy.x,
+                                        bottomEnemy: SearchfigureEnemy.y,
                                     })
                                 }   
                             }
@@ -1025,6 +1243,8 @@ export default class Board extends Component {
                                             this.collisionEnemyWithKing.push({
                                                 right: -75,
                                                 bottom: -75,
+                                                rightEnemy: SearchfigureEnemy.x,
+                                                bottomEnemy: SearchfigureEnemy.y,
                                             })
                                         }
                                     }
@@ -1032,6 +1252,8 @@ export default class Board extends Component {
                                         this.collisionEnemyWithKing.push({
                                             right: -75,
                                             bottom: -75,
+                                            rightEnemy: SearchfigureEnemy.x,
+                                            bottomEnemy: SearchfigureEnemy.y,
                                         })
                                     }   
                                 }
@@ -1071,6 +1293,8 @@ export default class Board extends Component {
                                             this.collisionEnemyWithKing.push({
                                                 right: 75,
                                                 bottom: -75,
+                                                rightEnemy: SearchfigureEnemy.x,
+                                                bottomEnemy: SearchfigureEnemy.y,
                                             })
                                         }
                                     }
@@ -1078,6 +1302,8 @@ export default class Board extends Component {
                                         this.collisionEnemyWithKing.push({
                                             right: 75,
                                             bottom: -75,
+                                            rightEnemy: SearchfigureEnemy.x,
+                                            bottomEnemy: SearchfigureEnemy.y,
                                         })
                                     }   
                                 }   
@@ -1109,12 +1335,13 @@ export default class Board extends Component {
                 positionPositiveXNegativeY.y -= 75;
             }
         }
-        
+        if(status === 'get' && positionGet.length !== 0) {
+            return positionGet;
+        }
     }
 
     checkStatusVertcialAndHorizont(checkFigure, userGame, figureEnemy, status) {
         let positionGet = [];
-
         let positionPositiveX = 75;
         let positionPositiveY = 75;
         let positionNegativeX = -75;
@@ -1150,6 +1377,8 @@ export default class Board extends Component {
                                             this.collisionEnemyWithKing.push({
                                                 right: 0,
                                                 bottom: 75,
+                                                rightEnemy: SearchfigureEnemy.x,
+                                                bottomEnemy: SearchfigureEnemy.y,
                                             })
                                         }
                                     }
@@ -1157,6 +1386,8 @@ export default class Board extends Component {
                                         this.collisionEnemyWithKing.push({
                                             right: 0,
                                             bottom: 75,
+                                            rightEnemy: SearchfigureEnemy.x,
+                                            bottomEnemy: SearchfigureEnemy.y,
                                         })
                                     }   
                                 }
@@ -1197,6 +1428,8 @@ export default class Board extends Component {
                                             this.collisionEnemyWithKing.push({
                                                 right: 0,
                                                 bottom: -75,
+                                                rightEnemy: SearchfigureEnemy.x,
+                                                bottomEnemy: SearchfigureEnemy.y,
                                             })
                                         }
                                     }
@@ -1204,6 +1437,8 @@ export default class Board extends Component {
                                         this.collisionEnemyWithKing.push({
                                             right: 0,
                                             bottom: -75,
+                                            rightEnemy: SearchfigureEnemy.x,
+                                            bottomEnemy: SearchfigureEnemy.y,
                                         })
                                     }   
                                 }
@@ -1243,6 +1478,8 @@ export default class Board extends Component {
                                         this.collisionEnemyWithKing.push({
                                             right: 75,
                                             bottom: 0,
+                                            rightEnemy: SearchfigureEnemy.x,
+                                            bottomEnemy: SearchfigureEnemy.y,
                                         })
                                     }
                                 }
@@ -1250,6 +1487,8 @@ export default class Board extends Component {
                                     this.collisionEnemyWithKing.push({
                                         right: 75,
                                         bottom: 0,
+                                        rightEnemy: SearchfigureEnemy.x,
+                                        bottomEnemy: SearchfigureEnemy.y,
                                     })
                                 }   
                             }
@@ -1289,6 +1528,8 @@ export default class Board extends Component {
                                         this.collisionEnemyWithKing.push({
                                             right: -75,
                                             bottom: 0,
+                                            rightEnemy: SearchfigureEnemy.x,
+                                            bottomEnemy: SearchfigureEnemy.y,
                                         })
                                     }
                                 }
@@ -1296,6 +1537,8 @@ export default class Board extends Component {
                                     this.collisionEnemyWithKing.push({
                                         right: -75,
                                         bottom: 0,
+                                        rightEnemy: SearchfigureEnemy.x,
+                                        bottomEnemy: SearchfigureEnemy.y,
                                     })
                                 }   
                             }
@@ -1322,6 +1565,9 @@ export default class Board extends Component {
                 positionNegativeX -= 75;
                 positionNegativeY -= 75;
             }
+        }
+        if(status === 'get' && positionGet.length !== 0) {
+            return positionGet;
         }
     }
 
@@ -1432,6 +1678,19 @@ export default class Board extends Component {
                                                 />
                                             </div>
                                         </div>
+                                        :null
+                                       }
+                                       {this.collisionEnemyWithKing ?
+                                        this.collisionEnemyWithKing.map((position, index)=> {
+                                            return <div className="board-next-position-alert"
+                                                        style={{
+                                                            right: position.rightEnemy,
+                                                            bottom: position.bottomEnemy,
+                                                        }}
+                                                        key={index}
+                                                    >
+                                                    </div>
+                                        })
                                         :null
                                        }
                                     </React.Fragment>

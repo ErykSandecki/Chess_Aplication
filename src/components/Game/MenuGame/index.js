@@ -464,6 +464,7 @@ export default class MenuGame extends Component {
                 x: value  - 0,
                 y: value  - 0,
                 status: true,
+                firstMove: false,
             },
             {
                 nameFigure: 'tower_2',
@@ -471,6 +472,7 @@ export default class MenuGame extends Component {
                 x: (value  - 525) * (setValue),
                 y: value  - 0,
                 status: true,
+                firstMove: false,
             },
             {
                 nameFigure: 'horse_1',
@@ -478,6 +480,7 @@ export default class MenuGame extends Component {
                 x: (value  - 75) * (setValue),
                 y: value  - 0,
                 status: true,
+                firstMove: false,
             },
             {
                 nameFigure: 'horse_2',
@@ -485,6 +488,7 @@ export default class MenuGame extends Component {
                 x: (value  - 450) * (setValue),
                 y: value  - 0,
                 status: true,
+                firstMove: false,
             },
             {
                 nameFigure: 'bishop_1',
@@ -492,6 +496,7 @@ export default class MenuGame extends Component {
                 x: (value  - 150) * (setValue),
                 y: value  - 0,
                 status: true,
+                firstMove: false,
             },
             {
                 nameFigure: 'bishop_2',
@@ -499,6 +504,7 @@ export default class MenuGame extends Component {
                 x: (value  - 375) * (setValue),
                 y: value  - 0,
                 status: true,
+                firstMove: false,
             },
             {
                 nameFigure: 'king',
@@ -514,6 +520,7 @@ export default class MenuGame extends Component {
                 x: (value  - hetmanValue) * (setValue),
                 y: value - 0,
                 status: true,
+                firstMove: false,
             },
         ]
         return figures;
