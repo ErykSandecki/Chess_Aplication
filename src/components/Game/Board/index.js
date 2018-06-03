@@ -36,7 +36,6 @@ export default class Board extends Component {
             this.setState({
                 actuallyClassFigure: '',
             }); 
-            this.collisionEnemyWithKing = null;
         }
         if(!this.state.endangeredKing) {
             if(this.props.actuallyGame.gameInvite) {
@@ -293,7 +292,7 @@ export default class Board extends Component {
                                                    figure.y === king.y; 
                                         })){
                                             let towerCopy = Object.assign({},tower_2);
-                                            towerCopy.x = 75; 
+                                            towerCopy.x -= 75; 
                                             this.castling(king, towerCopy, userGame, tower_2);
                                         }
                                     }
@@ -324,7 +323,7 @@ export default class Board extends Component {
                     right: 150,
                     bottom: 0,
                 }
-                this.setPositionFigures(king, userGame,positionKing);
+                this.setPositionFigures(king, userGame, positionKing);
                 this.setPositionFigures(tower, userGame, positionTower);
             }
             else {
@@ -478,6 +477,7 @@ export default class Board extends Component {
                 positionNegativeY -= 75;
             }
         }
+        this.checkCordinatesWithKing(figure, userGame); 
        if(figure.nameFigure.substr(0, 6) !== 'hetman') {
         if(positionNext.length !== 0) {
             return positionNext.map((position, index)=> {
@@ -516,6 +516,8 @@ export default class Board extends Component {
                     });
                }
         })
+
+        this.checkCordinatesWithKing(figure, userGame);
 
         if(positionNext.length !== 0) {
             return positionNext.map((position, index)=> {
@@ -647,6 +649,7 @@ export default class Board extends Component {
                 positionPositiveXNegativeY.y -= 75;
             }
         }
+        this.checkCordinatesWithKing(figure, userGame);
         if(figure.nameFigure.substr(0,6) !== 'hetman') {
             if(positionNext.length !== 0) {
                 return positionNext.map((position, index)=> {
@@ -694,8 +697,11 @@ export default class Board extends Component {
             }  
     }
 
+   
+
     checkNextPositionKing(figure, userGame) {
         let positionNext = [];
+        let savePosition = [];
         POSITION_KING.forEach((kingPos) => {
             if(figure.x + kingPos.x <= 525 &&
                figure.x + kingPos.x >= 0 &&
@@ -711,6 +717,16 @@ export default class Board extends Component {
                    })
                }
         })
+        
+        positionNext.forEach((position, index) =>{
+                let possibleKingPosition = Object.assign({}, figure);
+                possibleKingPosition.x += position.right;
+                possibleKingPosition.y += position.bottom;
+                if(!this.checkStatusNextPositionWithKing(possibleKingPosition, userGame)) {
+                    positionNext.splice(index, 1);
+              }
+        })
+
         if(positionNext.length !== 0) {
                 return positionNext.map((position, index)=> {
                     return <div className="board-next-position"
@@ -849,6 +865,8 @@ export default class Board extends Component {
              }
         })
 
+        this.checkCordinatesWithKing(figure, userGame);
+
         if(positionNext.length !== 0) {
             return positionNext.map((position, index)=> {
                 return <div className="board-next-position"
@@ -961,6 +979,255 @@ export default class Board extends Component {
         this.props.databaseGame.child(this.setFigure.userGame.idGame).child('gameInvite').child(this.setFigure.indexActuallyUser).child('yourMove').set(true);
         this.setState({windowSetFigure: false})
         this.setFigure = null;
+    }
+
+    checkCordinatesWithKing(figure, userGame) {
+        let positionPositiveX = 75;
+        let positionNegativeX = -75;
+        let positionPositiveY = 75;
+        let positionNegativeY = -75;
+        let positionNegativeXPositiveY = {
+            x: -75,
+            y: 75,
+        };
+        let positionPositiveXPositiveY = {
+            x: 75,
+            y: 75,
+        };
+        let positionNegativeXNegativeY = {
+            x: -75,
+            y: -75,
+        };
+        let positionPositiveXNegativeY = {
+            x: 75,
+            y: -75,
+        };
+        let checkNextPositionPositiveY = true;
+        let checkNextPositionNegativeY = true;
+        let checkNextPositionPositiveX = true;
+        let checkNextPositionNegativeX = true; 
+        let checkNextPositionNegativeXPositiveY = true;
+        let checkNextPositionPositiveXPositiveY = true;
+        let checkNextPositionNegativeXNegativeY = true;
+        let checkNextPositionPositiveXNegativeY = true;
+        while(true) {
+            console.log('sprawdzam1')
+            // vertical and Horizont //
+            if(checkNextPositionPositiveY &&
+               figure.y + positionPositiveY <= 525 &&
+                !userGame.figures.find((userFigure) => {
+                    return figure.x === userFigure.x &&
+                           figure.y + positionPositiveY === userFigure.y  &&
+                           userFigure.nameFigure.substr(0, 4) !== 'king';
+                }) && 
+                !userGame.figuresEnemy.find((userFigure) => {
+                    return figure.x === userFigure.x &&
+                           figure.y + positionPositiveY === userFigure.y;
+                })) {
+                    if(userGame.figures.find((userFigure) => {
+                        return figure.x === userFigure.x &&
+                               figure.y + positionPositiveY === userFigure.y &&
+                               userFigure.nameFigure === 'king';
+                    })) {
+                        return true
+                    }
+            }
+            else {
+                checkNextPositionPositiveY = false;
+            }
+
+            if(checkNextPositionNegativeY &&
+                figure.y + positionNegativeY >= 0 &&
+                 !userGame.figures.find((userFigure) => {
+                     return figure.x === userFigure.x &&
+                            figure.y + positionNegativeY === userFigure.y  &&
+                            userFigure.nameFigure.substr(0, 4) !== 'king';
+                 }) && 
+                 !userGame.figuresEnemy.find((userFigure) => {
+                     return figure.x === userFigure.x &&
+                            figure.y + positionNegativeY === userFigure.y;
+                 })) {
+                    if(userGame.figures.find((userFigure) => {
+                        return figure.x === userFigure.x &&
+                               figure.y + positionNegativeY === userFigure.y &&
+                               userFigure.nameFigure === 'king';
+                    })) {
+                        return true
+                    }
+             }
+             else {
+                 checkNextPositionNegativeY = false;
+             }
+
+            if(checkNextPositionPositiveX &&
+                figure.x + positionPositiveX <= 525 &&
+                 !userGame.figures.find((userFigure) => {
+                     return figure.x + positionPositiveX === userFigure.x &&
+                            figure.y === userFigure.y && 
+                            userFigure.nameFigure.substr(0, 4) !== 'king';
+                 }) && 
+                 !userGame.figuresEnemy.find((userFigure) => {
+                     return figure.x + positionPositiveX === userFigure.x &&
+                            figure.y === userFigure.y;
+                 })) {
+                    if(userGame.figures.find((userFigure) => {
+                        return figure.x + positionPositiveX === userFigure.x &&
+                               figure.y === userFigure.y &&
+                               userFigure.nameFigure === 'king';
+                    })) {
+                        return true
+                    }
+             }
+             else {
+                checkNextPositionPositiveX = false;
+             }
+
+             if(checkNextPositionNegativeX &&
+                figure.x + positionPositiveX >= 0 &&
+                 !userGame.figures.find((userFigure) => {
+                     return figure.x + positionNegativeX === userFigure.x &&
+                            figure.y === userFigure.y && 
+                            userFigure.nameFigure.substr(0, 4) !== 'king';
+                 }) && 
+                 !userGame.figuresEnemy.find((userFigure) => {
+                     return figure.x + positionNegativeX === userFigure.x &&
+                            figure.y === userFigure.y;
+                 })) {
+                    if(userGame.figures.find((userFigure) => {
+                        return figure.x + positionNegativeX === userFigure.x &&
+                               figure.y === userFigure.y &&
+                               userFigure.nameFigure === 'king';
+                    })) {
+                        return true
+                    }
+             }
+             else {
+                checkNextPositionNegativeX = false;
+             }
+
+             // cross //
+
+             if(checkNextPositionNegativeXPositiveY &&
+                figure.y + positionNegativeXPositiveY.y <= 525 &&
+                figure.x + positionNegativeXPositiveY.x >= 0 &&
+                 !userGame.figures.find((userFigure) => {
+                     return figure.x + positionNegativeXPositiveY.x === userFigure.x &&
+                            figure.y + positionNegativeXPositiveY.y === userFigure.y  &&
+                            userFigure.nameFigure.substr(0, 4) !== 'king';
+                 }) && 
+                 !userGame.figuresEnemy.find((userFigure) => {
+                     return figure.x + positionNegativeXPositiveY.x === userFigure.x &&
+                            figure.y + positionNegativeXPositiveY.y === userFigure.y;
+                 })) {
+                     if(userGame.figures.find((userFigure) => {
+                         return figure.x + positionNegativeXPositiveY.x === userFigure.x &&
+                                figure.y + positionNegativeXPositiveY.y === userFigure.y &&
+                                userFigure.nameFigure === 'king';
+                     })) {
+                         return true
+                     }
+             }
+             else {
+                checkNextPositionNegativeXPositiveY = false;
+             }
+
+             if(checkNextPositionPositiveXPositiveY &&
+                figure.y + positionPositiveXPositiveY.y <= 525 &&
+                figure.x + positionPositiveXPositiveY.x <= 525 &&
+                 !userGame.figures.find((userFigure) => {
+                     return figure.x + positionPositiveXPositiveY.x === userFigure.x &&
+                            figure.y + positionPositiveXPositiveY.y === userFigure.y  &&
+                            userFigure.nameFigure.substr(0, 4) !== 'king';
+                 }) && 
+                 !userGame.figuresEnemy.find((userFigure) => {
+                     return figure.x + positionPositiveXPositiveY.x === userFigure.x &&
+                            figure.y + positionPositiveXPositiveY.y === userFigure.y;
+                 })) {
+                     if(userGame.figures.find((userFigure) => {
+                         return figure.x + positionPositiveXPositiveY.x === userFigure.x &&
+                                figure.y + positionPositiveXPositiveY.y === userFigure.y &&
+                                userFigure.nameFigure === 'king';
+                     })) {
+                         return true
+                     }
+             }
+             else {
+                checkNextPositionPositiveXPositiveY = false;
+             }
+
+             if(checkNextPositionNegativeXNegativeY &&
+                figure.y + positionNegativeXNegativeY.y >= 0 &&
+                figure.x + positionNegativeXNegativeY.x >= 0 &&
+                 !userGame.figures.find((userFigure) => {
+                     return figure.x + positionNegativeXNegativeY.x === userFigure.x &&
+                            figure.y + positionNegativeXNegativeY.y === userFigure.y  &&
+                            userFigure.nameFigure.substr(0, 4) !== 'king';
+                 }) && 
+                 !userGame.figuresEnemy.find((userFigure) => {
+                     return figure.x + positionNegativeXNegativeY.x &&
+                            figure.y + positionNegativeXNegativeY.y === userFigure.y;
+                 })) {
+                     if(userGame.figures.find((userFigure) => {
+                         return figure.x + positionNegativeXNegativeY.x === userFigure.x &&
+                                figure.y + positionNegativeXNegativeY.y === userFigure.y &&
+                                userFigure.nameFigure === 'king';
+                     })) {
+                         return true
+                     }
+             }
+             else {
+                checkNextPositionNegativeXNegativeY = false;
+             }
+
+             if(checkNextPositionPositiveXNegativeY &&
+                figure.y + positionPositiveXNegativeY.y >= 0 &&
+                figure.x + positionPositiveXNegativeY.x <= 525 &&
+                 !userGame.figures.find((userFigure) => {
+                     return figure.x + positionPositiveXNegativeY.x === userFigure.x &&
+                            figure.y + positionPositiveXNegativeY.y === userFigure.y  &&
+                            userFigure.nameFigure.substr(0, 4) !== 'king';
+                 }) && 
+                 !userGame.figuresEnemy.find((userFigure) => {
+                     return figure.x + positionPositiveXNegativeY.x === userFigure.x &&
+                            figure.y + positionPositiveXNegativeY.y === userFigure.y;
+                 })) {
+                     if(userGame.figures.find((userFigure) => {
+                         return figure.x + positionPositiveXNegativeY.x === userFigure.x &&
+                                figure.y + positionPositiveXNegativeY.y === userFigure.y &&
+                                userFigure.nameFigure === 'king';
+                     })) {
+                         return true
+                     }
+             }
+             else {
+                checkNextPositionPositiveXNegativeY = false;
+             }
+
+            if(!checkNextPositionPositiveY &&
+                !checkNextPositionNegativeY &&
+                !checkNextPositionPositiveX &&
+                !checkNextPositionNegativeX &&
+                !checkNextPositionNegativeXPositiveY &&
+                !checkNextPositionPositiveXPositiveY &&
+                !checkNextPositionNegativeXNegativeY &&
+                !checkNextPositionPositiveXNegativeY) {
+                     break;
+            }
+            else {
+                positionPositiveX += 75;
+                positionPositiveY += 75;
+                positionNegativeX -= 75;
+                positionNegativeY -= 75;
+                positionNegativeXPositiveY.x -= 75;
+                positionNegativeXPositiveY.y += 75;
+                positionPositiveXPositiveY.x += 75;
+                positionPositiveXPositiveY.y += 75;
+                positionNegativeXNegativeY.x -= 75;
+                positionNegativeXNegativeY.y -= 75;
+                positionPositiveXNegativeY.x += 75;
+                positionPositiveXNegativeY.y -= 75;
+            }
+        }
     }
 
     checkStatusKing() {
