@@ -309,925 +309,6 @@ export default class Board extends Component {
                 this.props.setClickFigure(true);
                 this.setState({actuallyClassFigure: classFigureName})
             }
-       
-    }
-
-    castling(king, towerCopy, userGame, tower) {
-        if(this.checkStatusNextPositionWithKing(towerCopy, userGame)) {
-            if(userGame.colorFigure === 'white'){
-                let positionKing = {
-                    right: -150,
-                    bottom: 0,
-                }
-                let positionTower = {
-                    right: 150,
-                    bottom: 0,
-                }
-                this.setPositionFigures(king, userGame, positionKing);
-                this.setPositionFigures(tower, userGame, positionTower);
-            }
-            else {
-                let positionKing = {
-                    right: 150,
-                    bottom: 0,
-                }
-                let positionTower = {
-                    right: -150,
-                    bottom: 0,
-                }
-                this.setPositionFigures(king, userGame, positionKing);
-                this.setPositionFigures(tower, userGame, positionTower);
-               }
-               this.props.setClickFigure(false);   
-            }
-    }
-   
-
-    checkStatusNextPositionWithKing(nextPosKingFigure, userGame) {
-        let positionGet = [];
-        positionGet = this.checkStatusKingWithHetman(nextPosKingFigure, userGame , 'get');
-        if(positionGet) {
-            return false;
-        }
-        positionGet = this.checkStatusKingWithBishop(nextPosKingFigure, userGame, 'get');
-        if(positionGet) {
-            return false;
-        }
-        positionGet = this.checkStatusKingWithTower(nextPosKingFigure, userGame, 'get');
-        if(positionGet) {
-            return false;
-        }
-        positionGet = this.checkStatusKingWithPawn(nextPosKingFigure, userGame, 'get');
-        if(positionGet) {
-            return false;
-        }
-        positionGet = this.checkStatusKingWithHorse(nextPosKingFigure, userGame, 'get');
-        if(positionGet) {
-            return false;
-        }
-        return true;
-    }
-
-    renderNewPossiblePosition(figure, userGame) {
-        if(figure.nameFigure.substr(0,4) === 'pawn') {
-           return this.checkNextPositionPawn(figure, userGame);
-        }
-        else if(figure.nameFigure.substr(0,5) === 'tower') {
-           return this.checkNextPositionVerticalAndHorizon(figure, userGame);
-        }
-        else if(figure.nameFigure.substr(0,5) === 'horse') {
-            return this.checkNextPositionHorse(figure, userGame);
-        }
-        else if(figure.nameFigure.substr(0,6) === 'bishop') {
-            return this.checkNextPositionCross(figure, userGame);
-        }
-        else if(figure.nameFigure.substr(0,6) === 'hetman') {
-            return this.checkNextPositionHetman(figure, userGame);
-        }
-        else if(figure.nameFigure.substr(0,4) === 'king') {
-            return this.checkNextPositionKing(figure, userGame);
-        }
-    }
-
-    checkNextPositionVerticalAndHorizon(figure, userGame) {
-        let positionNext = [];
-        let diffrent = 0;
-        let newLengthArray = 0;
-        let positionPositiveX = 75;
-        let positionPositiveY = 75;
-        let positionNegativeX = -75;
-        let positionNegativeY = -75;
-        let checkNextPositionPositiveY = true;
-        let checkNextPositionNegativeY = true;
-        let checkNextPositionPositiveX = true;
-        let checkNextPositionNegativeX = true; 
-        while(true) {  
-            if(checkNextPositionPositiveY &&
-                figure.y + positionPositiveY <= 525 && 
-                !userGame.figures.find((figures) => {  
-                   return figure.x === figures.x &&
-                          figure.y + positionPositiveY === figures.y;  
-               })) {
-                positionNext.push({
-                    right: 0,
-                    bottom: positionPositiveY,
-                })
-                checkNextPositionPositiveY = this.checkEnemyCordinates(figure.x, figure.y + positionPositiveY, userGame);
-            }
-            else {
-                checkNextPositionPositiveY = false;
-            }
-            if(checkNextPositionNegativeY &&
-               figure.y + positionNegativeY >= 0 &&
-               !userGame.figures.find((figures)=>{
-                    return figure.x === figures.x &&
-                           figure.y + positionNegativeY === figures.y;  
-                })) {
-                    positionNext.push({
-                    right: 0,
-                    bottom: positionNegativeY,
-                })
-                checkNextPositionNegativeY = this.checkEnemyCordinates(figure.x, figure.y + positionNegativeY, userGame);
-            }
-            else {
-                checkNextPositionNegativeY = false;
-            }
-
-            if(checkNextPositionPositiveX &&
-               figure.x + positionPositiveX <= 525 &&
-               !userGame.figures.find((figures)=>{
-                    return figure.x + positionPositiveX === figures.x &&
-                           figure.y === figures.y;  
-                })) {
-                    positionNext.push({
-                    right: positionPositiveX,
-                    bottom: 0,
-                })
-                checkNextPositionPositiveX = this.checkEnemyCordinates(figure.x + positionPositiveX, figure.y, userGame);
-            }
-
-            else {
-                checkNextPositionPositiveX = false;
-            }
-            if(checkNextPositionNegativeX &&
-               figure.x + positionNegativeX >= 0 &&
-               !userGame.figures.find((figures)=>{
-                    return figure.x + positionNegativeX === figures.x &&
-                           figure.y === figures.y;  
-                })) {
-                    positionNext.push({
-                    right: positionNegativeX,
-                    bottom: 0,
-                })
-                checkNextPositionNegativeX = this.checkEnemyCordinates(figure.x + positionNegativeX, figure.y, userGame);  
-            }
-            else {
-                checkNextPositionNegativeX = false;
-            }
-            newLengthArray = positionNext.length;
-            
-            if(newLengthArray === diffrent) {
-                break;
-            }
-            else {
-                diffrent = newLengthArray;
-                positionPositiveX += 75;
-                positionPositiveY += 75;
-                positionNegativeX -= 75;
-                positionNegativeY -= 75;
-            }
-        }
-        this.checkCordinatesWithKing(figure, userGame); 
-       if(figure.nameFigure.substr(0, 6) !== 'hetman') {
-        if(positionNext.length !== 0) {
-            return positionNext.map((position, index)=> {
-                return <div className="board-next-position"
-                            style={position}
-                            key={index}
-                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
-                        >
-                            <div className="board-next-position-point"></div> 
-                       </div>
-                    })
-            }
-            else {
-                return null;
-            }  
-       } 
-       else {
-           return positionNext;
-       }   
-    }
-
-    checkNextPositionHorse(figure, userGame) {
-        let positionNext = [];
-        POSITION_HORSE.forEach((horsePos) => {
-            if(figure.x + horsePos.x <= 525 &&
-               figure.x + horsePos.x >= 0 &&
-               figure.y + horsePos.y <= 525 &&
-               figure.y + horsePos.y >= 0 &&
-               !userGame.figures.find((figures)=>{
-                return figure.x + horsePos.x === figures.x &&
-                       figure.y + horsePos.y === figures.y;  
-                })) {
-                   positionNext.push({
-                       right: horsePos.x,
-                       bottom: horsePos.y,
-                    });
-               }
-        })
-
-        this.checkCordinatesWithKing(figure, userGame);
-
-        if(positionNext.length !== 0) {
-            return positionNext.map((position, index)=> {
-                return <div className="board-next-position"
-                            style={position}
-                            key={index}
-                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
-                        >
-                            <div className="board-next-position-point"></div> 
-                       </div>
-                    })
-            }
-            else {
-                return null;
-            }  
-    }
-
-    checkNextPositionCross(figure, userGame) {
-        let positionNext = [];
-        let diffrent = 0;
-        let newLengthArray = 0;
-        let positionNegativeXPositiveY = {
-            x: -75,
-            y: 75,
-        };
-        let positionPositiveXPositiveY = {
-            x: 75,
-            y: 75,
-        };
-        let positionNegativeXNegativeY = {
-            x: -75,
-            y: -75,
-        };
-        let positionPositiveXNegativeY = {
-            x: 75,
-            y: -75,
-        };
-        let checkNextPositionNegativeXPositiveY = true;
-        let checkNextPositionPositiveXPositiveY = true;
-        let checkNextPositionNegativeXNegativeY = true;
-        let checkNextPositionPositiveXNegativeY = true;
-        while(true) {  
-            if(checkNextPositionNegativeXPositiveY &&
-               figure.x + positionNegativeXPositiveY.x >= 0 &&
-               figure.y + positionNegativeXPositiveY.y <= 525 &&
-               !userGame.figures.find((figures)=>{
-                return figure.x + positionNegativeXPositiveY.x === figures.x &&
-                       figure.y + positionNegativeXPositiveY.y === figures.y;   
-                })) {
-                   positionNext.push({
-                       right: positionNegativeXPositiveY.x,
-                       bottom: positionNegativeXPositiveY.y,
-                   })
-                   checkNextPositionNegativeXPositiveY = this.checkEnemyCordinates(figure.x + positionNegativeXPositiveY.x, figure.y + positionNegativeXPositiveY.y, userGame);
-            }
-
-            else {
-                checkNextPositionNegativeXPositiveY = false;
-            }
-
-            if(checkNextPositionPositiveXPositiveY &&
-               figure.x + positionPositiveXPositiveY.x <= 525 &&
-               figure.y + positionPositiveXPositiveY.y <= 525 &&
-               !userGame.figures.find((figures)=>{
-                return figure.x + positionPositiveXPositiveY.x === figures.x &&
-                       figure.y + positionPositiveXPositiveY.y === figures.y;   
-                })) {
-                   positionNext.push({
-                       right: positionPositiveXPositiveY.x,
-                       bottom: positionPositiveXPositiveY.y,
-                   })
-                   checkNextPositionPositiveXPositiveY = this.checkEnemyCordinates(figure.x + positionPositiveXPositiveY.x, figure.y + positionPositiveXPositiveY.y, userGame);
-            }
-
-            else {
-                checkNextPositionPositiveXPositiveY = false;
-            }
-
-            if(checkNextPositionNegativeXNegativeY &&
-               figure.x + positionNegativeXNegativeY.x >= 0 &&
-               figure.y + positionNegativeXNegativeY.y >= 0 &&
-               !userGame.figures.find((figures)=>{
-                    return figure.x + positionNegativeXNegativeY.x === figures.x &&
-                           figure.y + positionNegativeXNegativeY.y === figures.y;   
-                    })) {
-                    positionNext.push({
-                        right: positionNegativeXNegativeY.x,
-                        bottom: positionNegativeXNegativeY.y,
-                    })
-                    checkNextPositionNegativeXNegativeY = this.checkEnemyCordinates(figure.x + positionNegativeXNegativeY.x, figure.y + positionNegativeXNegativeY.y, userGame);
-             }
-
-             else {
-                checkNextPositionNegativeXNegativeY = false;
-             }
-            
-            if(checkNextPositionPositiveXNegativeY &&
-               figure.x + positionPositiveXNegativeY.x <= 525 &&
-               figure.y + positionPositiveXNegativeY.y >= 0 && 
-               !userGame.figures.find((figures)=>{
-                    return figure.x + positionPositiveXNegativeY.x === figures.x &&
-                           figure.y + positionPositiveXNegativeY.y === figures.y;   
-                    })) {
-                    positionNext.push({
-                        right: positionPositiveXNegativeY.x,
-                        bottom: positionPositiveXNegativeY.y,
-                    })
-                    checkNextPositionPositiveXNegativeY = this.checkEnemyCordinates(figure.x + positionPositiveXNegativeY.x, figure.y + positionPositiveXNegativeY.y, userGame);
-            }
-
-            else {
-                checkNextPositionPositiveXNegativeY = false;
-            }
-
-            newLengthArray = positionNext.length;
-            
-            if(newLengthArray === diffrent) {
-                break;
-            }
-            else {
-                diffrent = newLengthArray;
-                positionNegativeXPositiveY.x -= 75;
-                positionNegativeXPositiveY.y += 75;
-                positionPositiveXPositiveY.x += 75;
-                positionPositiveXPositiveY.y += 75;
-                positionNegativeXNegativeY.x -= 75;
-                positionNegativeXNegativeY.y -= 75;
-                positionPositiveXNegativeY.x += 75;
-                positionPositiveXNegativeY.y -= 75;
-            }
-        }
-        this.checkCordinatesWithKing(figure, userGame);
-        if(figure.nameFigure.substr(0,6) !== 'hetman') {
-            if(positionNext.length !== 0) {
-                return positionNext.map((position, index)=> {
-                    return <div className="board-next-position"
-                                style={{
-                                    right: position.right - 2,
-                                    bottom: position.bottom,
-                                }}
-                                key={index}
-                                onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
-                            >
-                                <div className="board-next-position-point"></div> 
-                           </div>
-                        })
-                }
-                else {
-                    return null;
-                }  
-        }
-        else {
-            return positionNext;
-        }
-    }
-
-    checkNextPositionHetman(figure, userGame) {
-        let moveOnCross = this.checkNextPositionCross(figure, userGame);
-        let moveVerticalAndHorizon = this.checkNextPositionVerticalAndHorizon(figure, userGame);
-        let positionNext = [...moveOnCross || [], ...moveVerticalAndHorizon || []];
-        if(positionNext.length !== 0) {
-            return positionNext.map((position, index)=> {
-                return <div className="board-next-position"
-                            style={{
-                                    right: position.right - 2,
-                                    bottom: position.bottom,
-                                 }}
-                            key={index}
-                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
-                        >
-                            <div className="board-next-position-point"></div> 
-                       </div>
-                    })
-            }
-            else {
-                return null;
-            }  
-    }
-
-   
-
-    checkNextPositionKing(figure, userGame) {
-        let positionNext = [];
-        let savePosition = [];
-        POSITION_KING.forEach((kingPos) => {
-            if(figure.x + kingPos.x <= 525 &&
-               figure.x + kingPos.x >= 0 &&
-               figure.y + kingPos.y <= 525 &&
-               figure.y + kingPos.y >= 0 &&
-               !userGame.figures.find((figures)=>{
-                return figure.x + kingPos.x === figures.x &&
-                       figure.y + kingPos.y === figures.y;  
-                })) {
-                   positionNext.push({
-                       right: kingPos.x,
-                       bottom: kingPos.y,
-                   })
-               }
-        })
-        
-        positionNext.forEach((position, index) =>{
-                let possibleKingPosition = Object.assign({}, figure);
-                possibleKingPosition.x += position.right;
-                possibleKingPosition.y += position.bottom;
-                if(!this.checkStatusNextPositionWithKing(possibleKingPosition, userGame)) {
-                    positionNext.splice(index, 1);
-              }
-        })
-
-        if(positionNext.length !== 0) {
-                return positionNext.map((position, index)=> {
-                    return <div className="board-next-position"
-                                style={position}
-                                key={index}
-                                onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
-                            >
-                                <div className="board-next-position-point"></div> 
-                            </div>
-                        })
-                }
-        else {
-            return null;
-        }  
-    }
-
-    checkEnemyCordinates(x, y, userGame) {
-        if(userGame.figuresEnemy.find((figures) => {
-            return  y === figures.y && x === figures.x;  
-        })) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
-    setPositionFigures(figure, userGame, position) {
-        let setFigure = {
-            nameFigure: figure.nameFigure,
-            srcImage: figure.srcImage,
-            x:  figure.x + position.right,
-            y:  figure.y + position.bottom,
-            status: true,
-            firstMove: true,
-        }
-
-        let setFigureForUser = {
-            nameFigure: figure.nameFigure,
-            srcImage: figure.srcImage,
-            x: 525 - (figure.x + position.right),
-            y:  525 - (figure.y + position.bottom),
-            status: true,
-            firstMove: true,
-        }
-
-        let indexFigure = userGame.figures.findIndex((figures) => {
-            return figure.nameFigure === figures.nameFigure; 
-        })
-
-        let indexUserGameInvite = this.props.actuallyGame.gameInvite.findIndex((userSearch) => {
-            return userGame.idGame === userSearch.idGame;
-        })
-    
-        let userSet = this.props.gameData.find((user) => {
-            return user.idGame === userGame.idGame;
-        })
-
-        let indexActuallyUser = userSet.gameInvite.findIndex((userSearch) => {
-            return userSearch.idGame === this.props.actuallyGame.idGame;
-        })
-
-        let figuresDelete = userGame.figuresEnemy.find((figuresEnemy) => {
-            return figuresEnemy.x === setFigure.x && figuresEnemy.y === setFigure.y
-        })
-        
-        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figures').child(indexFigure).set(setFigure);
-        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figuresEnemy').child(indexFigure).set(setFigureForUser);
-        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('yourMove').set(false);
-        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('yourMove').set(true);
-        
-        if(figuresDelete) {
-            let indexGameData = this.props.gameData.findIndex((userSearch)=> {
-                return userGame.idGame === userSearch.idGame;
-            })
-            let thisFigureDelete = this.props.gameData[indexGameData].gameInvite[indexActuallyUser].figures.find((figures) => {
-                return figures.nameFigure === figuresDelete.nameFigure;
-            })
-            let indexthisFigureDelete = this.props.gameData[indexGameData].gameInvite[indexActuallyUser].figures.findIndex((figures)=> {
-                return figures.nameFigure === figuresDelete.nameFigure;
-            })
-            thisFigureDelete.x = 1000;
-            thisFigureDelete.y = 1000;
-            thisFigureDelete.status = false;
-            this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figures').child(indexthisFigureDelete).set(thisFigureDelete);
-            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figuresEnemy').child(indexthisFigureDelete).set(thisFigureDelete);
-        }
-        if(this.state.endangeredKing) {
-            this.setState({endangeredKing: false});
-        }
-        this.collisionEnemyWithKing = null;
-    }
-
-    checkNextPositionPawn(figure, userGame) {
-        let positionNext = [];
-        if(!userGame.figures.find((figures) => {
-            return figures.y === figure.y + 75 && figures.x === figure.x
-        }) &&
-        !userGame.figuresEnemy.find((figures) => {
-            return figures.y === figure.y + 75 && figures.x === figure.x
-        })) {
-            positionNext.push({
-                        right: 0,
-                        bottom: 75,
-            })
-        }
-
-        if(!figure.firstMove) {
-            if(!userGame.figures.find((figures) => {
-                return (figures.y === figure.y + 150 && figures.x === figure.x) ||
-                       (figures.y === figure.y + 75 && figures.x === figure.x) 
-            }) &&
-            !userGame.figuresEnemy.find((figures) => {
-                return (figures.y === figure.y + 150 && figures.x === figure.x) || 
-                       (figures.y === figure.y + 75 && figures.x === figure.x) 
-            })) {
-                positionNext.push({
-                            right: 0,
-                            bottom: 150,
-                })
-            }
-        }
-
-        userGame.figuresEnemy.forEach((figuresEnemy) => {
-            if(figuresEnemy.y === figure.y + 75 && figuresEnemy.x - 75 === figure.x) {
-                positionNext.push({
-                    right: 75,
-                    bottom: 75,
-                })  
-             }
-             if(figuresEnemy.y === figure.y + 75 && figuresEnemy.x + 75 === figure.x) {
-                positionNext.push({
-                    right:  -75,
-                    bottom: 75,
-                })  
-             }
-        })
-
-        this.checkCordinatesWithKing(figure, userGame);
-
-        if(positionNext.length !== 0) {
-            return positionNext.map((position, index)=> {
-                return <div className="board-next-position"
-                            style={position}
-                            key={index}
-                            onClick={()=>{this.setPositionFigurePawn(figure, userGame, position)}}
-                       >
-                            <div className="board-next-position-point"></div> 
-                       </div>
-                    })
-        }
-        else {
-            return null;
-        }
-        
-    }
-
-    setPositionFigurePawn(figure, userGame, position) {
-        let setPawn = {
-                nameFigure: figure.nameFigure,
-                srcImage: figure.srcImage,
-                x:  figure.x + position.right,
-                y:  figure.y + position.bottom,
-                firstMove: true,
-                status: true,
-        }
-
-        let setPawnForUser = {
-            nameFigure: figure.nameFigure,
-            srcImage: figure.srcImage,
-            x: 525 - (figure.x + position.right),
-            y:  525 - (figure.y + position.bottom),
-            firstMove: true,
-            status: true,
-        }
-
-        let indexPawn = userGame.figures.findIndex((figures) => {
-            return figure.nameFigure === figures.nameFigure; 
-        })
-        let indexUserGameInvite = this.props.actuallyGame.gameInvite.findIndex((userSearch) => {
-            return userGame.idGame === userSearch.idGame;
-        })
-        
-        let userSet = this.props.gameData.find((user) => {
-            return user.idGame === userGame.idGame;
-        })
-
-        let indexActuallyUser = userSet.gameInvite.findIndex((userSearch) => {
-            return userSearch.idGame === this.props.actuallyGame.idGame;
-        })
-
-        let figuresDelete = userGame.figuresEnemy.find((figuresEnemy) => {
-            return figuresEnemy.x === setPawn.x && figuresEnemy.y === setPawn.y
-        })
-        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figures').child(indexPawn).set(setPawn);
-        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figuresEnemy').child(indexPawn).set(setPawnForUser);
-        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('yourMove').set(false);
-        if(figure.y + position.bottom === 525) {
-            this.setFigure = {
-                    setPawn,
-                    indexPawn,
-                    indexUserGameInvite,
-                    userGame,
-                    indexActuallyUser,
-                    setPawnForUser,
-            };
-            this.setState({windowSetFigure: true});                    
-        }
-        else {
-            this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('yourMove').set(true);
-        }
-        if(figuresDelete) {
-            let indexGameData = this.props.gameData.findIndex((userSearch)=> {
-                return userGame.idGame === userSearch.idGame;
-            })
-            let thisFigureDelete = this.props.gameData[indexGameData].gameInvite[indexActuallyUser].figures.find((figures) => {
-                return figures.nameFigure === figuresDelete.nameFigure;
-            })
-            let indexthisFigureDelete = this.props.gameData[indexGameData].gameInvite[indexActuallyUser].figures.findIndex((figures)=> {
-                return figures.nameFigure === figuresDelete.nameFigure;
-            })
-            thisFigureDelete.x = 1000;
-            thisFigureDelete.y = 1000;
-            thisFigureDelete.status = false;
-            this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figures').child(indexthisFigureDelete).set(thisFigureDelete);
-            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figuresEnemy').child(indexthisFigureDelete).set(thisFigureDelete);
-        }
-        if(this.state.endangeredKing) {
-            this.setState({endangeredKing: false});
-        }
-        this.collisionEnemyWithKing = null;
-    }
-
-    setFigureActually(newFigure) {
-        if(newFigure === 'hetman') {
-            this.setFigure.setPawn.nameFigure = newFigure + this.setFigure.setPawn.nameFigure.substr(-2);
-            this.setFigure.setPawn.srcImage = 'chess-' + newFigure +  this.setFigure.setPawn.srcImage.substr(-6);
-            this.setFigure.setPawnForUser.nameFigure =  this.setFigure.setPawn.nameFigure;
-            this.setFigure.setPawnForUser.srcImage = this.setFigure.setPawn.srcImage;
-        }
-        else {
-            this.setFigure.setPawn.nameFigure = newFigure + '_pawn' + this.setFigure.setPawn.nameFigure.substr(-2);
-            this.setFigure.setPawn.srcImage = 'chess-' + newFigure +  this.setFigure.setPawn.srcImage.substr(-6);
-            this.setFigure.setPawnForUser.nameFigure =  this.setFigure.setPawn.nameFigure;
-            this.setFigure.setPawnForUser.srcImage = this.setFigure.setPawn.srcImage;
-        }
-
-        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(this.setFigure.indexUserGameInvite).child('figures').child(this.setFigure.indexPawn).set(this.setFigure.setPawn);
-        this.props.databaseGame.child(this.setFigure.userGame.idGame).child('gameInvite').child(this.setFigure.indexActuallyUser).child('figuresEnemy').child(this.setFigure.indexPawn).set(this.setFigure.setPawnForUser);
-        this.props.databaseGame.child(this.setFigure.userGame.idGame).child('gameInvite').child(this.setFigure.indexActuallyUser).child('yourMove').set(true);
-        this.setState({windowSetFigure: false})
-        this.setFigure = null;
-    }
-
-    checkCordinatesWithKing(figure, userGame) {
-        let positionPositiveX = 75;
-        let positionNegativeX = -75;
-        let positionPositiveY = 75;
-        let positionNegativeY = -75;
-        let positionNegativeXPositiveY = {
-            x: -75,
-            y: 75,
-        };
-        let positionPositiveXPositiveY = {
-            x: 75,
-            y: 75,
-        };
-        let positionNegativeXNegativeY = {
-            x: -75,
-            y: -75,
-        };
-        let positionPositiveXNegativeY = {
-            x: 75,
-            y: -75,
-        };
-        let checkNextPositionPositiveY = true;
-        let checkNextPositionNegativeY = true;
-        let checkNextPositionPositiveX = true;
-        let checkNextPositionNegativeX = true; 
-        let checkNextPositionNegativeXPositiveY = true;
-        let checkNextPositionPositiveXPositiveY = true;
-        let checkNextPositionNegativeXNegativeY = true;
-        let checkNextPositionPositiveXNegativeY = true;
-        while(true) {
-            console.log('sprawdzam1')
-            // vertical and Horizont //
-            if(checkNextPositionPositiveY &&
-               figure.y + positionPositiveY <= 525 &&
-                !userGame.figures.find((userFigure) => {
-                    return figure.x === userFigure.x &&
-                           figure.y + positionPositiveY === userFigure.y  &&
-                           userFigure.nameFigure.substr(0, 4) !== 'king';
-                }) && 
-                !userGame.figuresEnemy.find((userFigure) => {
-                    return figure.x === userFigure.x &&
-                           figure.y + positionPositiveY === userFigure.y;
-                })) {
-                    if(userGame.figures.find((userFigure) => {
-                        return figure.x === userFigure.x &&
-                               figure.y + positionPositiveY === userFigure.y &&
-                               userFigure.nameFigure === 'king';
-                    })) {
-                        return true
-                    }
-            }
-            else {
-                checkNextPositionPositiveY = false;
-            }
-
-            if(checkNextPositionNegativeY &&
-                figure.y + positionNegativeY >= 0 &&
-                 !userGame.figures.find((userFigure) => {
-                     return figure.x === userFigure.x &&
-                            figure.y + positionNegativeY === userFigure.y  &&
-                            userFigure.nameFigure.substr(0, 4) !== 'king';
-                 }) && 
-                 !userGame.figuresEnemy.find((userFigure) => {
-                     return figure.x === userFigure.x &&
-                            figure.y + positionNegativeY === userFigure.y;
-                 })) {
-                    if(userGame.figures.find((userFigure) => {
-                        return figure.x === userFigure.x &&
-                               figure.y + positionNegativeY === userFigure.y &&
-                               userFigure.nameFigure === 'king';
-                    })) {
-                        return true
-                    }
-             }
-             else {
-                 checkNextPositionNegativeY = false;
-             }
-
-            if(checkNextPositionPositiveX &&
-                figure.x + positionPositiveX <= 525 &&
-                 !userGame.figures.find((userFigure) => {
-                     return figure.x + positionPositiveX === userFigure.x &&
-                            figure.y === userFigure.y && 
-                            userFigure.nameFigure.substr(0, 4) !== 'king';
-                 }) && 
-                 !userGame.figuresEnemy.find((userFigure) => {
-                     return figure.x + positionPositiveX === userFigure.x &&
-                            figure.y === userFigure.y;
-                 })) {
-                    if(userGame.figures.find((userFigure) => {
-                        return figure.x + positionPositiveX === userFigure.x &&
-                               figure.y === userFigure.y &&
-                               userFigure.nameFigure === 'king';
-                    })) {
-                        return true
-                    }
-             }
-             else {
-                checkNextPositionPositiveX = false;
-             }
-
-             if(checkNextPositionNegativeX &&
-                figure.x + positionPositiveX >= 0 &&
-                 !userGame.figures.find((userFigure) => {
-                     return figure.x + positionNegativeX === userFigure.x &&
-                            figure.y === userFigure.y && 
-                            userFigure.nameFigure.substr(0, 4) !== 'king';
-                 }) && 
-                 !userGame.figuresEnemy.find((userFigure) => {
-                     return figure.x + positionNegativeX === userFigure.x &&
-                            figure.y === userFigure.y;
-                 })) {
-                    if(userGame.figures.find((userFigure) => {
-                        return figure.x + positionNegativeX === userFigure.x &&
-                               figure.y === userFigure.y &&
-                               userFigure.nameFigure === 'king';
-                    })) {
-                        return true
-                    }
-             }
-             else {
-                checkNextPositionNegativeX = false;
-             }
-
-             // cross //
-
-             if(checkNextPositionNegativeXPositiveY &&
-                figure.y + positionNegativeXPositiveY.y <= 525 &&
-                figure.x + positionNegativeXPositiveY.x >= 0 &&
-                 !userGame.figures.find((userFigure) => {
-                     return figure.x + positionNegativeXPositiveY.x === userFigure.x &&
-                            figure.y + positionNegativeXPositiveY.y === userFigure.y  &&
-                            userFigure.nameFigure.substr(0, 4) !== 'king';
-                 }) && 
-                 !userGame.figuresEnemy.find((userFigure) => {
-                     return figure.x + positionNegativeXPositiveY.x === userFigure.x &&
-                            figure.y + positionNegativeXPositiveY.y === userFigure.y;
-                 })) {
-                     if(userGame.figures.find((userFigure) => {
-                         return figure.x + positionNegativeXPositiveY.x === userFigure.x &&
-                                figure.y + positionNegativeXPositiveY.y === userFigure.y &&
-                                userFigure.nameFigure === 'king';
-                     })) {
-                         return true
-                     }
-             }
-             else {
-                checkNextPositionNegativeXPositiveY = false;
-             }
-
-             if(checkNextPositionPositiveXPositiveY &&
-                figure.y + positionPositiveXPositiveY.y <= 525 &&
-                figure.x + positionPositiveXPositiveY.x <= 525 &&
-                 !userGame.figures.find((userFigure) => {
-                     return figure.x + positionPositiveXPositiveY.x === userFigure.x &&
-                            figure.y + positionPositiveXPositiveY.y === userFigure.y  &&
-                            userFigure.nameFigure.substr(0, 4) !== 'king';
-                 }) && 
-                 !userGame.figuresEnemy.find((userFigure) => {
-                     return figure.x + positionPositiveXPositiveY.x === userFigure.x &&
-                            figure.y + positionPositiveXPositiveY.y === userFigure.y;
-                 })) {
-                     if(userGame.figures.find((userFigure) => {
-                         return figure.x + positionPositiveXPositiveY.x === userFigure.x &&
-                                figure.y + positionPositiveXPositiveY.y === userFigure.y &&
-                                userFigure.nameFigure === 'king';
-                     })) {
-                         return true
-                     }
-             }
-             else {
-                checkNextPositionPositiveXPositiveY = false;
-             }
-
-             if(checkNextPositionNegativeXNegativeY &&
-                figure.y + positionNegativeXNegativeY.y >= 0 &&
-                figure.x + positionNegativeXNegativeY.x >= 0 &&
-                 !userGame.figures.find((userFigure) => {
-                     return figure.x + positionNegativeXNegativeY.x === userFigure.x &&
-                            figure.y + positionNegativeXNegativeY.y === userFigure.y  &&
-                            userFigure.nameFigure.substr(0, 4) !== 'king';
-                 }) && 
-                 !userGame.figuresEnemy.find((userFigure) => {
-                     return figure.x + positionNegativeXNegativeY.x &&
-                            figure.y + positionNegativeXNegativeY.y === userFigure.y;
-                 })) {
-                     if(userGame.figures.find((userFigure) => {
-                         return figure.x + positionNegativeXNegativeY.x === userFigure.x &&
-                                figure.y + positionNegativeXNegativeY.y === userFigure.y &&
-                                userFigure.nameFigure === 'king';
-                     })) {
-                         return true
-                     }
-             }
-             else {
-                checkNextPositionNegativeXNegativeY = false;
-             }
-
-             if(checkNextPositionPositiveXNegativeY &&
-                figure.y + positionPositiveXNegativeY.y >= 0 &&
-                figure.x + positionPositiveXNegativeY.x <= 525 &&
-                 !userGame.figures.find((userFigure) => {
-                     return figure.x + positionPositiveXNegativeY.x === userFigure.x &&
-                            figure.y + positionPositiveXNegativeY.y === userFigure.y  &&
-                            userFigure.nameFigure.substr(0, 4) !== 'king';
-                 }) && 
-                 !userGame.figuresEnemy.find((userFigure) => {
-                     return figure.x + positionPositiveXNegativeY.x === userFigure.x &&
-                            figure.y + positionPositiveXNegativeY.y === userFigure.y;
-                 })) {
-                     if(userGame.figures.find((userFigure) => {
-                         return figure.x + positionPositiveXNegativeY.x === userFigure.x &&
-                                figure.y + positionPositiveXNegativeY.y === userFigure.y &&
-                                userFigure.nameFigure === 'king';
-                     })) {
-                         return true
-                     }
-             }
-             else {
-                checkNextPositionPositiveXNegativeY = false;
-             }
-
-            if(!checkNextPositionPositiveY &&
-                !checkNextPositionNegativeY &&
-                !checkNextPositionPositiveX &&
-                !checkNextPositionNegativeX &&
-                !checkNextPositionNegativeXPositiveY &&
-                !checkNextPositionPositiveXPositiveY &&
-                !checkNextPositionNegativeXNegativeY &&
-                !checkNextPositionPositiveXNegativeY) {
-                     break;
-            }
-            else {
-                positionPositiveX += 75;
-                positionPositiveY += 75;
-                positionNegativeX -= 75;
-                positionNegativeY -= 75;
-                positionNegativeXPositiveY.x -= 75;
-                positionNegativeXPositiveY.y += 75;
-                positionPositiveXPositiveY.x += 75;
-                positionPositiveXPositiveY.y += 75;
-                positionNegativeXNegativeY.x -= 75;
-                positionNegativeXNegativeY.y -= 75;
-                positionPositiveXNegativeY.x += 75;
-                positionPositiveXNegativeY.y -= 75;
-            }
-        }
     }
 
     checkStatusKing() {
@@ -1291,7 +372,9 @@ export default class Board extends Component {
         }
         else {
             let positionGet = this.checkStatusVertcialAndHorizont(kingFigure, userGame, 'tower', status);
-            return positionGet;
+            if(positionGet) {
+                return positionGet;
+            }
         }
     }
 
@@ -1303,7 +386,7 @@ export default class Board extends Component {
                if(userGame.figuresEnemy.find((enemy) => {
                     enemyPos = enemy;    
                     return kingFigure.x + 75 === enemy.x &&
-                           kingFigure.y + 75 ===enemy.y &&
+                           kingFigure.y + 75 === enemy.y &&
                            enemy.nameFigure.substr(0,4) === 'pawn' 
                })){
                 if(status === 'set') {
@@ -1439,7 +522,8 @@ export default class Board extends Component {
                 checkFigure.y + positionNegativeXPositiveY.y <= 525 &&
                !userGame.figures.find((figures)=>{
                 return checkFigure.x + positionNegativeXPositiveY.x === figures.x &&
-                       checkFigure.y + positionNegativeXPositiveY.y === figures.y;   
+                       checkFigure.y + positionNegativeXPositiveY.y === figures.y && 
+                       (status === 'set' || figures.nameFigure.substr(0,4) !== 'king')  
                 })) {
                     SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
                     return checkFigure.x + positionNegativeXPositiveY.x === figureEnemy.x &&
@@ -1491,7 +575,8 @@ export default class Board extends Component {
                 checkFigure.y + positionPositiveXPositiveY.y <= 525 &&
                !userGame.figures.find((figures)=>{
                  return checkFigure.x + positionPositiveXPositiveY.x === figures.x &&
-                        checkFigure.y + positionPositiveXPositiveY.y === figures.y;   
+                        checkFigure.y + positionPositiveXPositiveY.y === figures.y && 
+                        (status === 'set' || figures.nameFigure.substr(0,4) !== 'king')  
                  })) {
                      SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
                      return checkFigure.x + positionPositiveXPositiveY.x === figureEnemy.x &&
@@ -1541,7 +626,8 @@ export default class Board extends Component {
                 checkFigure.y + positionNegativeXNegativeY.y >= 0 &&
                 !userGame.figures.find((figures)=>{
                   return checkFigure.x + positionNegativeXNegativeY.x === figures.x &&
-                         checkFigure.y + positionNegativeXNegativeY.y === figures.y;   
+                         checkFigure.y + positionNegativeXNegativeY.y === figures.y && 
+                         (status === 'set' || figures.nameFigure.substr(0,4) !== 'king')   
                   })) {
                       SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
                       return checkFigure.x + positionNegativeXNegativeY.x === figureEnemy.x &&
@@ -1591,11 +677,12 @@ export default class Board extends Component {
                 checkFigure.y + positionPositiveXNegativeY.y >= 0 &&
                 !userGame.figures.find((figures)=>{
                   return checkFigure.x + positionPositiveXNegativeY.x === figures.x &&
-                         checkFigure.y + positionPositiveXNegativeY.y === figures.y;   
+                         checkFigure.y + positionPositiveXNegativeY.y === figures.y && 
+                         (status === 'set' || figures.nameFigure.substr(0,4) !== 'king')  
                   })) {
                       SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
                       return checkFigure.x + positionPositiveXNegativeY.x === figureEnemy.x &&
-                             checkFigure.y + positionPositiveXNegativeY.y === figureEnemy.y   
+                             checkFigure.y + positionPositiveXNegativeY.y === figureEnemy.y ;  
                       })
                       if(SearchfigureEnemy) {
                           if(SearchfigureEnemy.nameFigure.substr(0,6) !== figureEnemy) {
@@ -1674,7 +761,8 @@ export default class Board extends Component {
                checkFigure.y + positionPositiveY <= 525 &&
                !userGame.figures.find((figures)=>{
                     return checkFigure.x === figures.x &&
-                           checkFigure.y + positionPositiveY === figures.y;   
+                           checkFigure.y + positionPositiveY === figures.y && 
+                           (status === 'set' || figures.nameFigure.substr(0,4) !== 'king')   
                 })) {
                     SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
                         return checkFigure.x === figureEnemy.x &&
@@ -1725,7 +813,8 @@ export default class Board extends Component {
                 checkFigure.y + positionNegativeY >= 0 &&
                 !userGame.figures.find((figures)=>{
                      return checkFigure.x === figures.x &&
-                            checkFigure.y + positionNegativeY === figures.y;   
+                            checkFigure.y + positionNegativeY === figures.y && 
+                            (status === 'set' || figures.nameFigure.substr(0,4) !== 'king')  
                  })) {
                      SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
                          return checkFigure.x === figureEnemy.x &&
@@ -1775,7 +864,8 @@ export default class Board extends Component {
                 checkFigure.x + positionPositiveX <= 525 &&
                 !userGame.figures.find((figures)=>{
                      return checkFigure.x + positionPositiveX === figures.x &&
-                            checkFigure.y === figures.y;   
+                            checkFigure.y === figures.y && 
+                            (status === 'set' || figures.nameFigure.substr(0,4) !== 'king')  
                  })) {
                      SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
                          return checkFigure.x + positionPositiveX === figureEnemy.x &&
@@ -1825,7 +915,8 @@ export default class Board extends Component {
                 checkFigure.x + positionNegativeX >= 0 &&
                 !userGame.figures.find((figures)=>{
                      return checkFigure.x + positionNegativeX === figures.x &&
-                            checkFigure.y === figures.y;   
+                            checkFigure.y === figures.y && 
+                            (status === 'set' || figures.nameFigure.substr(0,4) !== 'king')  
                  })) {
                      SearchfigureEnemy = userGame.figuresEnemy.find((figureEnemy)=>{
                          return checkFigure.x + positionNegativeX === figureEnemy.x &&
@@ -1887,6 +978,704 @@ export default class Board extends Component {
         if(status === 'get' && positionGet.length !== 0) {
             return positionGet;
         }
+    }
+
+    castling(king, towerCopy, userGame, tower) {
+        if(this.checkStatusNextPositionWithKing(towerCopy, userGame)) {
+            if(userGame.colorFigure === 'white'){
+                let positionKing = {
+                    right: -150,
+                    bottom: 0,
+                }
+                let positionTower = {
+                    right: 150,
+                    bottom: 0,
+                }
+                this.setPositionFigures(king, userGame, positionKing);
+                this.setPositionFigures(tower, userGame, positionTower);
+            }
+            else {
+                let positionKing = {
+                    right: 150,
+                    bottom: 0,
+                }
+                let positionTower = {
+                    right: -150,
+                    bottom: 0,
+                }
+                this.setPositionFigures(king, userGame, positionKing);
+                this.setPositionFigures(tower, userGame, positionTower);
+               }
+               this.props.setClickFigure(false);   
+            }
+    }
+   
+
+    checkStatusNextPositionWithKing(nextPosKingFigure, userGame) {
+        let positionGet = [];
+        positionGet = this.checkStatusKingWithHetman(nextPosKingFigure, userGame , 'get');
+        if(positionGet) {
+            console.log("jest1")
+            return false;
+        }
+        positionGet = this.checkStatusKingWithBishop(nextPosKingFigure, userGame, 'get');
+        if(positionGet) {
+            console.log("jest2")
+            return false;
+        }
+        positionGet = this.checkStatusKingWithTower(nextPosKingFigure, userGame, 'get');
+        if(positionGet) {
+            console.log("jest3")
+            return false;
+        }
+        positionGet = this.checkStatusKingWithPawn(nextPosKingFigure, userGame, 'get');
+        if(positionGet) {
+            console.log("jest4")
+            return false;
+        }
+        positionGet = this.checkStatusKingWithHorse(nextPosKingFigure, userGame, 'get');
+        if(positionGet) {
+            console.log("jest5")
+            return false;
+        }
+        return true;
+    }
+
+    renderNewPossiblePosition(figure, userGame) {
+        if(figure.nameFigure.substr(0,4) === 'pawn') {
+           return this.checkNextPositionPawn(figure, userGame);
+        }
+        else if(figure.nameFigure.substr(0,5) === 'tower') {
+           return this.checkNextPositionVerticalAndHorizon(figure, userGame);
+        }
+        else if(figure.nameFigure.substr(0,5) === 'horse') {
+            return this.checkNextPositionHorse(figure, userGame);
+        }
+        else if(figure.nameFigure.substr(0,6) === 'bishop') {
+            return this.checkNextPositionCross(figure, userGame);
+        }
+        else if(figure.nameFigure.substr(0,6) === 'hetman') {
+            return this.checkNextPositionHetman(figure, userGame);
+        }
+        else if(figure.nameFigure.substr(0,4) === 'king') {
+            return this.checkNextPositionKing(figure, userGame);
+        }
+    }
+
+    checkNextPositionHorse(figure, userGame) {
+        let positionNext = [];
+        POSITION_HORSE.forEach((horsePos) => {
+            if(figure.x + horsePos.x <= 525 &&
+               figure.x + horsePos.x >= 0 &&
+               figure.y + horsePos.y <= 525 &&
+               figure.y + horsePos.y >= 0 &&
+               !userGame.figures.find((figures)=>{
+                return figure.x + horsePos.x === figures.x &&
+                       figure.y + horsePos.y === figures.y;  
+                })) {
+                   positionNext.push({
+                       right: horsePos.x,
+                       bottom: horsePos.y,
+                    });
+               }
+        })
+        if(positionNext.length !== 0) {
+            return positionNext.map((position, index)=> {
+                return <div className="board-next-position"
+                            style={position}
+                            key={index}
+                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                        >
+                            <div className="board-next-position-point"></div> 
+                       </div>
+                    })
+            }
+            else {
+                return null;
+            }  
+    }
+    checkNextPositionHetman(figure, userGame) {
+        let moveOnCross = this.checkNextPositionCross(figure, userGame);
+        let moveVerticalAndHorizon = this.checkNextPositionVerticalAndHorizon(figure, userGame);
+        let positionNext = [...moveOnCross || [], ...moveVerticalAndHorizon || []];
+        if(positionNext.length !== 0) {
+            return positionNext.map((position, index)=> {
+                return <div className="board-next-position"
+                            style={{
+                                    right: position.right - 2,
+                                    bottom: position.bottom,
+                                 }}
+                            key={index}
+                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                        >
+                            <div className="board-next-position-point"></div> 
+                       </div>
+                    })
+            }
+            else {
+                return null;
+            }  
+    }
+
+    checkNextPositionKing(figure, userGame) {
+        let positionNext = [];
+        let changePositionWhenDangerous = [];
+        POSITION_KING.forEach((kingPos) => {
+            if(figure.x + kingPos.x <= 525 &&
+               figure.x + kingPos.x >= 0 &&
+               figure.y + kingPos.y <= 525 &&
+               figure.y + kingPos.y >= 0 &&
+               !userGame.figures.find((figures)=>{
+                return figure.x + kingPos.x === figures.x &&
+                       figure.y + kingPos.y === figures.y;  
+                })) {
+                   positionNext.push({
+                       right: kingPos.x,
+                       bottom: kingPos.y,
+                   })
+               }
+        })
+        positionNext.forEach((position, index) =>{
+                let possibleKingPosition = Object.assign({}, figure);
+                possibleKingPosition.x += position.right;
+                possibleKingPosition.y += position.bottom;
+                if(this.checkStatusNextPositionWithKing(possibleKingPosition, userGame)) { 
+                    if(this.checkKingWithKing(possibleKingPosition, userGame)) {
+                        changePositionWhenDangerous.push(position);
+                    }
+                }
+                
+        })
+        positionNext = changePositionWhenDangerous;
+
+
+        if(positionNext.length !== 0) {
+                return positionNext.map((position, index)=> {
+                    return <div className="board-next-position"
+                                style={position}
+                                key={index}
+                                onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                            >
+                                <div className="board-next-position-point"></div> 
+                            </div>
+                        })
+                }
+        else {
+            return null;
+        }  
+    }
+
+    checkKingWithKing(figure, userGame) {
+        let positionEnemyKing = [];
+        let s;
+        POSITION_KING.forEach((position) => {
+            if(figure.x + position.x <= 525 &&
+               figure.x + position.x >= 0 &&
+               figure.y + position.y <= 525 &&
+               figure.y + position.y >= 0 &&
+               userGame.figuresEnemy.find((enemy) =>{ 
+                s =enemy
+                return figure.x + position.x === enemy.x &&
+                          figure.y + position.y === enemy.y &&
+                          enemy.nameFigure === 'king'; 
+               })){
+                   positionEnemyKing.push(true);
+               }
+        }) 
+        if(positionEnemyKing.length !== 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    checkNextPositionVerticalAndHorizon(figure, userGame) {
+        let positionNext = [];
+        let diffrent = 0;
+        let newLengthArray = 0;
+        let positionPositiveX = 75;
+        let positionPositiveY = 75;
+        let positionNegativeX = -75;
+        let positionNegativeY = -75;
+        let checkNextPositionPositiveY = true;
+        let checkNextPositionNegativeY = true;
+        let checkNextPositionPositiveX = true;
+        let checkNextPositionNegativeX = true; 
+        while(true) {  
+            if(checkNextPositionPositiveY &&
+                figure.y + positionPositiveY <= 525 && 
+                !userGame.figures.find((figures) => {  
+                   return figure.x === figures.x &&
+                          figure.y + positionPositiveY === figures.y;  
+               })) {
+                positionNext.push({
+                    right: 0,
+                    bottom: positionPositiveY,
+                })
+                checkNextPositionPositiveY = this.checkEnemyCordinates(figure.x, figure.y + positionPositiveY, userGame);
+            }
+            else {
+                checkNextPositionPositiveY = false;
+            }
+            if(checkNextPositionNegativeY &&
+               figure.y + positionNegativeY >= 0 &&
+               !userGame.figures.find((figures)=>{
+                    return figure.x === figures.x &&
+                           figure.y + positionNegativeY === figures.y;  
+                })) {
+                    positionNext.push({
+                    right: 0,
+                    bottom: positionNegativeY,
+                })
+                checkNextPositionNegativeY = this.checkEnemyCordinates(figure.x, figure.y + positionNegativeY, userGame);
+            }
+            else {
+                checkNextPositionNegativeY = false;
+            }
+
+            if(checkNextPositionPositiveX &&
+               figure.x + positionPositiveX <= 525 &&
+               !userGame.figures.find((figures)=>{
+                    return figure.x + positionPositiveX === figures.x &&
+                           figure.y === figures.y;  
+                })) {
+                    positionNext.push({
+                    right: positionPositiveX,
+                    bottom: 0,
+                })
+                checkNextPositionPositiveX = this.checkEnemyCordinates(figure.x + positionPositiveX, figure.y, userGame);
+            }
+
+            else {
+                checkNextPositionPositiveX = false;
+            }
+            if(checkNextPositionNegativeX &&
+               figure.x + positionNegativeX >= 0 &&
+               !userGame.figures.find((figures)=>{
+                    return figure.x + positionNegativeX === figures.x &&
+                           figure.y === figures.y;  
+                })) {
+                    positionNext.push({
+                    right: positionNegativeX,
+                    bottom: 0,
+                })
+                checkNextPositionNegativeX = this.checkEnemyCordinates(figure.x + positionNegativeX, figure.y, userGame);  
+            }
+            else {
+                checkNextPositionNegativeX = false;
+            }
+            newLengthArray = positionNext.length;
+            
+            if(newLengthArray === diffrent) {
+                break;
+            }
+            else {
+                diffrent = newLengthArray;
+                positionPositiveX += 75;
+                positionPositiveY += 75;
+                positionNegativeX -= 75;
+                positionNegativeY -= 75;
+            }
+        }
+       if(figure.nameFigure.substr(0, 6) !== 'hetman') {
+        if(positionNext.length !== 0) {
+            return positionNext.map((position, index)=> {
+                return <div className="board-next-position"
+                            style={position}
+                            key={index}
+                            onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                        >
+                            <div className="board-next-position-point"></div> 
+                       </div>
+                    })
+            }
+            else {
+                return null;
+            }  
+       } 
+       else {
+           return positionNext;
+       }   
+    }
+
+    checkNextPositionCross(figure, userGame) {
+        let positionNext = [];
+        let diffrent = 0;
+        let newLengthArray = 0;
+        let positionNegativeXPositiveY = {
+            x: -75,
+            y: 75,
+        };
+        let positionPositiveXPositiveY = {
+            x: 75,
+            y: 75,
+        };
+        let positionNegativeXNegativeY = {
+            x: -75,
+            y: -75,
+        };
+        let positionPositiveXNegativeY = {
+            x: 75,
+            y: -75,
+        };
+        let checkNextPositionNegativeXPositiveY = true;
+        let checkNextPositionPositiveXPositiveY = true;
+        let checkNextPositionNegativeXNegativeY = true;
+        let checkNextPositionPositiveXNegativeY = true;
+        while(true) {  
+            if(checkNextPositionNegativeXPositiveY &&
+               figure.x + positionNegativeXPositiveY.x >= 0 &&
+               figure.y + positionNegativeXPositiveY.y <= 525 &&
+               !userGame.figures.find((figures)=>{
+                return figure.x + positionNegativeXPositiveY.x === figures.x &&
+                       figure.y + positionNegativeXPositiveY.y === figures.y;   
+                })) {
+                   positionNext.push({
+                       right: positionNegativeXPositiveY.x,
+                       bottom: positionNegativeXPositiveY.y,
+                   })
+                   checkNextPositionNegativeXPositiveY = this.checkEnemyCordinates(figure.x + positionNegativeXPositiveY.x, figure.y + positionNegativeXPositiveY.y, userGame);
+            }
+
+            else {
+                checkNextPositionNegativeXPositiveY = false;
+            }
+
+            if(checkNextPositionPositiveXPositiveY &&
+               figure.x + positionPositiveXPositiveY.x <= 525 &&
+               figure.y + positionPositiveXPositiveY.y <= 525 &&
+               !userGame.figures.find((figures)=>{
+                return figure.x + positionPositiveXPositiveY.x === figures.x &&
+                       figure.y + positionPositiveXPositiveY.y === figures.y;   
+                })) {
+                   positionNext.push({
+                       right: positionPositiveXPositiveY.x,
+                       bottom: positionPositiveXPositiveY.y,
+                   })
+                   checkNextPositionPositiveXPositiveY = this.checkEnemyCordinates(figure.x + positionPositiveXPositiveY.x, figure.y + positionPositiveXPositiveY.y, userGame);
+            }
+
+            else {
+                checkNextPositionPositiveXPositiveY = false;
+            }
+
+            if(checkNextPositionNegativeXNegativeY &&
+               figure.x + positionNegativeXNegativeY.x >= 0 &&
+               figure.y + positionNegativeXNegativeY.y >= 0 &&
+               !userGame.figures.find((figures)=>{
+                    return figure.x + positionNegativeXNegativeY.x === figures.x &&
+                           figure.y + positionNegativeXNegativeY.y === figures.y;   
+                    })) {
+                    positionNext.push({
+                        right: positionNegativeXNegativeY.x,
+                        bottom: positionNegativeXNegativeY.y,
+                    })
+                    checkNextPositionNegativeXNegativeY = this.checkEnemyCordinates(figure.x + positionNegativeXNegativeY.x, figure.y + positionNegativeXNegativeY.y, userGame);
+             }
+
+             else {
+                checkNextPositionNegativeXNegativeY = false;
+             }
+            
+            if(checkNextPositionPositiveXNegativeY &&
+               figure.x + positionPositiveXNegativeY.x <= 525 &&
+               figure.y + positionPositiveXNegativeY.y >= 0 && 
+               !userGame.figures.find((figures)=>{
+                    return figure.x + positionPositiveXNegativeY.x === figures.x &&
+                           figure.y + positionPositiveXNegativeY.y === figures.y;   
+                    })) {
+                    positionNext.push({
+                        right: positionPositiveXNegativeY.x,
+                        bottom: positionPositiveXNegativeY.y,
+                    })
+                    checkNextPositionPositiveXNegativeY = this.checkEnemyCordinates(figure.x + positionPositiveXNegativeY.x, figure.y + positionPositiveXNegativeY.y, userGame);
+            }
+
+            else {
+                checkNextPositionPositiveXNegativeY = false;
+            }
+
+            newLengthArray = positionNext.length;
+            
+            if(newLengthArray === diffrent) {
+                break;
+            }
+            else {
+                diffrent = newLengthArray;
+                positionNegativeXPositiveY.x -= 75;
+                positionNegativeXPositiveY.y += 75;
+                positionPositiveXPositiveY.x += 75;
+                positionPositiveXPositiveY.y += 75;
+                positionNegativeXNegativeY.x -= 75;
+                positionNegativeXNegativeY.y -= 75;
+                positionPositiveXNegativeY.x += 75;
+                positionPositiveXNegativeY.y -= 75;
+            }
+        }
+        if(figure.nameFigure.substr(0,6) !== 'hetman') {
+            if(positionNext.length !== 0) {
+                return positionNext.map((position, index)=> {
+                    return <div className="board-next-position"
+                                style={{
+                                    right: position.right - 2,
+                                    bottom: position.bottom,
+                                }}
+                                key={index}
+                                onClick={()=>{this.setPositionFigures(figure, userGame, position)}}
+                            >
+                                <div className="board-next-position-point"></div> 
+                           </div>
+                        })
+                }
+                else {
+                    return null;
+                }  
+        }
+        else {
+            return positionNext;
+        }
+    }
+
+
+    checkEnemyCordinates(x, y, userGame) {
+        if(userGame.figuresEnemy.find((figures) => {
+            return  y === figures.y && x === figures.x;  
+        })) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    setPositionFigures(figure, userGame, position) {
+        let setFigure = {
+            nameFigure: figure.nameFigure,
+            srcImage: figure.srcImage,
+            x:  figure.x + position.right,
+            y:  figure.y + position.bottom,
+            status: true,
+            firstMove: true,
+        }
+
+        let setFigureForUser = {
+            nameFigure: figure.nameFigure,
+            srcImage: figure.srcImage,
+            x: 525 - (figure.x + position.right),
+            y:  525 - (figure.y + position.bottom),
+            status: true,
+            firstMove: true,
+        }
+
+        let indexFigure = userGame.figures.findIndex((figures) => {
+            return figure.nameFigure === figures.nameFigure; 
+        })
+
+        let indexUserGameInvite = this.props.actuallyGame.gameInvite.findIndex((userSearch) => {
+            return userGame.idGame === userSearch.idGame;
+        })
+    
+        let userSet = this.props.gameData.find((user) => {
+            return user.idGame === userGame.idGame;
+        })
+
+        let indexActuallyUser = userSet.gameInvite.findIndex((userSearch) => {
+            return userSearch.idGame === this.props.actuallyGame.idGame;
+        })
+
+        let figuresDelete = userGame.figuresEnemy.find((figuresEnemy) => {
+            return figuresEnemy.x === setFigure.x && figuresEnemy.y === setFigure.y
+        })
+        
+        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figures').child(indexFigure).set(setFigure);
+        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figuresEnemy').child(indexFigure).set(setFigureForUser);
+        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('yourMove').set(false);
+        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('yourMove').set(true);
+        
+        if(figuresDelete) {
+            let indexGameData = this.props.gameData.findIndex((userSearch)=> {
+                return userGame.idGame === userSearch.idGame;
+            })
+            let thisFigureDelete = this.props.gameData[indexGameData].gameInvite[indexActuallyUser].figures.find((figures) => {
+                return figures.nameFigure === figuresDelete.nameFigure;
+            })
+            let indexthisFigureDelete = this.props.gameData[indexGameData].gameInvite[indexActuallyUser].figures.findIndex((figures)=> {
+                return figures.nameFigure === figuresDelete.nameFigure;
+            })
+            thisFigureDelete.x = 1000;
+            thisFigureDelete.y = 1000;
+            thisFigureDelete.status = false;
+            this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figures').child(indexthisFigureDelete).set(thisFigureDelete);
+            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figuresEnemy').child(indexthisFigureDelete).set(thisFigureDelete);
+        }
+        if(this.state.endangeredKing) {
+            this.setState({endangeredKing: false});
+        }
+        this.collisionEnemyWithKing = null;
+    }
+
+    checkNextPositionPawn(figure, userGame) {
+        let positionNext = [];
+        if(!userGame.figures.find((figures) => {
+            return figures.y === figure.y + 75 && figures.x === figure.x
+        }) &&
+        !userGame.figuresEnemy.find((figures) => {
+            return figures.y === figure.y + 75 && figures.x === figure.x
+        })) {
+            positionNext.push({
+                        right: 0,
+                        bottom: 75,
+            })
+        }
+
+        if(!figure.firstMove) {
+            if(!userGame.figures.find((figures) => {
+                return (figures.y === figure.y + 150 && figures.x === figure.x) ||
+                       (figures.y === figure.y + 75 && figures.x === figure.x) 
+            }) &&
+            !userGame.figuresEnemy.find((figures) => {
+                return (figures.y === figure.y + 150 && figures.x === figure.x) || 
+                       (figures.y === figure.y + 75 && figures.x === figure.x) 
+            })) {
+                positionNext.push({
+                            right: 0,
+                            bottom: 150,
+                })
+            }
+        }
+
+        userGame.figuresEnemy.forEach((figuresEnemy) => {
+            if(figuresEnemy.y === figure.y + 75 && figuresEnemy.x - 75 === figure.x) {
+                positionNext.push({
+                    right: 75,
+                    bottom: 75,
+                })  
+             }
+             if(figuresEnemy.y === figure.y + 75 && figuresEnemy.x + 75 === figure.x) {
+                positionNext.push({
+                    right:  -75,
+                    bottom: 75,
+                })  
+             }
+        })
+
+        if(positionNext.length !== 0) {
+            return positionNext.map((position, index)=> {
+                return <div className="board-next-position"
+                            style={position}
+                            key={index}
+                            onClick={()=>{this.setPositionFigurePawn(figure, userGame, position)}}
+                       >
+                            <div className="board-next-position-point"></div> 
+                       </div>
+                    })
+        }
+        else {
+            return null;
+        }
+        
+    }
+
+    setPositionFigurePawn(figure, userGame, position) {
+        let setPawn = {
+                nameFigure: figure.nameFigure,
+                srcImage: figure.srcImage,
+                x:  figure.x + position.right,
+                y:  figure.y + position.bottom,
+                firstMove: true,
+                status: true,
+        }
+
+        let setPawnForUser = {
+            nameFigure: figure.nameFigure,
+            srcImage: figure.srcImage,
+            x: 525 - (figure.x + position.right),
+            y:  525 - (figure.y + position.bottom),
+            firstMove: true,
+            status: true,
+        }
+
+        let indexPawn = userGame.figures.findIndex((figures) => {
+            return figure.nameFigure === figures.nameFigure; 
+        })
+        let indexUserGameInvite = this.props.actuallyGame.gameInvite.findIndex((userSearch) => {
+            return userGame.idGame === userSearch.idGame;
+        })
+        
+        let userSet = this.props.gameData.find((user) => {
+            return user.idGame === userGame.idGame;
+        })
+
+        let indexActuallyUser = userSet.gameInvite.findIndex((userSearch) => {
+            return userSearch.idGame === this.props.actuallyGame.idGame;
+        })
+
+        let figuresDelete = userGame.figuresEnemy.find((figuresEnemy) => {
+            return figuresEnemy.x === setPawn.x && figuresEnemy.y === setPawn.y
+        })
+        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figures').child(indexPawn).set(setPawn);
+        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figuresEnemy').child(indexPawn).set(setPawnForUser);
+        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('yourMove').set(false);
+        if(figure.y + position.bottom === 525) {
+            this.setFigure = {
+                    setPawn,
+                    indexPawn,
+                    indexUserGameInvite,
+                    userGame,
+                    indexActuallyUser,
+                    setPawnForUser,
+            };
+            this.setState({windowSetFigure: true});                    
+        }
+        else {
+            this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('yourMove').set(true);
+        }
+        if(figuresDelete) {
+            let indexGameData = this.props.gameData.findIndex((userSearch)=> {
+                return userGame.idGame === userSearch.idGame;
+            })
+            let thisFigureDelete = this.props.gameData[indexGameData].gameInvite[indexActuallyUser].figures.find((figures) => {
+                return figures.nameFigure === figuresDelete.nameFigure;
+            })
+            let indexthisFigureDelete = this.props.gameData[indexGameData].gameInvite[indexActuallyUser].figures.findIndex((figures)=> {
+                return figures.nameFigure === figuresDelete.nameFigure;
+            })
+            thisFigureDelete.x = 1000;
+            thisFigureDelete.y = 1000;
+            thisFigureDelete.status = false;
+            this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figures').child(indexthisFigureDelete).set(thisFigureDelete);
+            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figuresEnemy').child(indexthisFigureDelete).set(thisFigureDelete);
+        }
+        if(this.state.endangeredKing) {
+            this.setState({endangeredKing: false});
+        }
+        this.collisionEnemyWithKing = null;
+    }
+
+    setFigureActually(newFigure) {
+        if(newFigure === 'hetman') {
+            this.setFigure.setPawn.nameFigure = newFigure + this.setFigure.setPawn.nameFigure.substr(-2);
+            this.setFigure.setPawn.srcImage = 'chess-' + newFigure +  this.setFigure.setPawn.srcImage.substr(-6);
+            this.setFigure.setPawnForUser.nameFigure =  this.setFigure.setPawn.nameFigure;
+            this.setFigure.setPawnForUser.srcImage = this.setFigure.setPawn.srcImage;
+        }
+        else {
+            this.setFigure.setPawn.nameFigure = newFigure + '_pawn' + this.setFigure.setPawn.nameFigure.substr(-2);
+            this.setFigure.setPawn.srcImage = 'chess-' + newFigure +  this.setFigure.setPawn.srcImage.substr(-6);
+            this.setFigure.setPawnForUser.nameFigure =  this.setFigure.setPawn.nameFigure;
+            this.setFigure.setPawnForUser.srcImage = this.setFigure.setPawn.srcImage;
+        }
+
+        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(this.setFigure.indexUserGameInvite).child('figures').child(this.setFigure.indexPawn).set(this.setFigure.setPawn);
+        this.props.databaseGame.child(this.setFigure.userGame.idGame).child('gameInvite').child(this.setFigure.indexActuallyUser).child('figuresEnemy').child(this.setFigure.indexPawn).set(this.setFigure.setPawnForUser);
+        this.props.databaseGame.child(this.setFigure.userGame.idGame).child('gameInvite').child(this.setFigure.indexActuallyUser).child('yourMove').set(true);
+        this.setState({windowSetFigure: false})
+        this.setFigure = null;
+    }
+
+    checkCordinatesWithKing(figure, userGame) {
+       
     }
 
     endGame() {
@@ -2158,14 +1947,6 @@ const POSITION_KING = [
         y: 75,
     },
     {
-        x: 75,
-        y: 75,
-    },
-    {
-        x: -75,
-        y: 75,
-    },
-    {
         x: -75,
         y: 0,
     },
@@ -2184,5 +1965,13 @@ const POSITION_KING = [
     {
         x: -75,
         y: -75,
+    },
+    {
+        x: 75,
+        y: 75,
+    },
+    {
+        x: -75,
+        y: 75,
     },
 ]
