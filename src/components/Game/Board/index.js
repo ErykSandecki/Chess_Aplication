@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import './style.css';
 
 import React, { Component } from 'react';
@@ -71,7 +73,7 @@ export default class Board extends Component {
                     if(!this.state.statusGame) {
                         this.setState({
                             statusGame: true,
-                        })
+                        });
                     }  
                 }
                 else if(thisGame.figuresEnemy.find((enemy)=>{
@@ -81,14 +83,14 @@ export default class Board extends Component {
                     if(!this.state.statusGame) {
                         this.setState({
                             statusGame: true,
-                        })
+                        });
                     } 
                 }
                 else {
                     if(this.state.statusGame) {
                         this.setState({
                             statusGame: false,
-                        })
+                        });
                     }
                 }
             }
@@ -96,7 +98,7 @@ export default class Board extends Component {
                 if(this.state.statusGame) {
                     this.setState({
                         statusGame: false,
-                    })
+                    });
                 }
             }
         }
@@ -104,7 +106,7 @@ export default class Board extends Component {
             if(this.state.statusGame) {
                 this.setState({
                     statusGame: false,
-                })
+                });
             }
         }
 
@@ -138,9 +140,12 @@ export default class Board extends Component {
         return <div className="board-scale"
                     key={index}
                     style={direction === 'horizontally' ?
-                            {left: (75 * index) + 'px',
-                             top: '600px'}
-                            :{left: '600px',
+                             {
+                                left: (75 * index) + 'px',
+                                top: '600px'
+                             }
+                            :{
+                              left: '600px',
                               top: (525 - 75 * index) + 'px'
                              }
                           }
@@ -174,13 +179,13 @@ export default class Board extends Component {
                                     :null
                                 }
                             </React.Fragment>
-                        :classChoose === classActuallyChoose ?
+                            :classChoose === classActuallyChoose ?
                                 <React.Fragment>
                                     <div className="spinner-figure"></div>
                                     {this.renderNewPossiblePosition(figure, userGame)}
                                 </React.Fragment>
                                 :null
-                            :null
+                        :null
                   }   
                </div>
     }
@@ -265,11 +270,9 @@ export default class Board extends Component {
                 else if(userGame.colorFigure === 'black' && 
                      classFigureName === 'board-figures tower_2' &&
                      this.state.actuallyClassFigure === 'board-figures king') {
-                        
                         let king = userGame.figures.find((figure) => {
                             return figure.nameFigure.substr(0,4) === 'king';
                         });
-                        
                         let tower_2 = userGame.figures.find((figure) => {
                             return figure.nameFigure.substr(0,7) === 'tower_2';
                         });
@@ -481,7 +484,7 @@ export default class Board extends Component {
                     })
                    }
                    else {
-                    positionGet.push(true)
+                    positionGet.push(true);
                    }
                    
                }
@@ -559,9 +562,8 @@ export default class Board extends Component {
                                 
                             }
                             else {
-                                positionGet.push(true)
-                            }
-                                
+                                positionGet.push(true);
+                            }     
                         checkNextPositionNegativeXPositiveY = false;
                     }
                }     
@@ -611,7 +613,7 @@ export default class Board extends Component {
                                 }   
                             }
                             else {
-                                positionGet.push(true)
+                                positionGet.push(true);
                             }
                          checkNextPositionPositiveXPositiveY = false;
                      }
@@ -662,7 +664,7 @@ export default class Board extends Component {
                                     }   
                                 }
                                 else {
-                                    positionGet.push(true)
+                                    positionGet.push(true);
                                 }
                           checkNextPositionNegativeXNegativeY = false;
                       }
@@ -713,12 +715,12 @@ export default class Board extends Component {
                                     }   
                                 }   
                                 else {
-                                    positionGet.push(true)
+                                    positionGet.push(true);
                                 }
                           checkNextPositionPositiveXNegativeY = false;
                       }
-                 }     
-              }
+                    }     
+                }
             else {
                 checkNextPositionPositiveXNegativeY = false;
               }
@@ -800,7 +802,6 @@ export default class Board extends Component {
                                 else {
                                     positionGet.push(true);
                                 }
-                               
                         checkNextPositionPositiveY = false;
                         }
                     }
@@ -1077,8 +1078,10 @@ export default class Board extends Component {
         })
         colisionWithYourKing = this.checkCordinatesWithKing(figure, userGame);
        
-        if(colisionWithYourKing) {
-                positionNext = [];
+        if(positionNext.length !== 0) {
+            if(colisionWithYourKing) {
+                positionNext = this.checkSavePositionKingWhenFigureChangePostion(figure, userGame, colisionWithYourKing,  positionNext);
+            }
         }
         
         if(positionNext.length !== 0) {
@@ -1155,8 +1158,16 @@ export default class Board extends Component {
                 } 
         })
         positionNext = changePositionWhenDangerous;
-
-
+       if(this.collisionEnemyWithKing) {
+           if(positionNext.length === 0 && 
+            !userGame.figures.find((figure) => {
+               return figure.status && figure.nameFigure !== 'king';
+           })) {
+            setTimeout(() => {
+                this.checkMate(userGame);
+            },2000)  
+           }
+       }
         if(positionNext.length !== 0) {
                 return positionNext.map((position, index)=> {
                     return <div className="board-next-position"
@@ -1175,14 +1186,12 @@ export default class Board extends Component {
 
     checkKingWithKing(figure, userGame) {
         let positionEnemyKing = [];
-        let s;
         POSITION_KING.forEach((position) => {
             if(figure.x + position.x <= 525 &&
                figure.x + position.x >= 0 &&
                figure.y + position.y <= 525 &&
                figure.y + position.y >= 0 &&
                userGame.figuresEnemy.find((enemy) =>{ 
-                s =enemy
                 return figure.x + position.x === enemy.x &&
                           figure.y + position.y === enemy.y &&
                           enemy.nameFigure === 'king'; 
@@ -1196,6 +1205,34 @@ export default class Board extends Component {
         else {
             return true;
         }
+    }
+
+    checkMate(userGame) {
+        let actuallyGameYourEnemyIndex = this.props.actuallyGame.gameInvite.findIndex((gameUser) => {
+            return gameUser.idGame === userGame.idGame});
+        let enemyUser = this.props.gameData.find((gameUser) => {
+            return gameUser.idGame === userGame.idGame;
+        })
+        let enemyUserIndex = enemyUser.gameInvite.findIndex((gameUser) => {
+            return gameUser.idGame === this.props.actuallyGame.idGame;
+        })
+        this.props.databaseGame
+        .child(this.props.actuallyGame.idGame)
+        .child('gameInvite')
+        .child(actuallyGameYourEnemyIndex)
+        .child('figures')
+        .child(14)
+        .child('status')
+        .set(false);
+
+        this.props.databaseGame
+        .child(userGame.idGame)
+        .child('gameInvite')
+        .child(enemyUserIndex)
+        .child('figuresEnemy')
+        .child(14)
+        .child('status')
+        .set(false); 
     }
 
     checkNextPositionVerticalAndHorizon(figure, userGame) {
@@ -1351,7 +1388,12 @@ export default class Board extends Component {
                        right: positionNegativeXPositiveY.x,
                        bottom: positionNegativeXPositiveY.y,
                    })
-                   checkNextPositionNegativeXPositiveY = this.checkEnemyCordinates(figure.x + positionNegativeXPositiveY.x, figure.y + positionNegativeXPositiveY.y, userGame);
+                   checkNextPositionNegativeXPositiveY = 
+                        this.checkEnemyCordinates(
+                            figure.x + positionNegativeXPositiveY.x, 
+                            figure.y + positionNegativeXPositiveY.y, 
+                            userGame
+                        );
             }
 
             else {
@@ -1369,7 +1411,12 @@ export default class Board extends Component {
                        right: positionPositiveXPositiveY.x,
                        bottom: positionPositiveXPositiveY.y,
                    })
-                   checkNextPositionPositiveXPositiveY = this.checkEnemyCordinates(figure.x + positionPositiveXPositiveY.x, figure.y + positionPositiveXPositiveY.y, userGame);
+                   checkNextPositionPositiveXPositiveY = 
+                        this.checkEnemyCordinates(
+                            figure.x + positionPositiveXPositiveY.x, 
+                            figure.y + positionPositiveXPositiveY.y, 
+                            userGame
+                        );
             }
 
             else {
@@ -1387,7 +1434,11 @@ export default class Board extends Component {
                         right: positionNegativeXNegativeY.x,
                         bottom: positionNegativeXNegativeY.y,
                     })
-                    checkNextPositionNegativeXNegativeY = this.checkEnemyCordinates(figure.x + positionNegativeXNegativeY.x, figure.y + positionNegativeXNegativeY.y, userGame);
+                    checkNextPositionNegativeXNegativeY = 
+                        this.checkEnemyCordinates(
+                            figure.x + positionNegativeXNegativeY.x,
+                            figure.y + positionNegativeXNegativeY.y, 
+                            userGame);
              }
 
              else {
@@ -1405,7 +1456,11 @@ export default class Board extends Component {
                         right: positionPositiveXNegativeY.x,
                         bottom: positionPositiveXNegativeY.y,
                     })
-                    checkNextPositionPositiveXNegativeY = this.checkEnemyCordinates(figure.x + positionPositiveXNegativeY.x, figure.y + positionPositiveXNegativeY.y, userGame);
+                    checkNextPositionPositiveXNegativeY = 
+                        this.checkEnemyCordinates(
+                            figure.x + positionPositiveXNegativeY.x, 
+                            figure.y + positionPositiveXNegativeY.y, 
+                            userGame);
             }
 
             else {
@@ -1478,7 +1533,7 @@ export default class Board extends Component {
                    if(figure.x + nextPosition >= 0 &&
                       !userGame.figures.find((figures) => {
                           return figure.x + nextPosition === figures.x &&
-                                 figure.y === figures.y
+                                 figure.y === figures.y;
                       })) {
                         if(userGame.figuresEnemy.find((enemy) => {
                             return figure.x + nextPosition === enemy.x &&
@@ -1487,6 +1542,9 @@ export default class Board extends Component {
                                     enemy.nameFigure.substr(0,5) === 'tower')                          
                         })) {
                             newPositionNext = [];
+                            if(figure.nameFigure.substr(0,5) === 'horse') {
+                                return newPositionNext
+                            }
                             positionNext.forEach((position) => {
                                 if(position.bottom === 0) {
                                     newPositionNext.push(position);
@@ -1516,6 +1574,9 @@ export default class Board extends Component {
                                     enemy.nameFigure.substr(0,5) === 'tower')                          
                         })) {
                             newPositionNext = [];
+                            if(figure.nameFigure.substr(0,5) === 'horse') {
+                                return newPositionNext
+                            }
                             positionNext.forEach((position) => {
                                 if(position.bottom === 0) {
                                     newPositionNext.push(position);
@@ -1534,7 +1595,7 @@ export default class Board extends Component {
             else if(colisionWithYourKing === 'y-') {
                 nextPosition = 75;
                 while(true) {
-                   if(figure.x + nextPosition >= 0 &&
+                   if(figure.x + nextPosition <= 525 &&
                       !userGame.figures.find((figures) => {
                           return figure.x === figures.x &&
                                  figure.y + nextPosition  === figures.y
@@ -1546,6 +1607,9 @@ export default class Board extends Component {
                                     enemy.nameFigure.substr(0,5) === 'tower')                          
                         })) {
                             newPositionNext = [];
+                            if(figure.nameFigure.substr(0,5) === 'horse') {
+                                return newPositionNext
+                            }
                             positionNext.forEach((position) => {
                                 if(position.right === 0) {
                                     newPositionNext.push(position);
@@ -1566,7 +1630,7 @@ export default class Board extends Component {
                    if(figure.x + nextPosition >= 0 &&
                       !userGame.figures.find((figures) => {
                           return figure.x === figures.x &&
-                                 figure.y + nextPosition  === figures.y
+                                 figure.y + nextPosition  === figures.y;
                       })) {
                         if(userGame.figuresEnemy.find((enemy) => {
                             return figure.x === enemy.x &&
@@ -1575,6 +1639,9 @@ export default class Board extends Component {
                                     enemy.nameFigure.substr(0,5) === 'tower')                          
                         })) {
                             newPositionNext = [];
+                            if(figure.nameFigure.substr(0,5) === 'horse') {
+                                return newPositionNext
+                            }
                             positionNext.forEach((position) => {
                                 if(position.right === 0) {
                                     newPositionNext.push(position);
@@ -1606,6 +1673,9 @@ export default class Board extends Component {
                                     enemy.nameFigure.substr(0,6) === 'bishop')                          
                         })) {
                             newPositionNext = [];
+                            if(figure.nameFigure.substr(0,5) === 'horse') {
+                                return newPositionNext;
+                            }
                             positionNext.forEach((position) => {
                                 if((position.bottom > 0 && 
                                    position.right < 0) ||
@@ -1641,6 +1711,9 @@ export default class Board extends Component {
                                     enemy.nameFigure.substr(0,6) === 'bishop')                          
                         })) {
                             newPositionNext = [];
+                            if(figure.nameFigure.substr(0,5) === 'horse') {
+                                return newPositionNext;
+                            }
                             positionNext.forEach((position) => {
                                 if((position.bottom > 0 && 
                                    position.right < 0) ||
@@ -1676,6 +1749,9 @@ export default class Board extends Component {
                                     enemy.nameFigure.substr(0,6) === 'bishop')                          
                         })) {
                             newPositionNext = [];
+                            if(figure.nameFigure.substr(0,5) === 'horse') {
+                                return newPositionNext;
+                            }
                             positionNext.forEach((position) => {
                                 if((position.bottom > 0 && 
                                    position.right > 0) ||
@@ -1702,7 +1778,7 @@ export default class Board extends Component {
                       figure.y + nextPositionY >= 0 &&  
                       !userGame.figures.find((figures) => {
                           return figure.x + nextPositionX === figures.x &&
-                                 figure.y + nextPositionY === figures.y
+                                 figure.y + nextPositionY === figures.y;
                       })) {
                         if(userGame.figuresEnemy.find((enemy) => {
                             return figure.x + nextPositionX === enemy.x &&
@@ -1711,6 +1787,9 @@ export default class Board extends Component {
                                     enemy.nameFigure.substr(0,6) === 'bishop')                          
                         })) {
                             newPositionNext = [];
+                            if(figure.nameFigure.substr(0,5) === 'horse') {
+                                return newPositionNext;
+                            }
                             positionNext.forEach((position) => {
                                 if((position.bottom > 0 && 
                                    position.right > 0) ||
@@ -1766,26 +1845,55 @@ export default class Board extends Component {
             return figure.nameFigure === figures.nameFigure; 
         })
 
-        let indexUserGameInvite = this.props.actuallyGame.gameInvite.findIndex((userSearch) => {
-            return userGame.idGame === userSearch.idGame;
-        })
+        let indexUserGameInvite = 
+                this.props.actuallyGame.gameInvite.findIndex((userSearch) => {
+                    return userGame.idGame === userSearch.idGame;
+                })
     
-        let userSet = this.props.gameData.find((user) => {
-            return user.idGame === userGame.idGame;
-        })
+        let userSet = 
+                this.props.gameData.find((user) => {
+                    return user.idGame === userGame.idGame;
+                })
 
-        let indexActuallyUser = userSet.gameInvite.findIndex((userSearch) => {
-            return userSearch.idGame === this.props.actuallyGame.idGame;
-        })
+        let indexActuallyUser = 
+                userSet.gameInvite.findIndex((userSearch) => {
+                    return userSearch.idGame === this.props.actuallyGame.idGame;
+                })
 
-        let figuresDelete = userGame.figuresEnemy.find((figuresEnemy) => {
-            return figuresEnemy.x === setFigure.x && figuresEnemy.y === setFigure.y
-        })
+        let figuresDelete = 
+                userGame.figuresEnemy.find((figuresEnemy) => {
+                    return figuresEnemy.x === setFigure.x && figuresEnemy.y === setFigure.y;
+                })
         
-        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figures').child(indexFigure).set(setFigure);
-        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figuresEnemy').child(indexFigure).set(setFigureForUser);
-        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('yourMove').set(false);
-        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('yourMove').set(true);
+        this.props.databaseGame
+            .child(this.props.actuallyGame.idGame)
+            .child('gameInvite')
+            .child(indexUserGameInvite)
+            .child('figures')
+            .child(indexFigure)
+            .set(setFigure);
+        
+        this.props.databaseGame
+            .child(userGame.idGame)
+            .child('gameInvite')
+            .child(indexActuallyUser)
+            .child('figuresEnemy')
+            .child(indexFigure)
+            .set(setFigureForUser);
+        
+        this.props.databaseGame
+            .child(this.props.actuallyGame.idGame)
+            .child('gameInvite')
+            .child(indexUserGameInvite)
+            .child('yourMove')
+            .set(false);
+        
+        this.props.databaseGame
+            .child(userGame.idGame)
+            .child('gameInvite')
+            .child(indexActuallyUser)
+            .child('yourMove')
+            .set(true);
         
         if(figuresDelete) {
             let indexGameData = this.props.gameData.findIndex((userSearch)=> {
@@ -1800,8 +1908,22 @@ export default class Board extends Component {
             thisFigureDelete.x = 1000;
             thisFigureDelete.y = 1000;
             thisFigureDelete.status = false;
-            this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figures').child(indexthisFigureDelete).set(thisFigureDelete);
-            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figuresEnemy').child(indexthisFigureDelete).set(thisFigureDelete);
+            
+            this.props.databaseGame
+                .child(userGame.idGame)
+                .child('gameInvite')
+                .child(indexActuallyUser)
+                .child('figures')
+                .child(indexthisFigureDelete)
+                .set(thisFigureDelete);
+
+            this.props.databaseGame
+                .child(this.props.actuallyGame.idGame)
+                .child('gameInvite')
+                .child(indexUserGameInvite)
+                .child('figuresEnemy')
+                .child(indexthisFigureDelete)
+                .set(thisFigureDelete);
         }
         if(this.state.endangeredKing) {
             this.setState({endangeredKing: false});
@@ -1915,9 +2037,29 @@ export default class Board extends Component {
         let figuresDelete = userGame.figuresEnemy.find((figuresEnemy) => {
             return figuresEnemy.x === setPawn.x && figuresEnemy.y === setPawn.y
         })
-        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figures').child(indexPawn).set(setPawn);
-        this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figuresEnemy').child(indexPawn).set(setPawnForUser);
-        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('yourMove').set(false);
+        this.props.databaseGame
+            .child(this.props.actuallyGame.idGame)
+            .child('gameInvite')
+            .child(indexUserGameInvite)
+            .child('figures')
+            .child(indexPawn)
+            .set(setPawn);
+        
+        this.props.databaseGame
+            .child(userGame.idGame)
+            .child('gameInvite')
+            .child(indexActuallyUser)
+            .child('figuresEnemy')
+            .child(indexPawn)
+            .set(setPawnForUser);
+        
+        this.props.databaseGame
+            .child(this.props.actuallyGame.idGame)
+            .child('gameInvite')
+            .child(indexUserGameInvite)
+            .child('yourMove')
+            .set(false);
+        
         if(figure.y + position.bottom === 525) {
             this.setFigure = {
                     setPawn,
@@ -1930,7 +2072,12 @@ export default class Board extends Component {
             this.setState({windowSetFigure: true});                    
         }
         else {
-            this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('yourMove').set(true);
+            this.props.databaseGame
+                .child(userGame.idGame)
+                .child('gameInvite')
+                .child(indexActuallyUser)
+                .child('yourMove')
+                .set(true);
         }
         if(figuresDelete) {
             let indexGameData = this.props.gameData.findIndex((userSearch)=> {
@@ -1945,8 +2092,22 @@ export default class Board extends Component {
             thisFigureDelete.x = 1000;
             thisFigureDelete.y = 1000;
             thisFigureDelete.status = false;
-            this.props.databaseGame.child(userGame.idGame).child('gameInvite').child(indexActuallyUser).child('figures').child(indexthisFigureDelete).set(thisFigureDelete);
-            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGameInvite).child('figuresEnemy').child(indexthisFigureDelete).set(thisFigureDelete);
+            
+            this.props.databaseGame
+                .child(userGame.idGame)
+                .child('gameInvite')
+                .child(indexActuallyUser)
+                .child('figures')
+                .child(indexthisFigureDelete)
+                .set(thisFigureDelete);
+            
+            this.props.databaseGame
+                .child(this.props.actuallyGame.idGame)
+                .child('gameInvite')
+                .child(indexUserGameInvite)
+                .child('figuresEnemy')
+                .child(indexthisFigureDelete)
+                .set(thisFigureDelete);
         }
         if(this.state.endangeredKing) {
             this.setState({endangeredKing: false});
@@ -1968,9 +2129,29 @@ export default class Board extends Component {
             this.setFigure.setPawnForUser.srcImage = this.setFigure.setPawn.srcImage;
         }
 
-        this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(this.setFigure.indexUserGameInvite).child('figures').child(this.setFigure.indexPawn).set(this.setFigure.setPawn);
-        this.props.databaseGame.child(this.setFigure.userGame.idGame).child('gameInvite').child(this.setFigure.indexActuallyUser).child('figuresEnemy').child(this.setFigure.indexPawn).set(this.setFigure.setPawnForUser);
-        this.props.databaseGame.child(this.setFigure.userGame.idGame).child('gameInvite').child(this.setFigure.indexActuallyUser).child('yourMove').set(true);
+        this.props.databaseGame
+            .child(this.props.actuallyGame.idGame)
+            .child('gameInvite')
+            .child(this.setFigure.indexUserGameInvite)
+            .child('figures')
+            .child(this.setFigure.indexPawn)
+            .set(this.setFigure.setPawn);
+
+        this.props.databaseGame
+            .child(this.setFigure.userGame.idGame)
+            .child('gameInvite')
+            .child(this.setFigure.indexActuallyUser)
+            .child('figuresEnemy')
+            .child(this.setFigure.indexPawn)
+            .set(this.setFigure.setPawnForUser);
+
+        this.props.databaseGame
+            .child(this.setFigure.userGame.idGame)
+            .child('gameInvite')
+            .child(this.setFigure.indexActuallyUser)
+            .child('yourMove')
+            .set(true);
+        
         this.setState({windowSetFigure: false})
         this.setFigure = null;
     }
@@ -2004,7 +2185,6 @@ export default class Board extends Component {
         let checkNextPositionPositiveXPositiveY = true;
         let checkNextPositionNegativeXNegativeY = true;
         let checkNextPositionPositiveXNegativeY = true;
-        let x = 1;
         while(true) {
             // vertical and Horizont //
             if(checkNextPositionPositiveY &&
@@ -2249,7 +2429,10 @@ export default class Board extends Component {
                 }
                  
                 return  <div className="board-end-game">
-                            <img className="board-picture-profile" src={this.props.actuallyUser.pictureUrl}/>
+                            <img className="board-picture-profile" 
+                                 src={this.props.actuallyUser.pictureUrl}
+                                 alt="board-end-game"
+                            />
                             <div className="board-text-game-end">
                                 {text}
                             </div>
@@ -2296,11 +2479,24 @@ export default class Board extends Component {
             newInviteGameUser = userDeleteInvite.gameInvite.filter((user) =>{
                 return user.idGame !== this.props.actuallyGame.idGame;
             })
-            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').set(newInviteGame);
-            this.props.databaseGame.child(userGame.idGame).child('gameInvite').set(newInviteGameUser);
+            
+            this.props.databaseGame
+            .child(this.props.actuallyGame.idGame)
+            .child('gameInvite')
+            .set(newInviteGame);
+            
+            this.props.databaseGame
+            .child(userGame.idGame)
+            .child('gameInvite')
+            .set(newInviteGameUser);
         }
         else {
-            this.props.databaseGame.child(this.props.actuallyGame.idGame).child('gameInvite').child(indexUserGame).child('endGame').set(true);
+            this.props.databaseGame
+            .child(this.props.actuallyGame.idGame)
+            .child('gameInvite')
+            .child(indexUserGame)
+            .child('endGame')
+            .set(true);
         }
       
     }
@@ -2368,7 +2564,7 @@ export default class Board extends Component {
                                            })
                                        })}
                                        {this.props.actuallyGame.gameInvite.filter((userGame) => {
-                                           return userGame.thisGame;
+                                                return userGame.thisGame;
                                        }).map((userGame, index) => {
                                            if(!userGame.yourMove) {
                                                return this.renderWaitOnMoveEnemy(userGame,index);
