@@ -390,3 +390,10 @@ input:hover {
         left: 25%;
     }
 }
+
+.login-register-bad-validation {
+    position: absolute;
+    background-color: red;
+    height: 100px;
+    width: 100px;
+}
