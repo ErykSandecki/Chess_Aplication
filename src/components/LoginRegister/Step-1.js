@@ -83,6 +83,7 @@ export default class Step1 extends Component {
             badRegisterInputs[2] = false;
             this.setState({badRegisterInputs});
         }
+        
         if(this.state.valueFourth === '') {
             badRegisterInputs[3] = true;
             this.setState({badRegisterInputs});
