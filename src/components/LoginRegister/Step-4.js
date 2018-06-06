@@ -11,6 +11,8 @@ export default class Step4 extends Component {
         this.sendValue = this.sendValue.bind(this);
         this.upload = React.createRef();
         this.sendValue = this.sendValue.bind(this);
+
+        this.alreadyClickOnLastStepRegster = true;
     }
 
     sendValue() {
@@ -24,6 +26,12 @@ export default class Step4 extends Component {
     uploadPicture = (e) => {this.setState({pictureFile: e.target.files[0]})};
 
     setAcceptanceRegulation = (e) => {this.setState({acceptanceRegulation: !this.state.acceptanceRegulation})};
+
+    createNewUser = () => { 
+        this.sendValue();
+        this.props.nextStep();
+        this.alreadyClickOnLastStepRegster = false;  
+    }
 
     render() {
         return(
@@ -60,11 +68,10 @@ export default class Step4 extends Component {
                        ref={this.upload}/>
                 <button className="register-login-button-register-login-last-step btn btn-success" 
                          onClick={this.props.adminBase.status === 'online' ?
-                                    () =>{
-                                        this.sendValue();
-                                        this.props.nextStep();
-                                      }
-                                :null
+                                    this.alreadyClickOnLastStepRegster ?
+                                        this.createNewUser
+                                        : null
+                                    :null
                                 }
                 >
                     Zarejestruj

@@ -255,7 +255,8 @@ export default class LoginRegister extends Component {
                                 <Step1
                                     getValueTheStepRegister={this.getValueTheStepRegister}
                                     adminBase = {this.props.adminBase}
-                                    nextStep={this.nextStep}/>
+                                    nextStep={this.nextStep}
+                                    usersData = {this.props.usersData}/>
                                 :this.state.stepRegister === 1 ?
                                     <Step2
                                         getValueTheStepRegister={this.getValueTheStepRegister}
