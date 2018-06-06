@@ -77,7 +77,7 @@ export default class Step1 extends Component {
         if(this.state.valueThird === '' || this.state.valueThird.length < 5) {
             badRegisterInputs[2] = true;
             this.setState({badRegisterInputs});
-            this.thirdTextBadInput = 'Musisz hasło oraz minimum 5 znaków!'
+            this.thirdTextBadInput = 'Musisz podać hasło oraz minimum 5 znaków!'
         }
         else {
             badRegisterInputs[2] = false;
