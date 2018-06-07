@@ -43,7 +43,7 @@ export default class Step1 extends Component {
         if(this.state.valueFisrt === '' || this.state.valueFisrt.length < 5) {
             badRegisterInputs[0] = true;
             this.setState({badRegisterInputs});
-            this.firstTextBadInput = 'Musisz podać nazwę oraz minimum 5 znaków!'
+            this.firstTextBadInput = 'Musisz podać nazwę, minimum 5 znaków!'
         }
         else if(this.props.usersData.find((user) => {
             return user.nameUser.toLowerCase() === this.state.valueFisrt.toLowerCase();
@@ -77,7 +77,7 @@ export default class Step1 extends Component {
         if(this.state.valueThird === '' || this.state.valueThird.length < 5) {
             badRegisterInputs[2] = true;
             this.setState({badRegisterInputs});
-            this.thirdTextBadInput = 'Musisz podać hasło oraz minimum 5 znaków!'
+            this.thirdTextBadInput = 'Musisz podać hasło, minimum 5 znaków!'
         }
         else {
             badRegisterInputs[2] = false;
