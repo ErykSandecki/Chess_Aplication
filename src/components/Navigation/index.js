@@ -78,9 +78,13 @@ export default class Navigation extends Component {
                             >
                                 ZAREJESTRUJ/ ZALOGUJ
                             </p>
-                            <p className="nav-member">
-                                JESTEŚ JUŻ CZŁONKIEM?
-                            </p>
+                            {window.innerWidth < 768 ?
+                                null
+                                :
+                                <p className="nav-member">
+                                    JESTEŚ JUŻ CZŁONKIEM?
+                                </p>
+                            }
                         </React.Fragment>        
                     }   
                 </div> 

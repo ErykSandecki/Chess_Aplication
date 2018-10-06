@@ -60,7 +60,7 @@
     line-height: 75px;
     margin: 0px;
     border-right: 1px solid #e6e6e6;
-    width: 70px;
+    width: 50px;
     color: black;
     transition: 0.5s;
     opacity: 1;
@@ -78,8 +78,6 @@
 .nav-drop-menu:hover .nav-text-button {
     opacity: 0.3 !important;
 }
-
-
 
 .nav-icon {
     float: left;
@@ -174,7 +172,6 @@
     .nav-icon {
         margin-left: 2%;
         margin-right: 2%;
-        display: block;
     }
 
     .nav-register-logout {
@@ -187,6 +184,21 @@
         font-size: 12px;
     }
 
+    .nav-option {
+        width: 620px;
+    }
+
+    .nav-member {
+        width: 260px;
+    }
+
+    .nav-register-login {
+        width: 260px;
+    }
+
+    .nav-text-button {
+        width: 70px;
+    }
 }
 
 /* Deskopt */
@@ -209,5 +221,10 @@
     .nav-icon {
         margin-left: 4%;
         margin-right: 4%;
+        display: block; 
+    }
+
+    .nav-option {
+        width: 450px;
     }
 }

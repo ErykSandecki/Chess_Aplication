@@ -261,24 +261,30 @@ export default class LoginRegister extends Component {
                                     adminBase = {this.props.adminBase}
                                     nextStep={this.nextStep}
                                     usersData = {this.props.usersData}/>
-                                :this.state.stepRegister === 1 ?
+                                    :
+                                    this.state.stepRegister === 1 ?
                                     <Step2
                                         getValueTheStepRegister={this.getValueTheStepRegister}
                                         adminBase = {this.props.adminBase}
                                         nextStep={this.nextStep}/>
-                                    :this.state.stepRegister === 2 ?
+                                        :
+                                        this.state.stepRegister === 2 ?
                                         <Step3
                                             getValueTheStepRegister={this.getValueTheStepRegister}
                                             adminBase = {this.props.adminBase}
                                             nextStep={this.nextStep}/>
-                                        :this.state.stepRegister >= 3 ?
+                                            :
+                                            this.state.stepRegister >= 3 ?
                                             <Step4
-                                            showRegulations={this.props.showRegulations}
-                                            getValueTheStepRegister={this.getValueTheStepRegister}
-                                            adminBase = {this.props.adminBase}
-                                            nextStep={this.nextStep}
-                                            widthBar={this.state.widthBar}/>
-                                        :null}
+                                                showRegulations={this.props.showRegulations}
+                                                getValueTheStepRegister={this.getValueTheStepRegister}
+                                                adminBase = {this.props.adminBase}
+                                                nextStep={this.nextStep}
+                                                widthBar={this.state.widthBar}
+                                            />
+                                            :
+                                            null
+                                    }
                             </React.Fragment>
                             <div className="register-login-form-register-pointers">
                                 <div 
@@ -329,17 +335,21 @@ export default class LoginRegister extends Component {
                                  src={logoUser} 
                                  alt="logo-user"
                             />
-                            <div className="register-login-exit-validation">
+                            <div 
+                                className="register-login-exit-validation"
+                                onClick={() => {
+                                    this.resetSectionRegisterLogin();
+                                    this.props.setSectionRegisterLogin(false,false,false);
+                                }}
+                            >
                                 <span className="glyphicon glyphicon-remove login-register-glyphicon-remove"></span>
-                                <p 
-                                    className="login-register-exit-menu" 
-                                    onClick={() => {
-                                                    this.resetSectionRegisterLogin();
-                                                    this.props.setSectionRegisterLogin(false,false,false);
-                                            }}
-                                >
-                                WYJŚCIE
-                                </p>
+                                {window.innerWidth < 768 ? 
+                                    null
+                                    :
+                                    <p className="login-register-exit-menu" >
+                                        WYJŚCIE
+                                    </p>   
+                                }
                             </div>
                             <p className="register-login-text">Logowanie</p>
                             <div className="register-login-form-login">
