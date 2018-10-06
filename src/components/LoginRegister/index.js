@@ -248,7 +248,11 @@ export default class LoginRegister extends Component {
                                 }}
                             >
                                 <span className="glyphicon glyphicon-remove login-register-glyphicon-remove"/>
-                                <p className="login-register-exit-menu">WYJŚCIE</p>
+                                {window.innerWidth < 768 ? 
+                                    null
+                                    :
+                                    <p className="login-register-exit-menu">WYJŚCIE</p>
+                                }
                             </div> 
                             <React.Fragment>
                                 {this.state.stepRegister === 0 ? 

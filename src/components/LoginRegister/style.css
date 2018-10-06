@@ -18,10 +18,10 @@ input:hover {
 
 .register-login-table {
     position: fixed;
-    height: 90vh;
+    height: 80%;
     width: 90%;
     left: 5%;
-    top: 5%;
+    top: 10%;
     background-color: white;
     z-index: 3;
     border-radius: 20px;
@@ -30,15 +30,26 @@ input:hover {
 }
 
 .register-login-image {
-    margin-top: 20px;
-    height: 10vh;
-    width: 10vh;
+    margin-top: 2%;
+    height: 50px;
+    width: 50px;
+}
+
+.register-login-exit-validation {
+    position: absolute;
+    right: 2%;
+    top: 2%;
+    border: 1px solid orange;
+    border-radius: 10px;
+    width: 60px;
+    background-color: orange;
+    height: 30px;
 }
 
 .login-register-glyphicon-remove {
     float: right;
-    margin-top: 17px;
-    margin-right: 15px;
+    margin-top: 8px;
+    margin-right: 20px;
 }
 
 .login-register-exit-menu {
@@ -52,32 +63,21 @@ input:hover {
     cursor: pointer;
 }
 
-.register-login-exit-validation {
-    position: absolute;
-    right: 2%;
-    top: 2%;
-    border: 1px solid orange;
-    border-radius: 10px;
-    width: 120px;
-    background-color: orange;
-    height: 50px;
-}
-
 .register-login-exit-validation:hover {
     filter: drop-shadow(8px 8px 10px gray);
     cursor: pointer;
 }
 
 .register-login-text {
-    font-size: 20px;
+    font-size: 12px;
     font-family: 'Lato', sans-serif;
-    margin-top: 15px;
+    margin-top: 5%;
 }
 
 .register-login-form-register {
-    width: 60%;
-    margin-top: 50px;
-    height: 25vh;
+    width: 100%;
+    margin-top: 20px;
+    height: 35%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 20px;
@@ -90,10 +90,11 @@ input:hover {
     margin-right: auto;
 }
 
-.register-login-form-register-input, .register-login-form-login-input {
-    width: 60%;
+.register-login-form-register-input, 
+.register-login-form-login-input {
+    width: 80%;
     border: unset;
-    font-size: 20px;
+    font-size: 12px;
 }
 
 .register-login-form-register-input:focus, 
@@ -107,7 +108,7 @@ input:hover {
 }
 
 .register-login-form-register-underline {
-    width: 60%;
+    width: 80%;
     height: 1px;
     margin-left: auto;
     margin-right: auto;
@@ -118,17 +119,18 @@ input:hover {
 
 .register-login-button-register-login-next-step {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    width: 40%;
-    height: 80px;
+    width: 200px;
+    height: 40px;
     border-radius: 40px;
+    margin-top: 25px;
 }
 
 .register-login-button-register-login-last-step {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    width: 40%;
-    height: 80px;
+    width: 200px;
+    height: 40px;
     border-radius: 40px;
-    margin-top: 75px;
+    margin-top: 25px;
 }
 
 .register-login-button-login {
@@ -155,7 +157,7 @@ input:hover {
 .register-login-form-register-pointers {
     width: 200px;
     height: 40px;
-    margin-top: 40px;
+    margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -171,7 +173,7 @@ input:hover {
 }
 
 .register-login-form-register-already-account {
-    margin-top: 5%;
+    margin-top: 10px;
     font-family: 'Lato', sans-serif;
 }
 
@@ -212,7 +214,7 @@ input:hover {
 }
 
 .register-login-progress-bar-register-upload-picture {
-    width: 50%;
+    width: 70%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
@@ -225,12 +227,14 @@ input:hover {
     font-size: 0px;
     margin-bottom: 10px;
     width: 0px;
+    visibility: hidden;
 }
 
 .register-login-choose-file {
     cursor: unset;
-    height: 50px;
-    width: 250px;
+    height: 25px;
+    width: 150px;
+    padding: 0px;
 }
 
 .register-login-choose-file:hover {
@@ -240,8 +244,14 @@ input:hover {
 .register-login-text-register-add-picture {
     margin-bottom: 20px;
     font-weight: bold;
-    margin-top: 50px;
-    font-size: 20px;
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.register-regular {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .register-login-login-users-table {
@@ -320,22 +330,109 @@ input:hover {
     cursor: pointer;
 }
 
+.login-register-bad-validation {
+    position: absolute;
+    background-color: red;
+    height: 100px;
+    width: 100px;
+}
+
+.register-login-validation {
+    width: 100%;
+    height: 25px;
+    top: 5px;
+    background-color: red;
+    position: absolute;
+    color: white;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
 @media only screen and (min-width: 768px) {
     .register-login-table {
         width: 80%;
         left: 10%;
     }
 
+    .register-login-image {
+        height: 75px;
+        width: 75px;
+    }
+
+    .register-login-exit-validation {
+        width: 150px;
+        height: 40px;
+        font-size: 15px;
+    }
+
+    .register-login-form-register {
+        margin-top: 20px;
+        height: 40%;
+        width: 70%;
+        margin-bottom: 0px;
+    }
+
+    .register-login-form-register-input {
+        font-size: 15px;
+    }
+
+    .register-login-form-register-underline {
+        margin-bottom: 30px;
+    }
+
+    .register-login-text {
+        font-size: 20px;
+    }
+
+    .login-register-exit-menu {
+        line-height: 40px;
+    }
+
+    .login-register-glyphicon-remove {
+        margin-top: 12px;
+    }
+
     .register-login-form-register-pointers {
-        width: 400px;
+        width: 200px;
+    }
+
+    .register-login-button-register-login-next-step {
+        margin-top: 5px;
+        height: 40px;
+        font-size: 15px;
+        margin-bottom: 5px;
+        width: 150px;
     }
 
     .register-login-form-register-pointer {
-        width: 20px;
-        height: 20px;
-        margin-left: 40px;
-        margin-right: 40px;
+        width: 10px;
+        height: 10px;
+        margin-left: 20px;
+        margin-right: 20px;
         border-radius: 20px;
+    }
+
+    .register-login-form-register-already-account {
+        font-size: 12px;
+    }
+
+    .register-login-text-register-add-picture {
+        font-size: 20px;
+    }
+
+    .register-login-choose-file {
+        height: 40px;
+        font-size: px;
+        width: 150px;
+    }
+
+    .register-login-progress-bar-register-upload-picture {
+        height: 15px;
+    }
+
+    .register-regular {
+        font-size: 12px;
+        width: 70%;
     }
 
     .register-login-register-complete-block {
@@ -360,50 +457,147 @@ input:hover {
         left: 10%;
         transition: 0.5s;
     }
+
+    .register-login-button-register-login-last-step {
+        margin-top: 15px;
+        height: 40px;
+        font-size: 15px;
+        margin-bottom: 5px;
+        width: 150px;
+    }
+
+    .register-login-validation {
+        font-size: 12px;
+        height: 20px;
+    }
 }
 
 @media only screen and (min-width: 1024px) {
     .register-login-table {
+        width: 60%;
+        left: 20%;
+        height: 90%;
+        top: 5%;
+    }
+
+    .register-login-image {
+        height: 100px;
+        width: 100px;
+    }
+
+    .register-login-exit-validation {
+        width: 100px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .login-register-exit-menu {
+       line-height: 30px;
+       margin-left: 8px;
+    }
+
+    .login-register-glyphicon-remove {
+        margin-top: 7px;
+    }
+
+    .register-login-form-register {
+        margin-top: 15px;
+        height: 40%;
         width: 50%;
-        left: 25%;
+    }
+
+    .register-login-form-register-input {
+        font-size: 15px;
+    }
+
+    .register-login-form-register-underline {
+        margin-bottom: 35px;
+    }
+
+    .register-login-text {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+    .register-login-form-register-pointers {
+        width: 400px;
+    }
+
+    .register-login-button-register-login-next-step {
+        height: 50px;
+        width: 200px;
+        font-size: 15px;
+        margin-bottom: 15px;
+        margin-top: 0px;
+    }
+
+    .register-login-form-register-pointer {
+        width: 20px;
+        height: 20px;
+        margin-left: 40px;
+        margin-right: 40px;
+        border-radius: 20px;
+    }
+
+    .register-login-form-register-already-account {
+        font-size: 15px;
+        margin-top: 10px;
+    }
+
+    .register-login-text-register-add-picture {
+        font-size: 15px;
+    }
+
+    .register-login-choose-file {
+        height: 40px;
+        font-size: 20px;
+        width: 150px;
+    }
+
+    .register-login-progress-bar-register-upload-picture {
+        height: 25px;
+    }
+
+    .register-regular {
+        font-size: 15px;
+        width: 70%;
     }
 
     .register-login-register-complete-block {
         width: 80%;
         left: 10%;
-        height: 200px;
-        border-radius: 20px;
+        height: 100px;
+        border-radius: 10px;
     }
 
     .register-login-register-complete-text {
-        font-size: 40px;
-        line-height: 200px;
+        font-size: 20px;
+        line-height: 100px;
     }
 
     .register-login-register-complete-img {
-        width: unset;
-        height: unset;
+        height: 35px;
+        width: 35px;
     }
 
     .register-login-login-users-table {
-        width: 50%;
-        left: 25%;
+        width: 80%;
+        left: 10%;
+        transition: 0.5s;
     }
+
+    .register-login-button-register-login-last-step {
+        height: 50px;
+        width: 200px;
+        font-size: 15px;
+        margin-bottom: 15px;
+        margin-top: 60px;
+    }
+
+    .register-login-validation {
+        font-size: 12px;
+        height: 20px;
+    }
+    
 }
 
-.login-register-bad-validation {
-    position: absolute;
-    background-color: red;
-    height: 100px;
-    width: 100px;
-}
-
-.register-login-validation {
-    width: 100%;
-    height: 25px;
-    top: 5px;
-    background-color: red;
-    position: absolute;
-    color: white;
-    border-radius: 5px;
-}

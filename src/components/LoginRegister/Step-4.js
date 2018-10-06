@@ -54,14 +54,17 @@ export default class Step4 extends Component {
                         <span className="sr-only"></span>
                     </div>
                 </div>
-                <input 
-                    type="checkbox"
-                    onChange={this.setAcceptanceRegulation}
-                />
-                <span> * Zapoznałem się i akceptuję powyższy 
-                    <span className="register-login-regular"
-                          onClick={this.props.showRegulations}> regulamin.</span>
-                </span>
+                <div className="register-regular">
+                    <input 
+                        type="checkbox"
+                        onChange={this.setAcceptanceRegulation}
+                    />
+                    <span> * Zapoznałem się i akceptuję powyższy 
+                        <span className="register-login-regular"
+                            onClick={this.props.showRegulations}> regulamin.</span>
+                    </span>
+                </div>
+                
                 <input type="file" 
                        className="register-login-register-upload-input" 
                        onChange={this.uploadPicture}
