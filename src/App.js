@@ -39,6 +39,7 @@ class App extends Component {
       },
       chatUsersWindow: null,
       visibleGame: false,
+      visibleNavigation : true
     }
     this.refreshStatusCheck = null;
     this.refreshActiveUsers = null;
@@ -174,6 +175,29 @@ class App extends Component {
                               :"hide-body"}
                     onClick = {this.showApp.bind(this)}>
               </div>
+              <div className="type-1">
+                <div>
+                  <a 
+                    className="btn btn-1"
+                    onClick={()=>{
+                      this.setState({
+                        visibleNavigation: !this.state.visibleNavigation
+                      })
+                    }}
+                  >
+                    <span className="txt">
+                      {this.state.visibleNavigation ?
+                        "HIDE NAVIGATION"
+                        :
+                        "SHOW NAVIGATION"
+                      }
+                    </span>
+                    <span className="round">
+                      <i className="fa fa-chevron-right"/>
+                    </span>
+                  </a>
+                </div>
+              </div>
               <Firebase
                 adminBase = {this.state.adminBase}
                 setAdminBase = {this.setAdminBase}
@@ -201,7 +225,7 @@ class App extends Component {
                   statusLogin = {this.state.statusLogin}/>
                 :null
                }
-              {this.state.statusLogin ?
+              {this.state.statusLogin && window.innerWidth >= 768 ?
                 <Message
                   usersData = {this.state.usersData}
                   actuallyUser = {this.state.actuallyUser}
@@ -250,7 +274,8 @@ class App extends Component {
                 chatUsersWindow = {this.state.chatUsersWindow}
                 sendNewUserToWindowChat = {this.sendNewUserToWindowChat}
                 setVisibleGame = {this.setVisibleGame}
-                visibleGame = {this.state.visibleGame}/>
+                visibleGame = {this.state.visibleGame}
+                visibleNavigation = {this.state.visibleNavigation}/>
               {this.state.statusLogin ? 
                 <Game
                   setVisibleGame = {this.setVisibleGame}

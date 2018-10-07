@@ -12,7 +12,11 @@ export default class Navigation extends Component {
     render() {
         return (
             <div className="nav"
-                
+                 style={this.props.visibleNavigation ? 
+                        {top: '0%'}
+                        :
+                        {top: '-20%'}    
+                        }
             >
                 <div className="nav-drop-menu" 
                 onClick={this.props.hideApp}>
@@ -46,20 +50,24 @@ export default class Navigation extends Component {
                             >
                                 Wyloguj
                             </p>
-                            {this.props.actuallyUser.nameUser !== 'admin' ?
+                            {this.props.actuallyUser.nameUser !== 'admin' && window.innerWidth >= 768 ?
                                 <span className="nav-gamepad fa fa-gamepad"
                                       onClick={() =>{this.props.setVisibleGame(true)}}
                                 >
                                 </span>
                                 :null
                             }
-                            <NotificationsNewMessage
+                            {window.innerWidth >= 768 ?
+                                <NotificationsNewMessage
                                 actuallyUser={this.props.actuallyUser}
                                 usersData={this.props.usersData}
                                 databaseUsers={this.props.databaseUsers}
                                 statusLogin = {this.props.statusLogin}
                                 sendNewUserToWindowChat = {this.props.sendNewUserToWindowChat}
-                                chatUsersWindow = {this.props.chatUsersWindow}/> 
+                                chatUsersWindow = {this.props.chatUsersWindow}/>
+                                :
+                                null
+                            }
                             <NotificationsNewFriends
                                 actuallyUser={this.props.actuallyUser}
                                 usersData={this.props.usersData}

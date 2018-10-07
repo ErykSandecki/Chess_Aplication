@@ -178,7 +178,7 @@ export default class Friends extends Component {
                             {user.name + ' ' + user.surname}
                         </p>
                         <p className="friends-users-list-information-2">
-                            {user.ranking}
+                             {"Ranking: " + user.ranking}
                         </p>
                     </div>
                     {friend ?
@@ -194,50 +194,55 @@ export default class Friends extends Component {
         }
         else {
             return null;
-        }   
-        
+        }        
     }
 
     buttonAddInvite(user, index) {
-        return <button className="friends-button-add-friends"
-                    onClick={() => {this.sendInvite(user,index)}}
-                    >
-                    Dodaj znajomego
-                    <span className="glyphicon glyphicon-user"/>
-        </button>
+        return  <div className="friends-button-options">
+                    <button className="friends-button-add-friends"
+                        onClick={() => {this.sendInvite(user,index)}}
+                        >
+                        Dodaj znajomego
+                        <span className="glyphicon glyphicon-user"/>
+                    </button>
+                </div>
     }
 
     buttonDeleteInviteFriends(user,index) {
-        return <button className="friends-button-delete-invite-for-friends"
-                       onClick={()=>{this.deleteUserOrInvite(user,index)}}
-                >
-                    Usuń zaproszenie 
-                    <span className="friends-remove-invite glyphicon glyphicon-remove"/>
-                </button>
+        return  <div className="friends-button-options">
+                    <button className="friends-button-delete-invite-for-friends"
+                        onClick={()=>{this.deleteUserOrInvite(user,index)}}
+                    >
+                        Usuń zaproszenie
+                    </button>
+                </div>
     }
 
     buttonAcceptedAndDeleteInvite(user, index) {
         return  <React.Fragment>
-                    <button className="friends-button-accepted-invite"
-                        onClick={() => {this.acceptedInvite(user,index)}}
-                    >
-                        Akceptuj zaproszenie +
-                    </button>
-                    <button className="friends-button-delete-invite"
-                        onClick={() => {this.deleteUserOrInvite(user,index)}}
-                    >
-                        Usuń zaproszenie -
-                    </button>
+                    <div className="friends-button-options">
+                        <button className="friends-button-accepted-invite"
+                            onClick={() => {this.acceptedInvite(user,index)}}
+                        >
+                            Akceptuj zaproszenie
+                        </button>
+                        <button className="friends-button-delete-invite"
+                            onClick={() => {this.deleteUserOrInvite(user,index)}}
+                        >
+                            Usuń zaproszenie
+                        </button>
+                    </div>
                 </React.Fragment>
     }
 
     buttonDeleteFriends(user, index) {
-        return <button className="friends-button-delete-friends"
-                       onClick={() => {this.deleteUserOrInvite(user,index)}}
-                >
-                    Usuń ze znajomych 
-                    <span className="friends-remove-invite glyphicon glyphicon-remove"/>
-                </button>
+        return  <div className="friends-button-options">
+                    <button className="friends-button-delete-friends"
+                        onClick={() => {this.deleteUserOrInvite(user,index)}}
+                    >
+                        Usuń ze znajomych 
+                    </button>
+                </div>
     }
 
     sendInvite(user,index) {
@@ -403,7 +408,11 @@ export default class Friends extends Component {
                                                     :null
                                               }
                                     >
-                                        Szukaj znajomych
+                                        {window.innerWidth < 768 ?
+                                            "Szukaj"
+                                            :
+                                            "Szukaj znajomych"
+                                        }
                                     </div>
                                     <div className="friends-users-table">
                                         <div className="friends-window-users"
@@ -499,13 +508,11 @@ export default class Friends extends Component {
                                         </div>
                                 </div>          
                             </div>
-                        </div>
-                        <div className="friends-exit-section">
-                            <div className="friends-exit-section-table"
-                                 onClick={this.exitSearch}
-                            >
-                                <span className="friends-exit">WYJŚCIE</span>
-                                <span className="friends-exit-icon glyphicon glyphicon-remove"></span>
+                            <div className="friends-exit-section">
+                                <div className="friends-exit-section-table"
+                                    onClick={this.exitSearch}
+                                >
+                                    <span className="friends-exit">Wyjście [ x ]</span>                                </div>
                             </div>
                         </div>
                     </div>

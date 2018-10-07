@@ -18,10 +18,10 @@ input:hover {
 
 .register-login-table {
     position: fixed;
-    height: 80%;
+    height: 600px;
     width: 90%;
     left: 5%;
-    top: 10%;
+    top: 5%;
     background-color: white;
     z-index: 3;
     border-radius: 20px;
@@ -257,10 +257,10 @@ input:hover {
 
 .register-login-login-users-table {
     position: fixed;
-    height: 80%;
+    height: 600px;
     width: 90%;
     left: 5%;
-    top: 10%;
+    top: 5%;
     background-color: white;
     z-index: 3;
     border-radius: 20px;
@@ -274,7 +274,7 @@ input:hover {
 
 .register-login-remember-password {
     margin-top: 15px;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
     text-align: center;
     font-size: 15px;
 }
@@ -353,6 +353,7 @@ input:hover {
     .register-login-table {
         width: 80%;
         left: 10%;
+        height: 620px;
     }
 
     .register-login-image {
@@ -399,10 +400,10 @@ input:hover {
 
     .register-login-button-register-login-next-step {
         margin-top: 5px;
-        height: 40px;
+        height: 60px;
         font-size: 15px;
         margin-bottom: 5px;
-        width: 150px;
+        width: 200px;
     }
 
     .register-login-form-register-pointer {
@@ -456,6 +457,7 @@ input:hover {
     .register-login-login-users-table {
         width: 80%;
         left: 10%;
+        height: 620px;
         transition: 0.5s;
     }
 
@@ -487,20 +489,22 @@ input:hover {
     .register-login-button-login {
         width: 200px;
         height: 60px;
+        margin-top: 45px;
     }
 }
 
 @media only screen and (min-width: 1024px) {
     .register-login-table {
-        width: 60%;
-        left: 20%;
-        height: 90%;
+        width: 50%;
+        left: 25%;
+        height: 620px;
         top: 5%;
     }
 
     .register-login-login-users-table {
         width: 50% !important;
         left: 25% !important;
+        height: 620px;
     }
 
     .register-login-image {
