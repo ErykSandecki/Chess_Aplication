@@ -184,6 +184,14 @@ class App extends Component {
                         visibleNavigation: !this.state.visibleNavigation
                       })
                     }}
+                    style={this.state.visibleNavigation ?
+                            null
+                            :
+                            {
+                              paddingLeft: "48px",
+                              paddingRight: "28px"
+                            }
+                          }
                   >
                     <span className="txt">
                       {this.state.visibleNavigation ?
@@ -192,8 +200,25 @@ class App extends Component {
                         "SHOW NAVIGATION"
                       }
                     </span>
-                    <span className="round">
-                      <i className="fa fa-chevron-right"/>
+                    <span 
+                      className="round"
+                      style={this.state.visibleNavigation ?
+                              null
+                              :
+                              {
+                                width: "calc(100% - 6px)",
+                                borderRadius: "30px"
+                              }
+                            }
+                    >
+                      <i 
+                        className="fa fa-chevron-right"
+                        style={this.state.visibleNavigation ?
+                                null
+                                :
+                                {transform: "rotate(0deg)"}
+                              }
+                       />
                     </span>
                   </a>
                 </div>

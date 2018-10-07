@@ -55,21 +55,6 @@
     float: left;
     transition: 0.5s linear;
   }
-  
-  .type-1 a:hover {
-    padding-left: 48px;
-    padding-right: 28px;
-  }
-  .type-1 a:hover .round {
-    width: calc(100% - 6px);
-    -moz-border-radius: 30px;
-    -webkit-border-radius: 30px;
-    border-radius: 30px;
-  }
-
-  .type-1:hover i {
-    transform: rotate(0deg);
-  }
 
   @media only screen and (min-width: 768px)  {
     .btn-1 {
@@ -129,16 +114,4 @@
         line-height: 38px;
         float: left;
       }
-      
-      .type-1 a:hover {
-        padding-left: 48px;
-        padding-right: 28px;
-      }
-      .type-1 a:hover .round {
-        width: calc(100% - 6px);
-        -moz-border-radius: 30px;
-        -webkit-border-radius: 30px;
-        border-radius: 30px;
-      }
-    
   }
